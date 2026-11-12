@@ -76,6 +76,17 @@ header nav a:hover,header nav a.on{background:var(--pink)}
 .door .big em{font-style:normal;color:var(--pink)}
 .door p{max-width:46ch;color:#a3a29d;margin:var(--s3) 0 0}
 
+.door-acts{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;margin-top:var(--s4)}
+.door-acts .m{color:#a3a29d;max-width:32ch}
+.playbtn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;background:var(--pink);color:var(--ink);border:3px solid #fff;border-radius:999px;padding:12px 22px 12px 16px;font:800 18px/1 var(--display);box-shadow:5px 5px 0 #fff;transition:transform .15s,box-shadow .15s}
+.playbtn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 #fff}
+.playbtn span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--pink);font-size:13px}
+.playing{position:fixed;z-index:45;left:50%;top:78px;transform:translateX(-50%);display:none;align-items:center;gap:12px;background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:8px 8px 8px 16px;font:800 14px/1 var(--display);box-shadow:4px 4px 0 var(--pink)}
+.playing.on{display:flex}
+.playing i{width:8px;height:8px;border-radius:50%;background:var(--pink);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.2}}
+.playing button{all:unset;cursor:pointer;background:var(--ink);color:#fff;border-radius:999px;padding:7px 12px}
+.playing .pbar{width:70px;height:4px;background:#eee;border-radius:2px;overflow:hidden}.playing .pbar b{display:block;height:100%;background:var(--pink);transform-origin:0 50%;transform:scaleX(0)}
 /* le opere: una per schermo */
 .scene{position:relative;height:200vh;background:var(--dark)}
 .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--dark);color:#fff;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:var(--gap);align-items:center;padding:90px var(--side) 48px}
@@ -92,11 +103,12 @@ header nav a:hover,header nav a.on{background:var(--pink)}
 .round .sheen{border-radius:50%}
 .stage.lit .sheen{opacity:1}
 /* giroscopio sul telefono */
-.gyro{all:unset;position:fixed;z-index:26;left:50%;top:78px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:10px 18px;font-weight:800;font-size:15px;box-shadow:4px 4px 0 var(--pink);white-space:nowrap;cursor:pointer}
+.gyro{all:unset;position:fixed;z-index:40;left:50%;top:78px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:10px 18px;font-weight:800;font-size:15px;box-shadow:4px 4px 0 var(--pink);white-space:nowrap;cursor:pointer}
 .gyro.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
 .tiltnote{display:none;font-size:var(--t-s);color:#a3a29d}
 html.gyro-on .tiltnote{display:block}
 /* barra delle sette tele */
+.rail:not(.show) *{pointer-events:none!important}
 .rail{position:fixed;z-index:25;right:14px;top:50%;transform:translateY(-50%);display:grid;gap:6px;opacity:0;pointer-events:none;transition:opacity .4s}
 .rail.show{opacity:1;pointer-events:auto}
 .rail button{all:unset;cursor:pointer;display:flex;align-items:center;justify-content:flex-end;gap:10px;height:20px;color:#fff}
@@ -127,7 +139,7 @@ html.gyro-on .tiltnote{display:block}
 
 /* la parete: tutto in un colpo d'occhio */
 .wallbtn{all:unset;cursor:pointer;position:fixed;z-index:27;left:50%;margin-left:-82px;bottom:22px;display:flex;align-items:center;gap:10px;background:var(--pink);color:var(--ink);border:3px solid var(--ink);border-radius:999px;padding:10px 18px 10px 12px;font:800 16px/1 var(--display);box-shadow:4px 4px 0 var(--ink);transform:translateY(140%);transition:transform .45s cubic-bezier(.3,1.5,.5,1),box-shadow .15s}
-.wallbtn.show{transform:none}.wallbtn:hover{box-shadow:6px 6px 0 var(--ink);transform:translate(-2px,-2px)}
+.wallbtn:not(.show){pointer-events:none;visibility:hidden;transition:transform .45s,visibility 0s .45s}.wallbtn.show{transform:none}.wallbtn:hover{box-shadow:6px 6px 0 var(--ink);transform:translate(-2px,-2px)}
 .wallbtn i{display:grid;grid-template-columns:repeat(2,8px);gap:3px}.wallbtn i b{width:8px;height:8px;background:var(--ink);border-radius:2px}
 #wall{position:fixed;inset:0;z-index:90;background:var(--dark);overflow:hidden;display:none;touch-action:none;cursor:grab;user-select:none}
 #wall.open{display:block}#wall.drag{cursor:grabbing}
@@ -254,7 +266,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
  .cnt{top:auto;bottom:28px}
  .hint{bottom:auto;top:120px}
  .index{grid-template-columns:repeat(4,minmax(0,1fr))}
- .rail{right:auto;left:50%;top:auto;bottom:12px;transform:translateX(-50%);grid-auto-flow:column;gap:8px}.rail span{display:none}.rail button{height:14px}.rail i{width:12px}.rail .on i{width:28px}
+ .rail{right:4px;gap:2px}.rail span{display:none}.rail button{height:22px;padding-left:8px}.rail i{width:10px}.rail .on i{width:20px}
  .lb-nav{width:44px;height:44px;margin-top:-22px;background:rgba(0,0,0,.5)}.lb-main{padding-inline:8px}
  .portrait{grid-column:1/-1;position:relative;top:auto;width:min(80%,420px);margin-bottom:var(--s5)}
  .story{grid-column:1/-1}
@@ -294,11 +306,13 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 <section class="door" id="opere"><svg class="melt" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true"><path fill="#0b0b0b" d="M0,100V70C40,70 60,40 90,40C120,40 125,62 140,62C150,62 152,20 160,20C168,20 170,58 185,58C230,58 240,30 300,30C350,30 360,66 400,66C430,66 435,44 450,44C460,44 462,8 470,8C478,8 480,40 500,40C560,40 570,70 630,70C680,70 690,36 740,36C760,36 762,14 770,14C778,14 780,50 800,50C850,50 870,24 920,24C950,24 960,60 1000,60V100Z"/></svg><div class="wrap">
  <h2 class="big">Prima <em>da vicino.</em> Poi un passo indietro.</h2>
  <p>Ogni tela si apre su un dettaglio fotografato a pochi centimetri: la grana, lo spray, le colature. Scorri e la vedi intera.</p>
+ <div class="door-acts"><button class="playbtn" type="button" id="play"><span aria-hidden="true">▶</span> Avvia la mostra</button><span class="m">Oppure lasciati portare: le tele scorrono da sole, tocca per fermarle.</span></div>
 </div></section>
 <div id="scenes"></div>
 <div class="bar" id="bar2" aria-hidden="true"></div>
 <button class="wallbtn" id="wallbtn" type="button"><i aria-hidden="true"><b></b><b></b><b></b><b></b></i>Tutte le opere</button>
 <div id="wall" role="dialog" aria-modal="true" aria-label="Tutte le opere" data-lenis-prevent><div class="wtop"><div><h2>La parete <span>✺</span></h2><p>Trascina in ogni direzione. Tocca per aprire.</p></div><button class="pill" type="button" id="wallx">Chiudi ✕</button></div><div id="wallin"></div><div class="wctl"><span class="wf" style="display:flex;gap:4px"><button type="button" data-f="all" aria-pressed="true">Tutto</button><button type="button" data-f="tele" aria-pressed="false">Tele</button><button type="button" data-f="det" aria-pressed="false">Dettagli</button></span><i></i><button class="z" type="button" id="zo" aria-label="Rimpicciolisci">−</button><button class="z" type="button" id="zi" aria-label="Ingrandisci">+</button></div></div>
+<div class="playing" id="playing" role="status"><i aria-hidden="true"></i><span id="playt">Mostra in corso</span><span class="pbar" aria-hidden="true"><b id="pbar"></b></span><button type="button" id="stop">Ferma ■</button></div>
 <nav class="rail" id="rail" aria-label="Vai a una tela"></nav>
 <button class="gyro" id="gyro" type="button">✦ Muovi il telefono: tocca per attivare</button>
 
@@ -473,7 +487,7 @@ let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{fitNam
  // iPhone: serve un tocco per chiedere il permesso
  const ask=()=>{DeviceOrientationEvent.requestPermission().then(()=>pill.remove()).catch(()=>pill.remove())};
  pill.onclick=e=>{e.stopPropagation();ask()};
- entered.then(()=>{gsap.registerPlugin(ScrollTrigger);ScrollTrigger.create({trigger:'#scenes',start:'top 60%',end:'bottom 40%',onToggle:t=>{if(!on&&document.body.contains(pill))setTimeout(()=>{if(!on)pill.classList.toggle('show',t.isActive)},t.isActive?1200:0)}})});
+ entered.then(()=>{gsap.registerPlugin(ScrollTrigger);ScrollTrigger.create({trigger:'#scenes',start:'top 60%',end:'bottom 40%',onToggle:t=>{if(!on&&document.body.contains(pill))setTimeout(()=>{if(!on)pill.classList.toggle('show',t.isActive);if(t.isActive)setTimeout(()=>pill.classList.remove('show'),7000)},t.isActive?1200:0)}})});
 })();
 
 // regia dello scroll
@@ -628,6 +642,24 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
  // il bottone compare dopo l'apertura e resta sempre a portata
  const mk=document.getElementById('marco');const tog=()=>btn.classList.toggle('show',scrollY>innerHeight*.6&&scrollY+innerHeight<mk.offsetTop+innerHeight*.4);addEventListener('scroll',tog,{passive:true});tog();
  if(location.hash==='#parete')setTimeout(open,300);
+})();
+
+// modalità mostra: le tele scorrono da sole, dal dettaglio alla tela intera
+(function(){const bar=document.getElementById('playing'),pb=document.getElementById('pbar'),pt=document.getElementById('playt');let run=0;
+ const wait=(ms,tok)=>new Promise(r=>{const t0=performance.now();const f=()=>{if(tok!==run)return r(false);const k=(performance.now()-t0)/ms;if(k>=1)return r(true);pb.style.transform=`scaleX(${k})`;requestAnimationFrame(f)};f()});
+ const go=(y,d)=>new Promise(r=>{if(lenis)lenis.scrollTo(y,{duration:d,easing:t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2,onComplete:r,force:true});else{scrollTo({top:y,behavior:'smooth'});setTimeout(r,d*1000)}});
+ async function play(){const tok=++run;bar.classList.add('on');const list=[...scenes.children];
+  let y=lenis?lenis.scroll:scrollY,start=list.findIndex(s=>y<s.offsetTop+s.offsetHeight-innerHeight*.5);if(start<0)start=0;
+  for(let i=start;i<list.length;i++){const s=list[i];pt.textContent=`${pad(i+1)} / ${pad(list.length)} · ${works[i].t}`;
+   await go(s.offsetTop+2,i===start?1.2:1.4);if(tok!==run)return;if(!await wait(2200,tok))return;
+   await go(restY(s),3.2);if(tok!==run)return;if(!await wait(5200,tok))return}
+  await go(document.getElementById('indice').offsetTop,1.6);stop()}
+ function stop(){run++;bar.classList.remove('on');pb.style.transform='scaleX(0)'}
+ document.getElementById('play').onclick=e=>{e.stopPropagation();play()};document.getElementById('stop').onclick=e=>{e.stopPropagation();stop()};
+ // qualsiasi gesto tuo ferma la mostra
+ ['wheel','touchstart','keydown'].forEach(ev=>addEventListener(ev,e=>{if(bar.classList.contains('on')&&!e.target.closest?.('#playing'))stop()},{passive:true}));
+ addEventListener('pointerdown',e=>{if(bar.classList.contains('on')&&!e.target.closest('#playing,#play'))stop()});
+ window.playShow=play;
 })();
 </script>
 </body>
