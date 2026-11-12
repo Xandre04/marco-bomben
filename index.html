@@ -172,7 +172,26 @@ dialog::backdrop{background:var(--dark)}
 .lb-th img{width:60px;height:60px;object-fit:cover;display:block}
 
 .cur{position:fixed;left:0;top:0;z-index:60;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--pink);pointer-events:none;opacity:0;transition:width .25s,height .25s,margin .25s,opacity .2s}
+.cur{display:grid;place-items:center;color:var(--ink);font:800 14px/1 var(--display);font-variation-settings:"wdth" 85}
+.cur span{opacity:0;transition:opacity .15s}
 .cur.on{opacity:1}.cur.big{width:56px;height:56px;margin:-28px 0 0 -28px;mix-blend-mode:difference;background:#fff}
+.cur.say{width:92px;height:92px;margin:-46px 0 0 -46px;mix-blend-mode:normal;background:var(--pink)}.cur.say span{opacity:1}
+/* ingresso */
+html.loading{overflow:hidden}
+#pre{position:fixed;inset:0;z-index:100;background:var(--pink);color:var(--ink);display:grid;grid-template-rows:1fr auto;padding:var(--s4) var(--side);will-change:transform}
+#pre .pc{align-self:end;font:800 clamp(7rem,30vw,26rem)/.78 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+#pre .pl{display:flex;justify-content:space-between;gap:var(--s2);font-weight:700;padding-top:var(--s2);border-top:3px solid var(--ink);margin-top:var(--s3)}
+#pre svg{position:absolute;left:0;top:100%;width:100%;height:clamp(80px,14vh,160px);display:block}
+/* il nero sale come una colata */
+.door{position:relative}
+.melt{position:absolute;left:0;right:0;bottom:100%;height:clamp(90px,16vw,220px);display:block;width:100%;transform-origin:50% 100%;pointer-events:none}
+/* anteprima che segue il mouse nell'indice */
+.peek{position:fixed;left:0;top:0;z-index:40;width:clamp(220px,22vw,340px);aspect-ratio:1;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.6);transition:opacity .25s;display:grid;place-items:center}
+.peek img{max-width:100%;max-height:100%;object-fit:contain;display:block;box-shadow:0 30px 60px -20px rgba(0,0,0,.8);outline:3px solid #fff}
+.peek.on{opacity:1}
+/* kairos parola per parola */
+.story blockquote .w{opacity:.14}
+.reel{cursor:grab}.reel.drag{cursor:grabbing;scroll-snap-type:none}
 
 @media (max-width:900px){
  .intro h2,.intro p{grid-column:1/-1}.cue{grid-column:1/-1;justify-self:start}
@@ -204,7 +223,9 @@ dialog::backdrop{background:var(--dark)}
 </head>
 <body>
 
-<div class="cur" id="cur" aria-hidden="true"></div>
+<div id="pre" aria-hidden="true"><div class="pc"><span id="pcn">00</span></div><div class="pl"><span>Marco Bomben</span><span>Sensazioni senza contorni</span></div>
+<svg viewBox="0 0 1000 100" preserveAspectRatio="none"><path fill="#ff2e88" d="M0,0H1000V18C990,18 985,30 984,48C983,62 975,62 974,48C973,30 960,20 930,20C900,20 890,26 889,70C888,92 876,92 875,70C874,40 860,22 800,22C760,22 752,28 751,40C750,52 740,52 739,40C738,28 700,20 640,20C600,20 590,30 589,84C588,100 574,100 573,84C572,40 560,22 520,22C470,22 462,30 461,52C460,66 448,66 447,52C446,30 420,18 360,18C320,18 312,24 311,36C310,46 300,46 299,36C298,24 270,20 230,20C190,20 182,30 181,76C180,96 166,96 165,76C164,40 150,20 100,20C60,20 52,28 51,44C50,58 38,58 37,44C36,26 20,18 0,18Z"/></svg></div>
+<div class="cur" id="cur" aria-hidden="true"><span></span></div><div class="peek" id="peek" aria-hidden="true"><img alt=""></div>
 <header id="bar"><div class="wrap"><a class="logo" href="#top" aria-label="Marco Bomben, torna su"><span>Marco</span><span>Bomben</span></a><nav aria-label="Sezioni"><a href="#opere">Opere</a><a href="#indice">Indice</a><a href="#marco">Marco</a><a href="#contatti">Contatti</a></nav></div></header>
 
 <main>
@@ -220,7 +241,7 @@ dialog::backdrop{background:var(--dark)}
  </div>
 </section>
 
-<section class="door" id="opere"><div class="wrap">
+<section class="door" id="opere"><svg class="melt" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true"><path fill="#0b0b0b" d="M0,100V70C40,70 60,40 90,40C120,40 125,62 140,62C150,62 152,20 160,20C168,20 170,58 185,58C230,58 240,30 300,30C350,30 360,66 400,66C430,66 435,44 450,44C460,44 462,8 470,8C478,8 480,40 500,40C560,40 570,70 630,70C680,70 690,36 740,36C760,36 762,14 770,14C778,14 780,50 800,50C850,50 870,24 920,24C950,24 960,60 1000,60V100Z"/></svg><div class="wrap">
  <h2 class="big">Prima <em>da vicino.</em> Poi un passo indietro.</h2>
  <p>Ogni tela si apre su un dettaglio fotografato a pochi centimetri: la grana, lo spray, le colature. Scorri e la vedi intera.</p>
 </div></section>
@@ -236,7 +257,7 @@ dialog::backdrop{background:var(--dark)}
  <figure class="portrait"><img src="img/mostra4.jpg" alt="Marco Bomben accanto alle sue tele" loading="lazy"><figcaption class="m">Marco Bomben alla sera dell'apertura</figcaption></figure>
  <div class="story">
   <p class="kicker">Marco Bomben · Pordenone, 1990</p>
-  <blockquote>Un quadro è finito quando diventa <em>autosufficiente</em>. Il momento giusto per fermarsi non si decide: si riconosce.</blockquote>
+  <blockquote><span class="w">Un</span> <span class="w">quadro</span> <span class="w">è</span> <span class="w">finito</span> <span class="w">quando</span> <span class="w">diventa</span> <span class="w"><em>autosufficiente</em></span><span class="w">.</span> <span class="w">Il</span> <span class="w">momento</span> <span class="w">giusto</span> <span class="w">per</span> <span class="w">fermarsi</span> <span class="w">non</span> <span class="w">si</span> <span class="w">decide:</span> <span class="w">si</span> <span class="w">riconosce.</span></blockquote>
   <p>Kairos, in greco, è il momento giusto. Marco coltiva la pittura per anni accanto agli studi di filosofia: laurea all'Università Ca' Foscari di Venezia, poi la magistrale in Scienze Filosofiche.</p>
   <p>Lavora con acrilici su tela e su carta e con tecniche miste. Negli ultimi anni ha aggiunto la vernice spray, che dà alle sue forme una superficie lucida, quasi di vetro.</p>
   <dl class="cv">
@@ -359,7 +380,17 @@ function buildHero(){const keep=mark.style.transform;mark.style.transform='none'
 function drawHero(force){if(!hd)return;const t=force?1:clamp((performance.now()-hstart)/3200);
  const c=hd.ctx;c.clearRect(0,0,hc.width,hc.height);for(const d of hd.drips){const k=ease(clamp((t-d.del*.6)/(1-d.del*.6)));drip(c,d.x,d.y,d.w,d.L*k,d.col)}}
 function loop(){drawHero();if(performance.now()-hstart<3400)requestAnimationFrame(loop)}
-document.fonts.ready.then(()=>{const go=()=>{fitName();paintLetters();
+// ingresso: la percentuale sale mentre si scaricano le tele, poi il rosa si ritira colando
+const entered=new Promise(res=>{const pre=document.getElementById('pre'),pcn=document.getElementById('pcn'),de=document.documentElement;
+ if(reduce||!window.gsap){pre.remove();res();return}
+ de.classList.add('loading');const list=['img/opera6-grande.jpg'];works.forEach((w,i)=>{list.push(`img/opera${i+1}-grande.${w.x}`,`img/opera${i+1}-dettaglio1.jpg`)});
+ let done=0,shown={v:0};const t0=performance.now();
+ const tick=()=>{const target=done/list.length*100;shown.v+=(target-shown.v)*.12;pcn.textContent=String(Math.min(100,Math.round(shown.v))).padStart(2,'0')};gsap.ticker.add(tick);
+ const finish=()=>{if(finish.d)return;finish.d=1;const wait=Math.max(0,1300-(performance.now()-t0));
+  gsap.to(shown,{v:100,duration:.4,delay:wait/1000,onComplete:()=>{gsap.ticker.remove(tick);pcn.textContent='100';
+   gsap.to(pre,{yPercent:-120,duration:1.1,ease:'power4.inOut',delay:.15,onStart:()=>{de.classList.remove('loading');setTimeout(res,350)},onComplete:()=>pre.remove()})}})};
+ list.forEach(src=>{const im=new Image();im.onload=im.onerror=()=>{if(++done>=list.length)finish()};im.src=src});setTimeout(finish,7000)});
+document.fonts.ready.then(()=>entered).then(()=>{const go=()=>{fitName();paintLetters();
   const intro=!reduce&&window.gsap;hstart=performance.now()+(intro?1150:0);buildHero();
   if(intro)gsap.from(h1.querySelectorAll('i'),{yPercent:115,rotate:()=>gsap.utils.random(-28,28),opacity:0,duration:.95,ease:'back.out(1.8)',stagger:.055});
   if(!reduce)requestAnimationFrame(loop)};heroImg.complete?go():(heroImg.onload=go,heroImg.onerror=go)});
@@ -382,8 +413,10 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   const tw=gsap.to(mark,{ease:'none',paused:true,x:()=>target().x,y:()=>target().y,scale:()=>target().scale});
   ScrollTrigger.create({trigger:mark,start:'top top+='+mark.getBoundingClientRect().top,end:()=>'+='+Math.max(200,mark.offsetHeight-90),pin:true,pinSpacing:false,scrub:true,animation:tw,invalidateOnRefresh:true,
    onUpdate:self=>{const done=self.progress>.995;logo.classList.toggle('on',done);mark.style.visibility=done?'hidden':'visible'}});
-  gsap.from('.intro>*',{y:40,opacity:0,duration:.9,ease:'power3.out',stagger:.1,delay:1.4});
-  gsap.from('.sticker',{scale:0,rotate:-180,duration:.8,ease:'back.out(2)',delay:1.8});
+  gsap.from('.intro>*',{y:40,opacity:0,duration:.9,ease:'power3.out',stagger:.1,delay:1.1});
+  gsap.from('.sticker',{scale:0,rotate:-180,duration:.8,ease:'back.out(2)',delay:1.5});
+  gsap.fromTo('.melt',{scaleY:0},{scaleY:1,ease:'none',scrollTrigger:{trigger:'.door',start:'top bottom',end:'top 35%',scrub:true}});
+  gsap.fromTo('.story blockquote .w',{opacity:.14},{opacity:1,stagger:.1,ease:'none',scrollTrigger:{trigger:'.story blockquote',start:'top 75%',end:'bottom 40%',scrub:true}});
   // soglia: le parole si accendono
   gsap.from('.door .big,.door p',{y:60,opacity:0,duration:1,ease:'power3.out',stagger:.15,scrollTrigger:{trigger:'.door',start:'top 75%',once:true}});
   // ogni opera: dal dettaglio alla tela intera
@@ -407,12 +440,28 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   gsap.from('.ig b',{scale:.55,yPercent:30,opacity:0,duration:1.1,ease:'expo.out',scrollTrigger:{trigger:'.ig',start:'top 85%',once:true}});
   gsap.fromTo('.bigname',{yPercent:60,letterSpacing:'.1em'},{yPercent:0,letterSpacing:'-.03em',ease:'none',scrollTrigger:{trigger:'footer',start:'top bottom',end:'bottom bottom',scrub:true}});
   if(matchMedia('(hover:hover) and (pointer:fine)').matches){const cur=document.getElementById('cur'),cx=gsap.quickTo(cur,'x',{duration:.25,ease:'power3'}),cy=gsap.quickTo(cur,'y',{duration:.25,ease:'power3'});
-   addEventListener('pointermove',e=>{cur.classList.add('on');cx(e.clientX);cy(e.clientY);cur.classList.toggle('big',!!e.target.closest('a,button'))},{passive:true});
+   const lab=cur.querySelector('span');
+   addEventListener('pointermove',e=>{cur.classList.add('on');cx(e.clientX);cy(e.clientY);const t=e.target;
+    const say=t.closest('.full button')?'Guarda':t.closest('.reel')?'Trascina':t.closest('.index button')?'Vai':t.closest('.ig,.contact a')?'Scrivi':'';
+    lab.textContent=say;cur.classList.toggle('say',!!say);cur.classList.toggle('big',!say&&!!t.closest('a,button'))},{passive:true});
+   // pulsanti magnetici
+   document.querySelectorAll('.cue,.ig,.contact>a,header nav a').forEach(el=>{const mx=gsap.quickTo(el,'x',{duration:.5,ease:'elastic.out(1,.5)'}),my=gsap.quickTo(el,'y',{duration:.5,ease:'elastic.out(1,.5)'}),k=el.classList.contains('ig')?.08:.3;
+    el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();mx((e.clientX-r.left-r.width/2)*k);my((e.clientY-r.top-r.height/2)*k)});el.addEventListener('pointerleave',()=>{mx(0);my(0)})});
+   // indice: la tela segue il mouse
+   const peek=document.getElementById('peek'),pi=peek.querySelector('img'),px2=gsap.quickTo(peek,'x',{duration:.5,ease:'power3'}),py2=gsap.quickTo(peek,'y',{duration:.5,ease:'power3'}),pr=gsap.quickTo(peek,'rotation',{duration:.6,ease:'power3'});let lx=0;
+   index.querySelectorAll('button').forEach((b,i)=>{b.addEventListener('pointerenter',()=>{pi.src=`img/opera${i+1}-grande.${works[i].x}`;peek.classList.add('on');gsap.to(peek,{scale:1,duration:.4,ease:'back.out(2)'})});
+    b.addEventListener('pointerleave',()=>{peek.classList.remove('on');gsap.to(peek,{scale:.6,duration:.3})})});
+   index.addEventListener('pointermove',e=>{px2(e.clientX);py2(e.clientY-180);pr(gsap.utils.clamp(-12,12,(e.clientX-lx)*.8));lx=e.clientX},{passive:true});
+   // foto della serata: si trascinano col mouse
+   const reel=document.querySelector('.reel');let dx=null,sl=0;
+   reel.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;dx=e.clientX;sl=reel.scrollLeft;reel.classList.add('drag');e.preventDefault()});
+   addEventListener('pointermove',e=>{if(dx!==null)reel.scrollLeft=sl-(e.clientX-dx)});
+   addEventListener('pointerup',()=>{if(dx===null)return;dx=null;reel.classList.remove('drag');const f=reel.children[0].offsetWidth+16;reel.scrollTo({left:Math.round(reel.scrollLeft/f)*f,behavior:'smooth'})});
    document.addEventListener('pointerleave',()=>cur.classList.remove('on'))}
   return()=>document.documentElement.classList.remove('anim')});
  addEventListener('load',()=>ScrollTrigger.refresh());
 }
-document.fonts.ready.then(()=>requestAnimationFrame(stage));
+document.fonts.ready.then(()=>entered).then(()=>requestAnimationFrame(stage));
 
 // visore: tutte le immagini di tutte le tele in fila, zoom, frecce, swipe
 const lb=document.getElementById('lb'),li=document.getElementById('lb-img'),th=document.getElementById('lb-th'),lm=document.getElementById('lb-main');
