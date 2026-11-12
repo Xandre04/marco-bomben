@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Marco Bomben</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#ff2e88">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Marco Bomben · Sensazioni senza contorni">
+<meta property="og:description" content="Sette tele in mostra alla Banca Mediolanum di Azzano Decimo. Guardale prima da vicino, poi per intero.">
+<meta property="og:image" content="https://xandre04.github.io/marco-bomben/img/og.jpg">
+<meta property="og:url" content="https://xandre04.github.io/marco-bomben/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff2e88'/%3E%3Cpath d='M14 46V18h8l10 14 10-14h8v28h-8V31l-10 13-10-13v15z' fill='%230a0a0a'/%3E%3Ccircle cx='46' cy='54' r='3' fill='%230a0a0a'/%3E%3Crect x='44.5' y='44' width='3' height='10' fill='%230a0a0a'/%3E%3C/svg%3E">
 <meta name="description" content="Marco Bomben, pittore. Sensazioni senza contorni: sette tele da guardare prima da vicino, poi per intero.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
@@ -73,7 +81,7 @@ header nav a:hover,header nav a.on{background:var(--pink)}
 .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--dark);color:#fff;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:var(--gap);align-items:center;padding:90px var(--side) 48px}
 .shade{position:absolute;inset:0;z-index:6;background:#000;opacity:0;pointer-events:none}
 .bar{position:fixed;left:0;top:0;z-index:35;height:3px;width:100%;background:var(--pink);transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
-.share{all:unset;cursor:pointer;font-weight:700;font-size:var(--t-s);color:#a3a29d}.share:hover{color:#fff}
+.share{all:unset;cursor:pointer;font-weight:700;font-size:13px;color:#a3a29d;margin-left:.6em;border-bottom:1px solid currentColor}.share:hover{color:#fff}
 .aura{position:absolute;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(closest-side at 62% 50%,var(--glow,#ff2e88),transparent);opacity:.32}
 .full,.info{position:relative;z-index:1}
 .full{grid-column:2;grid-row:1;height:100%;min-height:0;display:flex;align-items:center;justify-content:center}
@@ -346,7 +354,7 @@ const fitAll=()=>[...scenes.children].forEach(fitFull);
 works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='scene';s.id='opera-'+n;s.setAttribute('aria-label',w.t);
  s.innerHTML=`<div class="stage"><div class="aura" aria-hidden="true"></div><div class="shade" aria-hidden="true"></div>
   <div class="full${w.x==="webp"?" round":""}"><button type="button" aria-label="Guarda i dettagli di ${w.t}"><img src="img/opera${n}-grande.${w.x}" alt="${w.alt}" decoding="async"><span class="sheen" aria-hidden="true"></span></button></div>
-  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m} <span class="chip">Disponibile</span></p><p>${w.p}</p><span class="acts"><button class="pill" type="button">Guarda i dettagli ↗</button><a class="ask" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener">Chiedi di quest'opera</a><button class="share" type="button">Condividi</button></span><span class="tiltnote">Inclina il telefono: la luce scorre sulla vernice</span></div>
+  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m} <span class="chip">Disponibile</span> <button class="share" type="button">Condividi ↗</button></p><p>${w.p}</p><span class="acts"><button class="pill" type="button">Guarda i dettagli ↗</button><a class="ask" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener">Chiedi di quest'opera</a></span><span class="tiltnote">Inclina il telefono: la luce scorre sulla vernice</span></div>
   <div class="det" aria-hidden="true"><img src="img/opera${n}-dettaglio1.jpg" alt="" decoding="async"></div>
   <div class="hint" aria-hidden="true"><b>${w.t}, da vicino</b><span>Scorri per fare un passo indietro</span></div>
   <span class="cnt">${pad(n)} / ${pad(works.length)}</span></div>`;
@@ -423,7 +431,7 @@ let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{fitNam
   if(b0===null){b0=e.beta;g0=e.gamma}b0+=(e.beta-b0)*.006;g0+=(e.gamma-g0)*.006; // il centro si riadatta piano a come tieni il telefono
   const nx=gsap.utils.clamp(-1,1,(e.gamma-g0)/22),ny=gsap.utils.clamp(-1,1,(e.beta-b0)/22),i=active();
   if(last>=0&&last!==i){const o=qs[last];o.rx(0);o.ry(0);o.st.classList.remove('lit')}last=i;if(i<0)return;
-  const q=qs[i];q.ry(nx*12);q.rx(-ny*10);q.sh.style.setProperty('--mx',(50+nx*55)+'%');q.sh.style.setProperty('--my',(45+ny*55)+'%');q.st.classList.add('lit')}
+  const q=qs[i];q.ry(nx*6);q.rx(-ny*5);q.sh.style.setProperty('--mx',(50+nx*55)+'%');q.sh.style.setProperty('--my',(45+ny*55)+'%');q.st.classList.add('lit')}
  const start=()=>addEventListener('deviceorientation',ori,{passive:true});
  start();if(!needAsk)return
  // iPhone: serve un tocco per chiedere il permesso
@@ -475,19 +483,16 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
    const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:s,start:'top top',end:'bottom bottom',scrub:.6,snap:lenis?undefined:{snapTo:v=>v<REST/2?0:v<(1+REST)/2?REST:1,directional:false,duration:{min:.3,max:.9},delay:.15,ease:'power2.inOut'}}});
    // tela viva: si inclina col mouse e la luce scorre sulla vernice
    if(matchMedia('(hover:hover) and (pointer:fine)').matches){const btn=s.querySelector('.full button'),sh=s.querySelector('.sheen'),rx=gsap.quickTo(btn,'rotationX',{duration:.7,ease:'power3'}),ry=gsap.quickTo(btn,'rotationY',{duration:.7,ease:'power3'});
-    st.addEventListener('pointermove',e=>{const b=full.getBoundingClientRect(),nx=(e.clientX-b.left)/b.width,ny=(e.clientY-b.top)/b.height;rx((.5-clamp(ny,-.5,1.5))*7);ry((clamp(nx,-.5,1.5)-.5)*9);sh.style.setProperty('--mx',nx*100+'%');sh.style.setProperty('--my',ny*100+'%');st.classList.add('lit')},{passive:true});
+    st.addEventListener('pointermove',e=>{const b=full.getBoundingClientRect(),nx=(e.clientX-b.left)/b.width,ny=(e.clientY-b.top)/b.height;rx((.5-clamp(ny,-.5,1.5))*3.5);ry((clamp(nx,-.5,1.5)-.5)*4.5);sh.style.setProperty('--mx',nx*100+'%');sh.style.setProperty('--my',ny*100+'%');st.classList.add('lit')},{passive:true});
     st.addEventListener('pointerleave',()=>{rx(0);ry(0);st.classList.remove('lit')})}
    tl.fromTo(hint,{opacity:0,y:20},{opacity:1,y:0,duration:.06},0).to(hint,{opacity:0,y:-20,duration:.06},.16)
     .fromTo(det,{scale:1},{scale:.2,duration:.42,ease:'power2.inOut'},.16)
-    .fromTo(di,{scale:1.15},{scale:1,duration:.42},.16)
+    .fromTo(di,{scale:1.06},{scale:1,duration:.42},.16)
     .fromTo(det,{'--f':0},{'--f':1,duration:.2},.38)
-    .fromTo(full,{scale:1.35,opacity:0},{scale:1,opacity:1,duration:.4,ease:'power2.out'},.24)
+    .fromTo(full,{scale:1.08,opacity:0},{scale:1,opacity:1,duration:.4,ease:'power2.out'},.24)
     .fromTo(s.querySelector('.aura'),{opacity:0,scale:.6},{opacity:.32,scale:1,duration:.4},.24)
-    .fromTo(info,{y:50,opacity:0},{y:0,opacity:1,stagger:.03,duration:.14,ease:'power2.out'},.56)
+    .fromTo(info,{y:16,opacity:0},{y:0,opacity:1,stagger:.012,duration:.12,ease:'power2.out'},.56)
     .to({},{duration:.2},.8)});
-  // passaggio fra tele: quella che esce arretra e si spegne, quella nuova sale sopra
-  const ss=[...scenes.children];ss.forEach((s,i)=>{const nxt=ss[i+1]||document.getElementById('indice'),st=s.querySelector('.stage');
-   gsap.timeline({scrollTrigger:{trigger:nxt,start:'top bottom',end:'top top',scrub:true}}).to(st,{scale:.86,borderRadius:28,ease:'none'},0).to(st.querySelector('.shade'),{opacity:.7,ease:'none'},0)});
   // le lettere del nome saltano quando ci passi sopra
   if(matchMedia('(hover:hover)').matches)h1.querySelectorAll('i').forEach(el=>el.addEventListener('pointerenter',()=>{if(gsap.isTweening(el))return;gsap.timeline().to(el,{yPercent:-14,rotate:gsap.utils.random(-12,12),duration:.18,ease:'power2.out'}).to(el,{yPercent:0,rotate:0,duration:.6,ease:'elastic.out(1,.35)'})}));
   gsap.from('.index button',{y:60,opacity:0,rotate:()=>gsap.utils.random(-6,6),duration:.8,ease:'back.out(1.4)',stagger:.06,scrollTrigger:{trigger:'.index',start:'top 85%',once:true}});
