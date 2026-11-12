@@ -39,8 +39,15 @@ header nav a{color:var(--grey)} header nav a:hover{color:var(--ink)}
 .hero h1 .bl{display:inline-block;width:0;height:0}
 .hero h1 span+span{margin-left:.12em}
 @media (prefers-reduced-motion:no-preference){.hero h1{animation:pan 22s ease-in-out infinite alternate}@keyframes pan{to{background-position:70% 40%}}}
+.mark{position:relative;z-index:2;padding-bottom:clamp(120px,24vh,260px);transform-origin:0 0;will-change:transform}
 #heroDrip{position:absolute;left:0;top:0;width:100%;pointer-events:none;z-index:0}
-.hero-foot{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:clamp(140px,22vh,240px);padding-bottom:28px;align-items:end}
+header .logo{display:grid;font-weight:800;font-size:19px;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;padding:7px 8px;
+  background:url(img/opera6-grande.jpg) 30% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
+header .logo span+span{margin-left:.12em}
+header .chip{background:var(--tint,var(--wall));transition:background-color 1.4s ease;padding:0;pointer-events:auto}
+.anim header .logo{visibility:hidden}
+.anim header .logo.on{visibility:visible}
+.hero-foot{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:0;padding-bottom:28px;align-items:end}
 .hero-foot h2{margin:0;font:600 clamp(1.5rem,2.6vw,2.2rem)/1.02 var(--display);font-variation-settings:"opsz" 48,"wdth" 85;letter-spacing:-.02em;text-wrap:balance}
 .hero-foot p{margin:0;max-width:34ch}
 .hero-foot .m{justify-self:end;text-align:right}
@@ -101,7 +108,7 @@ dialog::backdrop{background:var(--wall)}
 @media (max-width:820px){
  header nav a:nth-child(n+3){display:none}
  .hero h1{font-size:29vw}
- .hero-foot{grid-template-columns:1fr;gap:14px;margin-top:150px}
+ .hero-foot{grid-template-columns:1fr;gap:14px}
  .hero-foot .m{justify-self:start;text-align:left}
  .room{grid-template-columns:1fr;gap:20px;padding-block:10vh 12vh}
  .loupe{display:none}
@@ -114,12 +121,12 @@ dialog::backdrop{background:var(--wall)}
 </head>
 <body>
 
-<header class="gut"><a href="#top">Marco Bomben</a><nav aria-label="Sezioni"><a href="#opere">Opere</a><a href="#mostra">Mostra</a><a href="#artista">Artista</a><a href="#contatti">Contatti</a></nav></header>
+<header class="gut"><span class="chip"><a class="logo" href="#top" aria-label="Marco Bomben, torna su"><span>Marco</span><span>Bomben</span></a></span><nav aria-label="Sezioni"><a href="#opere">Opere</a><a href="#mostra">Mostra</a><a href="#artista">Artista</a><a href="#contatti">Contatti</a></nav></header>
 
 <main>
 <section class="hero gut" id="top">
-  <canvas id="heroDrip" aria-hidden="true"></canvas>
-  <h1 id="name"><span>Marco</span><span>Bomben</span></h1>
+  <div class="mark" id="mark"><canvas id="heroDrip" aria-hidden="true"></canvas>
+  <h1 id="name"><span>Marco</span><span>Bomben</span></h1></div>
   <div class="hero-foot">
     <h2>Sensazioni senza contorni</h2>
     <p>Sette tele in mostra alla Banca Mediolanum di Azzano Decimo. Passa il cursore su una tela per guardarla da vicino, come davanti al quadro vero.</p>
@@ -179,6 +186,10 @@ dialog::backdrop{background:var(--wall)}
   </div>
 </dialog>
 
+<script src="js/gsap.min.js"></script>
+<script src="js/ScrollTrigger.min.js"></script>
+<script src="js/SplitText.min.js"></script>
+<script src="js/lenis.min.js"></script>
 <script>
 const works=[
  {t:"Opera I",m:"Tecnica mista su tela",d:3,x:"jpg",p:"Forme nere che si annodano su un fondo azzurro, attraversate da colature rosa e graffi.",alt:"Tela astratta con forme nere su fondo azzurro, rosa, lilla e giallo"},
@@ -231,10 +242,11 @@ const h1=document.getElementById('name'),hc=document.getElementById('heroDrip'),
 const heroImg=new Image();heroImg.src='img/opera6-grande.jpg';
 // ogni lettera in un suo elemento: le gocce partono dal fondo reale di ogni lettera
 h1.querySelectorAll('span').forEach(sp=>{const t=sp.textContent;sp.setAttribute('aria-label',t);sp.innerHTML=[...t].map(c=>`<i aria-hidden="true">${c}</i>`).join('')+'<b class="bl" aria-hidden="true"></b>'});
-function buildHero(){const cs=getComputedStyle(h1),hr=hero.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),fs=parseFloat(cs.fontSize);
+const mark=document.getElementById('mark');
+function buildHero(){const keep=mark.style.transform;mark.style.transform='none';const cs=getComputedStyle(h1),hr=mark.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),fs=parseFloat(cs.fontSize);
  hc.width=hr.width*dpr;hc.height=hr.height*dpr;hc.style.height=hr.height+'px';const ctx=hc.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
  const pal=heroImg.complete&&heroImg.naturalWidth?palette(heroImg,1):null;seed=11;const drips=[];
- const foot=hero.querySelector('.hero-foot').getBoundingClientRect().top-hr.top-18,wk=Math.min(1,innerWidth/900+.35);
+ const foot=hr.height-14,wk=Math.min(1,innerWidth/900+.35);
  h1.querySelectorAll('span').forEach((sp,li)=>{const baseY=sp.querySelector('.bl').getBoundingClientRect().bottom-hr.top;
   sp.querySelectorAll('i').forEach(el=>{const L=el.getBoundingClientRect(),ch=el.textContent.toUpperCase(),W=Math.max(4,Math.ceil(L.width)),H=Math.ceil(fs*1.3),cb=Math.round(fs);
    const off=document.createElement('canvas');off.width=W;off.height=H;const x=off.getContext('2d',{willReadFrequently:true});
@@ -246,12 +258,39 @@ function buildHero(){const cs=getComputedStyle(h1),hr=hero.getBoundingClientRect
    for(let k=0;k<nd;k++){const fx=feet[Math.floor(rnd()*feet.length)],y=baseY-1,room=Math.max(0,foot-y);if(room<10)continue;const long=rnd()<.28;
     let w=(3+rnd()*rnd()*16)*wk;w=Math.min(w,Math.max(3,feet.length*.6));
     drips.push({x:L.left-hr.left+fx,y,w,L:(long?.6+rnd()*.4:.08+rnd()*.3)*room,del:rnd()*.5,col:pal?css(pal((L.left+fx)/innerWidth,.2+rnd()*.6)):FALL[li%FALL.length]})}})});
- hd={ctx,drips};hstart=performance.now();if(reduce)drawHero(1)}
-function drawHero(force){if(!hd)return;const intro=force||clamp((performance.now()-hstart)/2600),sc=clamp(scrollY/(innerHeight*.9)),t=clamp(intro*.6+sc*.4+(force?1:0));
+ mark.style.transform=keep;hd={ctx,drips};if(!hstart)hstart=performance.now();if(reduce)drawHero(1)}
+function drawHero(force){if(!hd)return;const intro=force||clamp((performance.now()-hstart)/3200),t=clamp(intro+(force?1:0));
  const c=hd.ctx;c.clearRect(0,0,hc.width,hc.height);for(const d of hd.drips){const k=ease(clamp((t-d.del*.6)/(1-d.del*.6)));drip(c,d.x,d.y,d.w,d.L*k,d.col)}}
 function loop(){drawHero();requestAnimationFrame(loop)}
 document.fonts.ready.then(()=>{const go=()=>{buildHero();if(!reduce)requestAnimationFrame(loop)};heroImg.complete?go():(heroImg.onload=go,heroImg.onerror=go)});
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{buildHero()},150)});
+
+// regia dello scroll: il nome si ritira nel logo, le sezioni entrano secondo il loro contenuto
+function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlugin(ScrollTrigger);if(window.SplitText)gsap.registerPlugin(SplitText);
+ const mm=gsap.matchMedia();
+ mm.add('(prefers-reduced-motion: no-preference)',()=>{
+  document.documentElement.classList.add('anim');
+  let lenis=null;if(window.Lenis&&matchMedia('(pointer:fine)').matches){lenis=new Lenis({lerp:.11});lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0)}
+  const logo=document.querySelector('header .logo');
+  // il nome dipinto, con le sue colature, si rimpicciolisce fino a diventare il logo in alto
+  const target=()=>{const keep=mark.style.transform;mark.style.transform='none';const m=mark.getBoundingClientRect(),h=h1.getBoundingClientRect(),l=logo.getBoundingClientRect(),ps=getComputedStyle(logo),pt=parseFloat(ps.paddingTop),pl=parseFloat(ps.paddingLeft);
+   mark.style.transform=keep;const sc=(l.height-2*pt)/h.height;return{x:l.left+pl-m.left-(h.left-m.left)*sc,y:l.top+pt-m.top-(h.top-m.top)*sc,scale:sc}};
+  const tw=gsap.to(mark,{ease:'none',paused:true,x:()=>target().x,y:()=>target().y,scale:()=>target().scale});
+  const st=ScrollTrigger.create({trigger:mark,start:'top top+='+mark.getBoundingClientRect().top,end:()=>'+='+Math.max(200,mark.offsetHeight-90),pin:true,pinSpacing:false,scrub:true,animation:tw,invalidateOnRefresh:true,
+   onUpdate:self=>{const done=self.progress>.995;logo.classList.toggle('on',done);mark.style.visibility=done?'hidden':'visible'}});
+  // opere: la tela si scopre dal basso e si assesta, poi la didascalia
+  document.querySelectorAll('.room').forEach(r=>{const img=r.querySelector('.work img'),cap=r.querySelector('.cap');
+   const tl=gsap.timeline({scrollTrigger:{trigger:r,start:'top 72%',once:true}});
+   tl.fromTo(img,{clipPath:'inset(100% 0% 0% 0%)',scale:1.08},{clipPath:'inset(0% 0% 0% 0%)',scale:1,duration:.85,ease:'power3.out',clearProps:'clipPath'})
+     .from(cap.children,{y:22,opacity:0,duration:.6,ease:'power2.out',stagger:.06},'-=.45')});
+  // titoli grandi: le righe salgono dalla linea di base
+  if(window.SplitText)document.querySelectorAll('.big').forEach(h=>{const sp=SplitText.create(h,{type:'lines',mask:'lines'});
+   gsap.from(sp.lines,{yPercent:105,duration:.8,ease:'power3.out',stagger:.07,scrollTrigger:{trigger:h,start:'top 82%',once:true}})});
+  // foto della serata: si scoprono una dopo l'altra, come stampe appese
+  gsap.from('.strip figure',{clipPath:'inset(0% 0% 100% 0%)',y:30,duration:.8,ease:'power3.out',stagger:.08,scrollTrigger:{trigger:'.strip',start:'top 80%',once:true}});
+  return()=>{document.documentElement.classList.remove('anim');if(lenis){lenis.destroy()}}});
+}
+document.fonts.ready.then(()=>requestAnimationFrame(stage));
 
 // lightbox
 const lb=document.getElementById('lb'),li=document.getElementById('lb-img'),th=document.getElementById('lb-th');
