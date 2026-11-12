@@ -72,7 +72,7 @@ header .logo span+span{margin-left:.12em}
 .works{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--gap);row-gap:var(--s5)}
 .room{min-width:0;display:grid;gap:var(--s2);align-content:start}
 .room.wide{grid-column:1/-1}
-.work{background:var(--panel);aspect-ratio:5/4;display:flex;align-items:center;justify-content:center;padding:clamp(28px,4.5vw,64px)}
+.work{background:var(--panel);transition:background-color .6s ease;aspect-ratio:5/4;display:flex;align-items:center;justify-content:center;padding:clamp(28px,4.5vw,64px)}
 .room.wide .work{aspect-ratio:auto;padding-block:clamp(32px,6vw,88px)}
 .work button{all:unset;position:relative;display:block;cursor:zoom-in;height:100%;max-width:100%}
 .work button img{height:100%;width:auto;max-width:100%;object-fit:contain}
@@ -90,22 +90,32 @@ header .logo span+span{margin-left:.12em}
 .work.looking button{cursor:none}
 
 /* foto */
-.photos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap)}
+.photos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:auto auto;gap:var(--gap)}
+.photos figure{align-content:start}
+.photos figure:first-child{grid-column:1/3;grid-row:1/3;position:relative;min-height:320px}
+.photos figure:first-child img{position:absolute;inset:0 0 28px 0;width:100%;height:calc(100% - 28px);aspect-ratio:auto}
+.photos figure:first-child figcaption{position:absolute;left:0;bottom:0}
 .photos figure{margin:0;display:grid;gap:var(--s1)}
-.photos img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}
+.photos img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
 
 /* artista */
 .kairos{row-gap:var(--s4);align-items:start}
-.kairos blockquote{grid-column:1/7;margin:0;font:600 var(--t-xl)/1.15 var(--display);font-variation-settings:"opsz" 72,"wdth" 85;letter-spacing:-.02em;text-wrap:balance}
-.kairos .txt{grid-column:8/13}
+.kairos blockquote{grid-column:1/12;margin:0 0 var(--s4);font:700 clamp(2rem,4.6vw,4.25rem)/1.02 var(--display);font-variation-settings:"opsz" 96,"wdth" 80;letter-spacing:-.025em;text-wrap:balance}
+.kairos blockquote em{font-style:normal;color:#d81b72}
+.kairos .txt{grid-column:1/13;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);align-items:start}
+.kairos .txt>.bio{grid-column:1/6}
+.kairos .txt>.facts{grid-column:7/13}
 .kairos .txt p{margin:0 0 var(--s2)}
-dl.cv{margin:var(--s4) 0 var(--s3);display:grid}
+dl.cv{margin:0 0 var(--s3);display:grid}
 dl.cv div{display:grid;grid-template-columns:5rem 1fr;gap:var(--s2);padding-block:12px;border-top:1px solid var(--rule)}
 dl.cv div:last-child{border-bottom:1px solid var(--rule)}
 dl.cv dt{font-weight:700;font-variant-numeric:tabular-nums}
 dl.cv dd{margin:0}
 
 /* contatti */
+.ig{display:grid;gap:var(--s1);text-decoration:none;margin-bottom:var(--s5)}
+.ig b{font:800 clamp(3.5rem,13vw,12rem)/.85 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.03em;background:url(img/opera6-grande.jpg) 60% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent;transition:background-position .8s ease}
+.ig:hover b{background-position:20% 50%}
 .contact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
 .contact>*{display:grid;gap:var(--s1);padding-top:var(--s2);border-top:2px solid var(--ink);text-decoration:none}
 .contact b{font:700 var(--t-xl)/1.05 var(--display);font-variation-settings:"opsz" 48,"wdth" 85;letter-spacing:-.02em;overflow-wrap:anywhere}
@@ -128,6 +138,7 @@ dialog::backdrop{background:var(--wall)}
 
 @media (max-width:900px){
  .intro h2,.intro p,.intro .m,.head h2,.head p,.kairos blockquote,.kairos .txt{grid-column:1/-1}
+ .kairos .txt>.bio{grid-column:1/7}.kairos .txt>.facts{grid-column:7/13}
  .photos{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:640px){
@@ -141,6 +152,12 @@ dialog::backdrop{background:var(--wall)}
  .cap .link{grid-column:1;grid-row:auto;justify-self:start}
  .loupe{display:none}
  .contact{grid-template-columns:1fr}
+ .kairos .txt>.bio,.kairos .txt>.facts{grid-column:1/-1}
+ .photos{grid-template-columns:1fr 1fr}
+ .photos figure:first-child{grid-column:1/-1;grid-row:auto}
+ .photos figure:first-child{position:static;min-height:0}
+ .photos figure:first-child img{position:static;height:auto;aspect-ratio:4/3}
+ .photos figure:first-child figcaption{position:static}
 }
 </style>
 </head>
@@ -169,6 +186,7 @@ dialog::backdrop{background:var(--wall)}
     <figure><img src="img/live1.jpg" alt="Visitatori all'inaugurazione davanti alle tele" loading="lazy"><figcaption class="m">Il pubblico</figcaption></figure>
     <figure><img src="img/mostra1.jpg" alt="Le tele lungo il corridoio della sede Banca Mediolanum" loading="lazy"><figcaption class="m">Il corridoio</figcaption></figure>
     <figure><img src="img/live2.jpg" alt="Marco Bomben racconta un'opera ai visitatori" loading="lazy"><figcaption class="m">Davanti alle tele</figcaption></figure>
+    <figure><img src="img/live4.jpg" alt="Sala con quattro tele e poltrone rosse" loading="lazy"><figcaption class="m">La sala</figcaption></figure>
     <figure><img src="img/mostra4.jpg" alt="Marco Bomben accanto alle sue opere" loading="lazy"><figcaption class="m">L'artista</figcaption></figure>
   </div>
 </div></section>
@@ -176,26 +194,27 @@ dialog::backdrop{background:var(--wall)}
 <section class="sec" id="artista"><div class="wrap">
   <div class="head grid"><h2>Kairos</h2><p>In greco, il momento giusto. Per Marco è quando un quadro smette di avere bisogno di lui.</p></div>
   <div class="kairos grid">
-    <blockquote>Un quadro è finito quando diventa autosufficiente. Il momento giusto per fermarsi non si decide: si riconosce.</blockquote>
-    <div class="txt">
+    <blockquote>Un quadro è finito quando diventa <em>autosufficiente</em>. Il momento giusto per fermarsi non si decide: si riconosce.</blockquote>
+    <div class="txt"><div class="bio">
       <p>Marco Bomben nasce a Pordenone nel 1990. Coltiva la pittura per anni accanto agli studi di filosofia: laurea all'Università Ca' Foscari di Venezia, poi la magistrale in Scienze Filosofiche.</p>
-      <p>Lavora con acrilici su tela e su carta e con tecniche miste. Negli ultimi anni ha aggiunto la vernice spray, che dà alle sue forme una superficie lucida, quasi di vetro.</p>
-      <dl class="cv">
+      <p>Lavora con acrilici su tela e su carta e con tecniche miste. Negli ultimi anni ha aggiunto la vernice spray, che dà alle sue forme una superficie lucida, quasi di vetro.</p></div>
+      <div class="facts"><dl class="cv">
         <div><dt>1990</dt><dd>Nasce a Pordenone</dd></div>
         <div><dt>400+</dt><dd>Opere realizzate</dd></div>
         <div><dt>2026</dt><dd>Sensazioni senza contorni, Banca Mediolanum, Azzano Decimo</dd></div>
       </dl>
-      <a class="link" href="https://www.nordestnews.com/arte/dirompenti-cromatismi-improvvisi-marco-bomben/" target="_blank" rel="noopener">Leggi l'articolo su Nordest News</a>
+      <a class="link" href="https://www.nordestnews.com/arte/dirompenti-cromatismi-improvvisi-marco-bomben/" target="_blank" rel="noopener">Leggi l'articolo su Nordest News</a></div>
     </div>
   </div>
 </div></section>
 
 <section class="sec" id="contatti"><div class="wrap">
   <div class="head grid"><h2>Porta a casa un'opera</h2><p>Le tele in mostra sono disponibili. Scrivi a Marco per prezzi e visite in studio.</p></div>
+  <a class="ig" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Scrivigli su Instagram</span><b>@mbomben</b></a>
   <div class="contact">
-    <a href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Instagram</span><b>@mbomben</b></a>
     <a href="https://www.gigarte.com/marco-bomben" target="_blank" rel="noopener"><span class="m">Catalogo</span><b>Gigarte</b></a>
     <div><span class="m">Email</span><b>da inserire</b></div>
+    <div><span class="m">Mostra</span><b>Azzano Decimo</b></div>
   </div>
 </div></section>
 </main>
@@ -243,13 +262,14 @@ const css=c=>Array.isArray(c)?`rgb(${c[0]},${c[1]},${c[2]})`:c;
 
 // tele: lente d'ingrandimento sull'immagine grande, parete che prende il colore dell'opera
 const rooms=document.getElementById('rooms'),pad=n=>String(n).padStart(2,'0'),fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
-const tintOf=img=>{const p=palette(img,1);if(!p)return null;seed=5;let r=0,g=0,b=0;for(let k=0;k<14;k++){const c=p(rnd(),rnd());r+=c[0];g+=c[1];b+=c[2]}r/=14;g/=14;b/=14;const m=.9;return `rgb(${Math.round(255*m+r*(1-m))},${Math.round(255*m+g*(1-m))},${Math.round(255*m+b*(1-m))})`};
+const tintOf=img=>{const p=palette(img,1);if(!p)return null;seed=5;let r=0,g=0,b=0;for(let k=0;k<14;k++){const c=p(rnd(),rnd());r+=c[0];g+=c[1];b+=c[2]}r/=14;g/=14;b/=14;const m=.84;return `rgb(${Math.round(255*m+r*(1-m))},${Math.round(255*m+g*(1-m))},${Math.round(255*m+b*(1-m))})`};
 works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='room'+(w.wide?' wide':'');s.id='opera-'+n;s.setAttribute('aria-label',w.t);
  const big=`img/opera${n}-grande.${w.x}`;
  s.innerHTML=`<div class="work${w.round?' round':''}"><button type="button" aria-label="Guarda da vicino ${w.t}"><img src="img/opera${n}.${w.x}" alt="${w.alt}" decoding="async"><span class="loupe" aria-hidden="true"></span></button></div>
  <div class="cap"><h3>${w.t}</h3><span class="m">${w.m}</span><p>${w.p}</p><button class="link" type="button">Guarda da vicino</button></div>`;
  s.querySelectorAll('button').forEach(b=>b.onclick=()=>openLb(w,n));rooms.appendChild(s);
  const img=s.querySelector('img'),wk=s.querySelector('.work'),lp=s.querySelector('.loupe');
+ const paint=()=>{const t=tintOf(img);if(t)wk.style.background=t};img.complete?paint():img.addEventListener('load',paint);
  if(fine&&!reduce){let loaded=false;const Z=2.6;
   img.addEventListener('pointerenter',()=>{if(!loaded){loaded=true;lp.style.backgroundImage=`url(${big})`}wk.classList.add('looking')});
   img.addEventListener('pointerleave',()=>wk.classList.remove('looking'));
