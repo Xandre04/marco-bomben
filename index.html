@@ -145,6 +145,12 @@ html.gyro-on .tiltnote{display:block}
 .wtop h2 span{color:var(--pink)}
 .wtop p{margin:4px 0 0;color:#a3a29d;font-size:var(--t-s)}
 .wtop .pill{color:#fff;background:#0b0b0b}
+#wallin{position:absolute;inset:0;transform-origin:50% 50%}
+.wctl{position:fixed;z-index:91;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:8px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:5px;box-shadow:4px 4px 0 var(--pink)}
+.wctl button{all:unset;cursor:pointer;font:800 14px/1 var(--display);padding:8px 14px;border-radius:999px;color:var(--ink)}
+.wctl button[aria-pressed="true"]{background:var(--pink)}
+.wctl .z{width:34px;height:34px;padding:0;display:grid;place-items:center;font-size:20px;background:#f1f1ef}
+.wctl i{width:2px;height:22px;background:#ddd}
 .openwall{margin-top:var(--s4)}
 /* indice */
 #indice{background:var(--dark);color:#fff;padding-block:var(--s6)}
@@ -288,7 +294,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 <div id="scenes"></div>
 <div class="bar" id="bar2" aria-hidden="true"></div>
 <button class="wallbtn" id="wallbtn" type="button"><i aria-hidden="true"><b></b><b></b><b></b><b></b></i>Tutte le opere</button>
-<div id="wall" role="dialog" aria-modal="true" aria-label="Tutte le opere" data-lenis-prevent><div class="wtop"><div><h2>La parete <span>✺</span></h2><p>Trascina in ogni direzione. Tocca per aprire.</p></div><button class="pill" type="button" id="wallx">Chiudi ✕</button></div><div id="wallin"></div></div>
+<div id="wall" role="dialog" aria-modal="true" aria-label="Tutte le opere" data-lenis-prevent><div class="wtop"><div><h2>La parete <span>✺</span></h2><p>Trascina in ogni direzione. Tocca per aprire.</p></div><button class="pill" type="button" id="wallx">Chiudi ✕</button></div><div id="wallin"></div><div class="wctl"><span class="wf" style="display:flex;gap:4px"><button type="button" data-f="all" aria-pressed="true">Tutto</button><button type="button" data-f="tele" aria-pressed="false">Tele</button><button type="button" data-f="det" aria-pressed="false">Dettagli</button></span><i></i><button class="z" type="button" id="zo" aria-label="Rimpicciolisci">−</button><button class="z" type="button" id="zi" aria-label="Ingrandisci">+</button></div></div>
 <nav class="rail" id="rail" aria-label="Vai a una tela"></nav>
 <button class="gyro" id="gyro" type="button">✦ Muovi il telefono: tocca per attivare</button>
 
@@ -322,7 +328,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 
 <section id="contatti"><div class="wrap">
  <h2 class="big">Porta a casa un'opera</h2>
- <a class="ig" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Le tele in mostra sono disponibili. Scrivi a Marco su Instagram</span><b>@mbomben</b></a>
+ <a class="ig" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Le tele in mostra sono disponibili. Scrivi a Marco su Instagram</span><b class="wave" aria-label="@mbomben">@mbomben</b></a>
  <div class="contact">
   <a href="https://www.gigarte.com/marco-bomben" target="_blank" rel="noopener"><span class="m">Catalogo</span><b>Gigarte</b></a>
   <div><span class="m">Email</span><b>da inserire</b></div>
@@ -487,6 +493,15 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
  // barra di avanzamento in alto
  gsap.to('#bar2',{scaleX:1,ease:'none',scrollTrigger:{start:0,end:'max',scrub:.3}});
  document.getElementById('up').onclick=()=>lenis?lenis.scrollTo(0,{duration:2.2}):scrollTo({top:0,behavior:'smooth'});
+ // @mbomben: le lettere fanno l'onda
+ const wv=document.querySelector('.wave');if(wv){wv.innerHTML=[...wv.textContent].map(c=>`<span aria-hidden="true" style="display:inline-block">${c}</span>`).join('');const ls=wv.children;
+  const wave=()=>{if(!reduce&&!gsap.isTweening(ls[0]))gsap.timeline().to(ls,{yPercent:-22,rotate:-6,duration:.22,ease:'power2.out',stagger:.04}).to(ls,{yPercent:0,rotate:0,duration:.7,ease:'elastic.out(1,.35)',stagger:.04},.2)};
+  wv.closest('a').addEventListener('pointerenter',wave);ScrollTrigger.create({trigger:wv,start:'top 80%',onEnter:wave})}
+ // ritratto: si inclina col mouse
+ const pt=document.querySelector('.portrait img');if(pt&&!reduce&&matchMedia('(hover:hover) and (pointer:fine)').matches){gsap.set(pt,{transformPerspective:1000});
+  const prx=gsap.quickTo(pt,'rotationX',{duration:.6,ease:'power3'}),pry=gsap.quickTo(pt,'rotationY',{duration:.6,ease:'power3'});
+  document.getElementById('marco').addEventListener('pointermove',e=>{const r=pt.getBoundingClientRect();pry(gsap.utils.clamp(-14,14,(e.clientX-r.left-r.width/2)/r.width*20));prx(gsap.utils.clamp(-12,12,-(e.clientY-r.top-r.height/2)/r.height*16))});
+  document.getElementById('marco').addEventListener('pointerleave',()=>{prx(0);pry(0)})}
  const mm=gsap.matchMedia();
  mm.add('(prefers-reduced-motion: no-preference)',()=>{
   document.documentElement.classList.add('anim');
@@ -575,9 +590,13 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
 // la parete: tutte le tele e i dettagli su un muro che si trascina all'infinito
 (function(){const wall=document.getElementById('wall'),inn=document.getElementById('wallin'),btn=document.getElementById('wallbtn');
  // ordine misto: ogni tela seguita dai suoi dettagli, poi rimescolato a blocchi
- const items=seq.map((o,j)=>({...o,j}));seed=3;for(let i=items.length-1;i>0;i--){const k=Math.floor(rnd()*(i+1));[items[i],items[k]]=[items[k],items[i]]}
+ const all=seq.map((o,j)=>({...o,j}));seed=3;for(let i=all.length-1;i>0;i--){const k=Math.floor(rnd()*(i+1));[all[i],all[k]]=[all[k],all[i]]}
+ let items=all,zoom=1;
+ const setFilter=f=>{items=f==='tele'?all.filter(o=>!o.k):f==='det'?all.filter(o=>o.k):all;document.querySelectorAll('.wf button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===f));tiles=[];layout();pop()};
+ const setZoom=z=>{const oz=zoom;zoom=gsap.utils.clamp(.55,1.9,z);if(zoom===oz)return;const cx=innerWidth/2,cy=innerHeight/2,k=zoom/oz;ox=cx-(cx-ox)*k;oy=cy-(cy-oy)*k;tiles=[];layout()};
+ const pop=()=>{if(window.gsap&&!reduce)gsap.fromTo(tiles.map(t=>t.el.firstElementChild),{scale:0,rotate:()=>gsap.utils.random(-25,25)},{scale:1,rotate:0,duration:.6,ease:'back.out(1.6)',stagger:{each:.01,from:'random'}})};
  let tiles=[],S=0,C=0,R=0,W=0,H=0,ox=0,oy=0,vx=0,vy=0,drag=null,moved=0,raf=0;
- function layout(){S=innerWidth<700?Math.round(innerWidth/2.3):Math.round(Math.max(240,innerWidth/5.2));C=Math.max(Math.ceil(innerWidth/S)+2,Math.ceil(Math.sqrt(items.length*1.4)));R=Math.ceil(items.length/C);
+ function layout(){S=Math.round((innerWidth<700?innerWidth/2.3:Math.max(240,innerWidth/5.2))*zoom);C=Math.max(Math.ceil(innerWidth/S)+2,Math.ceil(Math.sqrt(items.length*1.4)));R=Math.ceil(items.length/C);
   while(R*S<innerHeight+2*S){R++}W=C*S;H=R*S;
   if(!tiles.length){inn.innerHTML='';const n=C*R;for(let k=0;k<n;k++){const it=items[k%items.length],t=document.createElement('div');t.className='tile'+(it.k?'':' whole');
    const g=document.getElementById('opera-'+it.n).style.getPropertyValue('--glow');if(g)t.style.setProperty('--glow',g);
@@ -587,19 +606,22 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
  const wrap=(v,m)=>((v%m)+m)%m;
  function frame(){if(!drag){ox+=vx;oy+=vy;vx*=.93;vy*=.93}
   for(const t of tiles){const x=wrap(t.c*S+ox,W)-S,y=wrap(t.r*S+t.sh+oy,H)-S;t.el.style.transform=`translate3d(${x}px,${y}px,0)`}
+  // più corri, più la parete si piega e si allontana, come gomma
+  const sp=Math.hypot(vx,vy);inn.style.transform=`scale(${1-Math.min(.14,sp*.004)}) skew(${gsap.utils.clamp(-7,7,-vx*.12)}deg,${gsap.utils.clamp(-5,5,-vy*.08)}deg)`;
   raf=requestAnimationFrame(frame)}
  function open(){layout();wall.classList.add('open');lenis&&lenis.stop();document.documentElement.style.overflow='hidden';ox=-S*.5;oy=-S*.3;vx=-2.2;vy=-.6;cancelAnimationFrame(raf);frame();
-  if(window.gsap&&!reduce)gsap.fromTo(tiles.map(t=>t.el.firstElementChild),{scale:0,rotate:()=>gsap.utils.random(-25,25)},{scale:1,rotate:0,duration:.7,ease:'back.out(1.6)',stagger:{each:.012,from:'random'}});
+  pop();
   document.getElementById('wallx').focus()}
  function close(){wall.classList.remove('open');cancelAnimationFrame(raf);document.documentElement.style.overflow='';lenis&&lenis.start()}
  window.openWall=open;
  btn.onclick=open;document.getElementById('openwall2').onclick=open;document.getElementById('navwall').onclick=e=>{e.preventDefault();open()};
  document.getElementById('wallx').onclick=close;
  addEventListener('keydown',e=>{if(!wall.classList.contains('open')||lb.open)return;if(e.key==='Escape')close();const k={ArrowLeft:[8,0],ArrowRight:[-8,0],ArrowUp:[0,8],ArrowDown:[0,-8]}[e.key];if(k){vx+=k[0];vy+=k[1]}});
- wall.addEventListener('pointerdown',e=>{if(e.target.closest('.wtop'))return;drag={x:e.clientX,y:e.clientY,t:performance.now()};moved=0;vx=vy=0;wall.classList.add('drag')});
+ document.querySelectorAll('.wf button').forEach(b=>b.onclick=()=>setFilter(b.dataset.f));document.getElementById('zi').onclick=()=>setZoom(zoom*1.25);document.getElementById('zo').onclick=()=>setZoom(zoom/1.25);
+ wall.addEventListener('pointerdown',e=>{if(e.target.closest('.wtop,.wctl'))return;drag={x:e.clientX,y:e.clientY,t:performance.now()};moved=0;vx=vy=0;wall.classList.add('drag')});
  addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;moved+=Math.abs(dx)+Math.abs(dy);ox+=dx;oy+=dy;vx=dx;vy=dy;drag.x=e.clientX;drag.y=e.clientY});
  addEventListener('pointerup',()=>{if(!drag)return;drag=null;wall.classList.remove('drag')});
- wall.addEventListener('wheel',e=>{e.preventDefault();vx-=e.deltaX*.12+(e.shiftKey?e.deltaY*.12:0);vy-=e.shiftKey?0:e.deltaY*.12},{passive:false});
+ wall.addEventListener('wheel',e=>{e.preventDefault();if(e.ctrlKey){setZoom(zoom*(e.deltaY<0?1.08:1/1.08));return}vx-=e.deltaX*.12+(e.shiftKey?e.deltaY*.12:0);vy-=e.shiftKey?0:e.deltaY*.12},{passive:false});
  addEventListener('resize',()=>{if(wall.classList.contains('open')){tiles=[];layout()}});
  // il bottone compare dopo l'apertura e resta sempre a portata
  const tog=()=>btn.classList.toggle('show',scrollY>innerHeight*.6);addEventListener('scroll',tog,{passive:true});tog();
