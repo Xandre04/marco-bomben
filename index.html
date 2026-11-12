@@ -18,15 +18,16 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-html,body{margin:0;background:var(--tint,var(--wall));transition:background-color 1.4s ease;color:var(--ink);font:400 1rem/1.6 var(--display);font-variation-settings:"opsz" 14;overflow-x:clip;-webkit-font-smoothing:antialiased}
+html,body{margin:0;background:var(--wall);color:var(--ink);font:400 1rem/1.6 var(--display);font-variation-settings:"opsz" 14;overflow-x:clip;-webkit-font-smoothing:antialiased}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .m{font:400 .86rem/1.45 var(--display);color:var(--grey)}
 
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--wall)}
+.wall{position:fixed;inset:0;z-index:-1;background:var(--tint,var(--wall));transition:background-color 1.2s ease;pointer-events:none}
 header{position:fixed;z-index:9;top:env(safe-area-inset-top,0px);left:0;right:0;display:flex;justify-content:space-between;gap:16px;padding-block:14px;font:500 .95rem/1 var(--display);pointer-events:none}
-header a{pointer-events:auto;text-decoration:none;background:var(--tint,var(--wall));transition:background-color 1.4s ease;padding:6px 8px}
+header a{pointer-events:auto;text-decoration:none;padding:6px 8px}
 header nav{display:flex;gap:4px}
 header nav a{color:var(--grey)} header nav a:hover{color:var(--ink)}
 
@@ -38,13 +39,12 @@ header nav a{color:var(--grey)} header nav a:hover{color:var(--ink)}
 .hero h1 i{font-style:normal}
 .hero h1 .bl{display:inline-block;width:0;height:0}
 .hero h1 span+span{margin-left:.12em}
-@media (prefers-reduced-motion:no-preference){.hero h1{animation:pan 22s ease-in-out infinite alternate}@keyframes pan{to{background-position:70% 40%}}}
-.mark{position:relative;z-index:2;padding-bottom:clamp(120px,24vh,260px);transform-origin:0 0;will-change:transform}
+.mark{position:relative;z-index:2;padding-bottom:clamp(120px,24vh,260px);transform-origin:0 0;will-change:transform;contain:layout paint}
 #heroDrip{position:absolute;left:0;top:0;width:100%;pointer-events:none;z-index:0}
 header .logo{display:grid;font-weight:800;font-size:19px;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;padding:7px 8px;
   background:url(img/opera6-grande.jpg) 30% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
 header .logo span+span{margin-left:.12em}
-header .chip{background:var(--tint,var(--wall));transition:background-color 1.4s ease;padding:0;pointer-events:auto}
+header .chip{padding:0;pointer-events:auto}
 .anim header .logo{visibility:hidden}
 .anim header .logo.on{visibility:visible}
 .hero-foot{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:0;padding-bottom:28px;align-items:end}
@@ -121,6 +121,7 @@ dialog::backdrop{background:var(--wall)}
 </head>
 <body>
 
+<div class="wall" aria-hidden="true"></div>
 <header class="gut"><span class="chip"><a class="logo" href="#top" aria-label="Marco Bomben, torna su"><span>Marco</span><span>Bomben</span></a></span><nav aria-label="Sezioni"><a href="#opere">Opere</a><a href="#mostra">Mostra</a><a href="#artista">Artista</a><a href="#contatti">Contatti</a></nav></header>
 
 <main>
@@ -189,7 +190,6 @@ dialog::backdrop{background:var(--wall)}
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
 <script src="js/SplitText.min.js"></script>
-<script src="js/lenis.min.js"></script>
 <script>
 const works=[
  {t:"Opera I",m:"Tecnica mista su tela",d:3,x:"jpg",p:"Forme nere che si annodano su un fondo azzurro, attraversate da colature rosa e graffi.",alt:"Tela astratta con forme nere su fondo azzurro, rosa, lilla e giallo"},
@@ -224,7 +224,7 @@ const rooms=document.getElementById('rooms'),pad=n=>String(n).padStart(2,'0'),fi
 const tintOf=img=>{const p=palette(img,1);if(!p)return null;seed=5;let r=0,g=0,b=0;for(let k=0;k<14;k++){const c=p(rnd(),rnd());r+=c[0];g+=c[1];b+=c[2]}r/=14;g/=14;b/=14;const m=.9;return `rgb(${Math.round(255*m+r*(1-m))},${Math.round(255*m+g*(1-m))},${Math.round(255*m+b*(1-m))})`};
 works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='room gut'+(i%2?' r':'');s.id='opera-'+n;s.setAttribute('aria-label',w.t);
  const big=`img/opera${n}-grande.${w.x}`;
- s.innerHTML=`<div class="work${w.round?' round':''}"><button type="button" aria-label="Guarda da vicino ${w.t}"><img src="img/opera${n}.${w.x}" alt="${w.alt}"></button><div class="loupe" aria-hidden="true"></div></div>
+ s.innerHTML=`<div class="work${w.round?' round':''}"><button type="button" aria-label="Guarda da vicino ${w.t}"><img src="img/opera${n}.${w.x}" alt="${w.alt}" decoding="async"></button><div class="loupe" aria-hidden="true"></div></div>
  <div class="cap"><h3>${w.t}</h3><span class="m">${w.m}</span><p>${w.p}</p><button type="button">Guarda da vicino</button></div>`;
  s.querySelectorAll('button').forEach(b=>b.onclick=()=>openLb(w,n));rooms.appendChild(s);
  const img=s.querySelector('img'),wk=s.querySelector('.work'),lp=s.querySelector('.loupe');
@@ -243,7 +243,7 @@ const heroImg=new Image();heroImg.src='img/opera6-grande.jpg';
 // ogni lettera in un suo elemento: le gocce partono dal fondo reale di ogni lettera
 h1.querySelectorAll('span').forEach(sp=>{const t=sp.textContent;sp.setAttribute('aria-label',t);sp.innerHTML=[...t].map(c=>`<i aria-hidden="true">${c}</i>`).join('')+'<b class="bl" aria-hidden="true"></b>'});
 const mark=document.getElementById('mark');
-function buildHero(){const keep=mark.style.transform;mark.style.transform='none';const cs=getComputedStyle(h1),hr=mark.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),fs=parseFloat(cs.fontSize);
+function buildHero(){const keep=mark.style.transform;mark.style.transform='none';const cs=getComputedStyle(h1),hr=mark.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5),fs=parseFloat(cs.fontSize);
  hc.width=hr.width*dpr;hc.height=hr.height*dpr;hc.style.height=hr.height+'px';const ctx=hc.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
  const pal=heroImg.complete&&heroImg.naturalWidth?palette(heroImg,1):null;seed=11;const drips=[];
  const foot=hr.height-14,wk=Math.min(1,innerWidth/900+.35);
@@ -261,7 +261,7 @@ function buildHero(){const keep=mark.style.transform;mark.style.transform='none'
  mark.style.transform=keep;hd={ctx,drips};if(!hstart)hstart=performance.now();if(reduce)drawHero(1)}
 function drawHero(force){if(!hd)return;const intro=force||clamp((performance.now()-hstart)/3200),t=clamp(intro+(force?1:0));
  const c=hd.ctx;c.clearRect(0,0,hc.width,hc.height);for(const d of hd.drips){const k=ease(clamp((t-d.del*.6)/(1-d.del*.6)));drip(c,d.x,d.y,d.w,d.L*k,d.col)}}
-function loop(){drawHero();requestAnimationFrame(loop)}
+function loop(){drawHero();if(performance.now()-hstart<3400)requestAnimationFrame(loop)}
 document.fonts.ready.then(()=>{const go=()=>{buildHero();if(!reduce)requestAnimationFrame(loop)};heroImg.complete?go():(heroImg.onload=go,heroImg.onerror=go)});
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{buildHero()},150)});
 
@@ -270,7 +270,6 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
  const mm=gsap.matchMedia();
  mm.add('(prefers-reduced-motion: no-preference)',()=>{
   document.documentElement.classList.add('anim');
-  let lenis=null;if(window.Lenis&&matchMedia('(pointer:fine)').matches){lenis=new Lenis({lerp:.11});lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0)}
   const logo=document.querySelector('header .logo');
   // il nome dipinto, con le sue colature, si rimpicciolisce fino a diventare il logo in alto
   const target=()=>{const keep=mark.style.transform;mark.style.transform='none';const m=mark.getBoundingClientRect(),h=h1.getBoundingClientRect(),l=logo.getBoundingClientRect(),ps=getComputedStyle(logo),pt=parseFloat(ps.paddingTop),pl=parseFloat(ps.paddingLeft);
@@ -288,7 +287,8 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
    gsap.from(sp.lines,{yPercent:105,duration:.8,ease:'power3.out',stagger:.07,scrollTrigger:{trigger:h,start:'top 82%',once:true}})});
   // foto della serata: si scoprono una dopo l'altra, come stampe appese
   gsap.from('.strip figure',{clipPath:'inset(0% 0% 100% 0%)',y:30,duration:.8,ease:'power3.out',stagger:.08,scrollTrigger:{trigger:'.strip',start:'top 80%',once:true}});
-  return()=>{document.documentElement.classList.remove('anim');if(lenis){lenis.destroy()}}});
+  return()=>document.documentElement.classList.remove('anim')});
+ addEventListener('load',()=>ScrollTrigger.refresh());
 }
 document.fonts.ready.then(()=>requestAnimationFrame(stage));
 
