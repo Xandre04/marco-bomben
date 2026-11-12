@@ -32,45 +32,48 @@ header nav{display:flex;gap:4px}
 header nav a{color:var(--grey)} header nav a:hover{color:var(--ink)}
 
 /* apertura: il nome è dipinto e cola */
-.hero{position:relative;padding-block:clamp(84px,12vh,130px) 0}
-.hero h1{position:relative;z-index:1;margin:0;font-weight:800;font-size:clamp(4.6rem,21.5vw,23rem);line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;
+.hero{position:relative;padding-block:clamp(70px,10vh,110px) 0}
+.hero h1{position:relative;z-index:1;margin:0;font-weight:800;font-size:17vw;line-height:.82;white-space:nowrap;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;
   background:url(img/opera6-grande.jpg) 30% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero h1 span{display:block}
+.hero h1 span{display:inline-block}
 .hero h1 i{font-style:normal}
 .hero h1 .bl{display:inline-block;width:0;height:0}
-.hero h1 span+span{margin-left:.12em}
-.mark{position:relative;z-index:2;padding-bottom:clamp(120px,24vh,260px);transform-origin:0 0;will-change:transform;contain:layout paint}
+.hero h1 span+span{margin-left:.16em}
+.mark{position:relative;z-index:2;padding-bottom:clamp(90px,17vh,200px);transform-origin:0 0;will-change:transform;contain:layout paint}
 #heroDrip{position:absolute;left:0;top:0;width:100%;pointer-events:none;z-index:0}
-header .logo{display:grid;font-weight:800;font-size:19px;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;padding:7px 8px;
+header .logo{display:flex;gap:.16em;font-weight:800;font-size:19px;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;padding:7px 8px;
   background:url(img/opera6-grande.jpg) 30% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
-header .logo span+span{margin-left:.12em}
 header .chip{padding:0;pointer-events:auto}
 .anim header .logo{visibility:hidden}
 .anim header .logo.on{visibility:visible}
-.hero-foot{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:0;padding-bottom:28px;align-items:end}
-.hero-foot h2{margin:0;font:600 clamp(1.5rem,2.6vw,2.2rem)/1.02 var(--display);font-variation-settings:"opsz" 48,"wdth" 85;letter-spacing:-.02em;text-wrap:balance}
-.hero-foot p{margin:0;max-width:34ch}
-.hero-foot .m{justify-self:end;text-align:right}
+.hero-foot{position:relative;z-index:1;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(20px,2.4vw,40px);row-gap:14px;margin-top:0;padding-bottom:28px;align-items:end}
+.hero-foot h2{grid-column:1/6;margin:0;font:600 clamp(1.5rem,2.6vw,2.2rem)/1.02 var(--display);font-variation-settings:"opsz" 48,"wdth" 85;letter-spacing:-.02em;text-wrap:balance}
+.hero-foot p{grid-column:7/11;margin:0;max-width:40ch}
+.hero-foot .m{grid-column:11/13;justify-self:end;text-align:right}
 
 /* sale */
-.room{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:start}
-.room .work{position:relative;grid-column:2/9;justify-self:start}
-.room.r .work{grid-column:5/12;justify-self:end}
+/* allestimento: le tele occupano la griglia come su una parete vera, coppie sfalsate e una tela larga che fa da pausa */
+#rooms{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(20px,2.4vw,40px);row-gap:clamp(80px,13vh,150px);padding-block:clamp(60px,10vh,120px) clamp(80px,12vh,140px);align-items:end}
+.room{position:relative;min-width:0;display:grid;gap:18px}
+.room.p1{grid-column:1/8}.room.p2{grid-column:9/13}
+.room.p3{grid-column:2/12}
+.room.p4{grid-column:2/6;align-self:center}.room.p5{grid-column:7/13}
+.room.p6{grid-column:1/6}.room.p7{grid-column:7/12;align-self:start;margin-top:clamp(40px,10vh,120px)}
+.room .work{position:relative}
 .room .work button{all:unset;cursor:zoom-in;display:block;position:relative;z-index:1}
-.room .work img{display:block;width:auto;height:auto;max-width:100%;max-height:74svh;box-shadow:0 1px 0 rgba(0,0,0,.06),14px 22px 30px -18px rgba(0,0,0,.35)}
+.room .work img{display:block;width:100%;height:auto;box-shadow:0 1px 0 rgba(0,0,0,.06),14px 22px 30px -18px rgba(0,0,0,.35)}
 .room .work.round img{box-shadow:none;filter:drop-shadow(14px 20px 18px rgba(0,0,0,.22))}
+.cap{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:20px;row-gap:4px;align-items:baseline}
+.cap h3{margin:0;font:800 clamp(1.9rem,2.6vw,2.8rem)/.9 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.02em}
+.cap .m{grid-column:2;grid-row:1;text-align:right}
+.cap p{grid-column:1/-1;margin:6px 0 0;font-size:.95rem;max-width:46ch}
+.cap button{all:unset;cursor:pointer;grid-column:1/-1;justify-self:start;margin-top:8px;font:600 .95rem/1 var(--display);border-bottom:2px solid currentColor;padding-bottom:3px}
 .loupe{position:absolute;z-index:3;width:clamp(180px,17vw,260px);aspect-ratio:1;border-radius:50%;pointer-events:none;left:0;top:0;transform:translate(-50%,-50%) scale(.6);opacity:0;transition:opacity .25s ease,transform .25s ease;background-repeat:no-repeat;box-shadow:0 0 0 3px var(--wall),0 18px 40px -10px rgba(0,0,0,.45)}
 .work.looking .loupe{opacity:1;transform:translate(-50%,-50%) scale(1)}
 .work.looking button{cursor:none}
-.room{padding-block:16vh 20vh}
-.cap{grid-column:10/13;grid-row:1;align-self:end;display:grid;gap:6px;padding-bottom:4px}
-.room.r .cap{grid-column:1/4}
-.cap h3{margin:0;font:800 clamp(2.4rem,4vw,3.6rem)/.9 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.03em}
-.cap p{margin:6px 0 0;font-size:.95rem;max-width:30ch}
-.cap button{all:unset;cursor:pointer;justify-self:start;margin-top:10px;font:600 .95rem/1 var(--display);border-bottom:2px solid currentColor;padding-bottom:3px}
 
 /* sezioni testuali */
-.sec{padding-block:clamp(90px,14vh,160px);border-top:1px solid var(--rule)}
+.sec{padding-block:clamp(70px,11vh,130px);border-top:1px solid var(--rule)}
 .sec .lead{margin:22px 0 0;max-width:52ch;color:var(--grey);font-size:1.05rem}
 .big{margin:0;font:800 clamp(3rem,9vw,8.5rem)/.86 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.015em;text-wrap:balance}
 .strip{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin-top:48px;padding-bottom:8px}
@@ -107,14 +110,18 @@ dialog::backdrop{background:var(--wall)}
 
 @media (max-width:820px){
  header nav a:nth-child(n+3){display:none}
- .hero h1{font-size:29vw}
- .hero-foot{grid-template-columns:1fr;gap:14px}
+ .hero h1{font-size:29vw;white-space:normal}
+ .hero h1 span{display:block}
+ .hero h1 span+span{margin-left:.12em}
+ header .logo{display:grid}
+ .hero-foot>*{grid-column:1/-1!important}
  .hero-foot .m{justify-self:start;text-align:left}
- .room{grid-template-columns:1fr;gap:20px;padding-block:10vh 12vh}
+ #rooms{grid-template-columns:1fr;row-gap:72px}
+ .room[class*="p"]{grid-column:1;margin-top:0;align-self:auto}
+ .room.p4 .work{width:78%;justify-self:center}
+ .cap{grid-template-columns:1fr}
+ .cap .m{grid-column:1;grid-row:auto;text-align:left}
  .loupe{display:none}
- .room .work,.room.r .work{grid-column:1;justify-self:center}
- .room .work img{max-height:58svh}
- .cap,.room.r .cap{grid-column:1;grid-row:auto;order:-1}
  .kairos,.contact{grid-template-columns:1fr}
 }
 </style>
@@ -222,7 +229,7 @@ const css=c=>Array.isArray(c)?`rgb(${c[0]},${c[1]},${c[2]})`:c;
 // tele: lente d'ingrandimento sull'immagine grande, parete che prende il colore dell'opera
 const rooms=document.getElementById('rooms'),pad=n=>String(n).padStart(2,'0'),fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
 const tintOf=img=>{const p=palette(img,1);if(!p)return null;seed=5;let r=0,g=0,b=0;for(let k=0;k<14;k++){const c=p(rnd(),rnd());r+=c[0];g+=c[1];b+=c[2]}r/=14;g/=14;b/=14;const m=.9;return `rgb(${Math.round(255*m+r*(1-m))},${Math.round(255*m+g*(1-m))},${Math.round(255*m+b*(1-m))})`};
-works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='room gut'+(i%2?' r':'');s.id='opera-'+n;s.setAttribute('aria-label',w.t);
+works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='room p'+n;s.id='opera-'+n;s.setAttribute('aria-label',w.t);
  const big=`img/opera${n}-grande.${w.x}`;
  s.innerHTML=`<div class="work${w.round?' round':''}"><button type="button" aria-label="Guarda da vicino ${w.t}"><img src="img/opera${n}.${w.x}" alt="${w.alt}" decoding="async"></button><div class="loupe" aria-hidden="true"></div></div>
  <div class="cap"><h3>${w.t}</h3><span class="m">${w.m}</span><p>${w.p}</p><button type="button">Guarda da vicino</button></div>`;
@@ -243,6 +250,9 @@ const heroImg=new Image();heroImg.src='img/opera6-grande.jpg';
 // ogni lettera in un suo elemento: le gocce partono dal fondo reale di ogni lettera
 h1.querySelectorAll('span').forEach(sp=>{const t=sp.textContent;sp.setAttribute('aria-label',t);sp.innerHTML=[...t].map(c=>`<i aria-hidden="true">${c}</i>`).join('')+'<b class="bl" aria-hidden="true"></b>'});
 const mark=document.getElementById('mark');
+const textW=el=>{const sp=el.querySelectorAll(':scope>span');return sp[sp.length-1].getBoundingClientRect().right-sp[0].getBoundingClientRect().left};
+function fitName(){if(matchMedia('(max-width:820px)').matches){h1.style.fontSize='';return}const keep=mark.style.transform;mark.style.transform='none';h1.style.fontSize='';
+ const avail=h1.clientWidth,fs=parseFloat(getComputedStyle(h1).fontSize);h1.style.fontSize=(fs*avail/textW(h1)*.995)+'px';mark.style.transform=keep}
 function buildHero(){const keep=mark.style.transform;mark.style.transform='none';const cs=getComputedStyle(h1),hr=mark.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5),fs=parseFloat(cs.fontSize);
  hc.width=hr.width*dpr;hc.height=hr.height*dpr;hc.style.height=hr.height+'px';const ctx=hc.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
  const pal=heroImg.complete&&heroImg.naturalWidth?palette(heroImg,1):null;seed=11;const drips=[];
@@ -262,8 +272,8 @@ function buildHero(){const keep=mark.style.transform;mark.style.transform='none'
 function drawHero(force){if(!hd)return;const intro=force||clamp((performance.now()-hstart)/3200),t=clamp(intro+(force?1:0));
  const c=hd.ctx;c.clearRect(0,0,hc.width,hc.height);for(const d of hd.drips){const k=ease(clamp((t-d.del*.6)/(1-d.del*.6)));drip(c,d.x,d.y,d.w,d.L*k,d.col)}}
 function loop(){drawHero();if(performance.now()-hstart<3400)requestAnimationFrame(loop)}
-document.fonts.ready.then(()=>{const go=()=>{buildHero();if(!reduce)requestAnimationFrame(loop)};heroImg.complete?go():(heroImg.onload=go,heroImg.onerror=go)});
-let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{buildHero()},150)});
+document.fonts.ready.then(()=>{const go=()=>{fitName();buildHero();if(!reduce)requestAnimationFrame(loop)};heroImg.complete?go():(heroImg.onload=go,heroImg.onerror=go)});
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{fitName();buildHero();window.ScrollTrigger&&ScrollTrigger.refresh()},150)});
 
 // regia dello scroll: il nome si ritira nel logo, le sezioni entrano secondo il loro contenuto
 function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlugin(ScrollTrigger);if(window.SplitText)gsap.registerPlugin(SplitText);
@@ -273,7 +283,7 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   const logo=document.querySelector('header .logo');
   // il nome dipinto, con le sue colature, si rimpicciolisce fino a diventare il logo in alto
   const target=()=>{const keep=mark.style.transform;mark.style.transform='none';const m=mark.getBoundingClientRect(),h=h1.getBoundingClientRect(),l=logo.getBoundingClientRect(),ps=getComputedStyle(logo),pt=parseFloat(ps.paddingTop),pl=parseFloat(ps.paddingLeft);
-   mark.style.transform=keep;const sc=(l.height-2*pt)/h.height;return{x:l.left+pl-m.left-(h.left-m.left)*sc,y:l.top+pt-m.top-(h.top-m.top)*sc,scale:sc}};
+   mark.style.transform=keep;const sc=textW(logo)/textW(h1);return{x:l.left+pl-m.left-(h.left-m.left)*sc,y:l.top+pt-m.top-(h.top-m.top)*sc,scale:sc}};
   const tw=gsap.to(mark,{ease:'none',paused:true,x:()=>target().x,y:()=>target().y,scale:()=>target().scale});
   const st=ScrollTrigger.create({trigger:mark,start:'top top+='+mark.getBoundingClientRect().top,end:()=>'+='+Math.max(200,mark.offsetHeight-90),pin:true,pinSpacing:false,scrub:true,animation:tw,invalidateOnRefresh:true,
    onUpdate:self=>{const done=self.progress>.995;logo.classList.toggle('on',done);mark.style.visibility=done?'hidden':'visible'}});
