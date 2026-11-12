@@ -71,6 +71,9 @@ header nav a:hover,header nav a.on{background:var(--pink)}
 /* le opere: una per schermo */
 .scene{position:relative;height:240vh;background:var(--dark)}
 .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--dark);color:#fff;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:var(--gap);align-items:center;padding:90px var(--side) 48px}
+.shade{position:absolute;inset:0;z-index:6;background:#000;opacity:0;pointer-events:none}
+.bar{position:fixed;left:0;top:0;z-index:35;height:3px;width:100%;background:var(--pink);transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
+.share{all:unset;cursor:pointer;font-weight:700;font-size:var(--t-s);color:#a3a29d}.share:hover{color:#fff}
 .aura{position:absolute;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(closest-side at 62% 50%,var(--glow,#ff2e88),transparent);opacity:.32}
 .full,.info{position:relative;z-index:1}
 .full{grid-column:2;grid-row:1;height:100%;min-height:0;display:flex;align-items:center;justify-content:center}
@@ -252,6 +255,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
  <p>Ogni tela si apre su un dettaglio fotografato a pochi centimetri: la grana, lo spray, le colature. Scorri e la vedi intera.</p>
 </div></section>
 <div id="scenes"></div>
+<div class="bar" id="bar2" aria-hidden="true"></div>
 <nav class="rail" id="rail" aria-label="Vai a una tela"></nav>
 <button class="gyro" id="gyro" type="button">✦ Muovi il telefono: tocca per attivare</button>
 
@@ -340,13 +344,15 @@ function fitFull(s){const box=s.querySelector('.full'),img=box.querySelector('im
  let w=W,h=W/r;if(h>H){h=H;w=H*r}img.style.setProperty('--w',Math.floor(w)+'px');img.style.setProperty('--h',Math.floor(h)+'px')}
 const fitAll=()=>[...scenes.children].forEach(fitFull);
 works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='scene';s.id='opera-'+n;s.setAttribute('aria-label',w.t);
- s.innerHTML=`<div class="stage"><div class="aura" aria-hidden="true"></div>
+ s.innerHTML=`<div class="stage"><div class="aura" aria-hidden="true"></div><div class="shade" aria-hidden="true"></div>
   <div class="full${w.x==="webp"?" round":""}"><button type="button" aria-label="Guarda i dettagli di ${w.t}"><img src="img/opera${n}-grande.${w.x}" alt="${w.alt}" decoding="async"><span class="sheen" aria-hidden="true"></span></button></div>
-  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m} <span class="chip">Disponibile</span></p><p>${w.p}</p><span class="acts"><button class="pill" type="button">Guarda i dettagli ↗</button><a class="ask" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener">Chiedi di quest'opera</a></span><span class="tiltnote">Inclina il telefono: la luce scorre sulla vernice</span></div>
+  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m} <span class="chip">Disponibile</span></p><p>${w.p}</p><span class="acts"><button class="pill" type="button">Guarda i dettagli ↗</button><a class="ask" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener">Chiedi di quest'opera</a><button class="share" type="button">Condividi</button></span><span class="tiltnote">Inclina il telefono: la luce scorre sulla vernice</span></div>
   <div class="det" aria-hidden="true"><img src="img/opera${n}-dettaglio1.jpg" alt="" decoding="async"></div>
   <div class="hint" aria-hidden="true"><b>${w.t}, da vicino</b><span>Scorri per fare un passo indietro</span></div>
   <span class="cnt">${pad(n)} / ${pad(works.length)}</span></div>`;
- s.querySelectorAll('.full button,.info .pill').forEach(b=>b.onclick=()=>openLb(w,n));scenes.appendChild(s);
+ s.querySelectorAll('.full button,.info .pill').forEach(b=>b.onclick=()=>openLb(w,n));
+ const sh=s.querySelector('.share');sh.onclick=async()=>{const url=location.href.split('#')[0]+'#opera-'+n,data={title:`${w.t} · Marco Bomben`,text:`${w.t} di Marco Bomben, Sensazioni senza contorni`,url};
+  try{if(navigator.share){await navigator.share(data);return}await navigator.clipboard.writeText(url);sh.textContent='Link copiato ✓';setTimeout(()=>sh.textContent='Condividi',1800)}catch(e){}};scenes.appendChild(s);
  const b=document.createElement('button');b.type='button';b.innerHTML=`<span class="th"><img src="img/opera${n}.${w.x}" alt="" loading="lazy"></span><b>${pad(n)} ${w.t}</b><span>${w.m}</span>`;
  b.onclick=()=>goTo(i);index.appendChild(b);
  const r=document.createElement('button');r.type='button';r.setAttribute('aria-label',`${pad(n)} ${w.t}`);r.innerHTML=`<span>${pad(n)} ${w.t}</span><i></i>`;r.onclick=()=>goTo(i);rail.appendChild(r);
@@ -443,6 +449,10 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   const y=lenis?lenis.scroll:scrollY,list=[...scenes.children];let i=list.findIndex(s=>y>=s.offsetTop-innerHeight*.5&&y<s.offsetTop+s.offsetHeight-innerHeight*.5);if(i<0)return;
   e.preventDefault();const r=restY(list[i]),j=e.key==='ArrowRight'?(y<r-20?i:i+1):(y>r+20?i:i-1);
   if(j>=list.length){const t=document.getElementById('indice').offsetTop;lenis?lenis.scrollTo(t,{duration:1.6}):scrollTo({top:t,behavior:'smooth'})}else goTo(Math.max(0,j))});
+ // link diretto a una tela (#opera-3): si apre già sulla tela intera
+ const m=location.hash.match(/^#opera-(\d)$/);if(m){const s=document.getElementById('opera-'+m[1]);if(s){const y=restY(s);lenis?lenis.scrollTo(y,{immediate:true}):scrollTo(0,y)}}
+ // barra di avanzamento in alto
+ gsap.to('#bar2',{scaleX:1,ease:'none',scrollTrigger:{start:0,end:'max',scrub:.3}});
  document.getElementById('up').onclick=()=>lenis?lenis.scrollTo(0,{duration:2.2}):scrollTo({top:0,behavior:'smooth'});
  const mm=gsap.matchMedia();
  mm.add('(prefers-reduced-motion: no-preference)',()=>{
@@ -475,6 +485,11 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
     .fromTo(s.querySelector('.aura'),{opacity:0,scale:.6},{opacity:.32,scale:1,duration:.4},.24)
     .fromTo(info,{y:50,opacity:0},{y:0,opacity:1,stagger:.03,duration:.14,ease:'power2.out'},.56)
     .to({},{duration:.2},.8)});
+  // passaggio fra tele: quella che esce arretra e si spegne, quella nuova sale sopra
+  const ss=[...scenes.children];ss.forEach((s,i)=>{const nxt=ss[i+1]||document.getElementById('indice'),st=s.querySelector('.stage');
+   gsap.timeline({scrollTrigger:{trigger:nxt,start:'top bottom',end:'top top',scrub:true}}).to(st,{scale:.86,borderRadius:28,ease:'none'},0).to(st.querySelector('.shade'),{opacity:.7,ease:'none'},0)});
+  // le lettere del nome saltano quando ci passi sopra
+  if(matchMedia('(hover:hover)').matches)h1.querySelectorAll('i').forEach(el=>el.addEventListener('pointerenter',()=>{if(gsap.isTweening(el))return;gsap.timeline().to(el,{yPercent:-14,rotate:gsap.utils.random(-12,12),duration:.18,ease:'power2.out'}).to(el,{yPercent:0,rotate:0,duration:.6,ease:'elastic.out(1,.35)'})}));
   gsap.from('.index button',{y:60,opacity:0,rotate:()=>gsap.utils.random(-6,6),duration:.8,ease:'back.out(1.4)',stagger:.06,scrollTrigger:{trigger:'.index',start:'top 85%',once:true}});
   gsap.from('.portrait',{y:120,rotate:-12,opacity:0,duration:1,ease:'back.out(1.3)',scrollTrigger:{trigger:'#marco',start:'top 75%',once:true}});
   gsap.from('.story>*',{y:40,opacity:0,duration:.8,ease:'power3.out',stagger:.08,scrollTrigger:{trigger:'.story',start:'top 80%',once:true}});
