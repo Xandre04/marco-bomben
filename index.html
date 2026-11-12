@@ -232,7 +232,12 @@ dialog::backdrop{background:var(--dark)}
 .lb-foot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:var(--s3);padding-block:var(--s2)}
 .lb-foot p{margin:0;color:#a3a29d;font-size:var(--t-s);max-width:42ch}.lb-foot .ask{justify-self:end}
 @media (max-width:900px){.lb-foot{grid-template-columns:1fr;justify-items:center;text-align:center;gap:var(--s2)}.lb-foot .ask{justify-self:center}.lb-foot p{display:none}}
-.lb-th{display:flex;justify-content:center;gap:var(--s1);overflow-x:auto}
+.lb-th{display:flex;justify-content:safe center;gap:var(--s1);overflow-x:auto;max-width:min(440px,88vw);scrollbar-width:none}.lb-th button{position:relative!important;flex:none!important}.lb-th i{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-style:normal;font-size:14px;text-shadow:0 1px 4px #000}
+.lb-main video{display:block;background:transparent}
+.lb-main [hidden]{display:none!important}
+.lb-main>img,.lb-main>video{width:100%;height:100%;min-height:0;object-fit:contain;grid-area:1/1}
+#wall .tile .play{position:absolute;right:8px;top:8px;width:34px;height:34px;border-radius:50%;background:var(--pink);color:var(--ink);display:grid;place-items:center;font-size:13px;border:2px solid var(--ink)}
+#wall .tile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .lb-th button{all:unset;cursor:pointer;opacity:.4}.lb-th button[aria-current="true"],.lb-th button:hover{opacity:1}
 .lb-th img{width:60px;height:60px;object-fit:cover;display:block}
 
@@ -311,13 +316,13 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 <div id="scenes"></div>
 <div class="bar" id="bar2" aria-hidden="true"></div>
 <button class="wallbtn" id="wallbtn" type="button"><i aria-hidden="true"><b></b><b></b><b></b><b></b></i>Tutte le opere</button>
-<div id="wall" role="dialog" aria-modal="true" aria-label="Tutte le opere" data-lenis-prevent><div class="wtop"><div><h2>La parete <span>✺</span></h2><p>Trascina in ogni direzione. Tocca per aprire.</p></div><button class="pill" type="button" id="wallx">Chiudi ✕</button></div><div id="wallin"></div><div class="wctl"><span class="wf" style="display:flex;gap:4px"><button type="button" data-f="all" aria-pressed="true">Tutto</button><button type="button" data-f="tele" aria-pressed="false">Tele</button><button type="button" data-f="det" aria-pressed="false">Dettagli</button></span><i></i><button class="z" type="button" id="zo" aria-label="Rimpicciolisci">−</button><button class="z" type="button" id="zi" aria-label="Ingrandisci">+</button></div></div>
+<div id="wall" role="dialog" aria-modal="true" aria-label="Tutte le opere" data-lenis-prevent><div class="wtop"><div><h2>La parete <span>✺</span></h2><p><span id="wcount"></span> Trascina in ogni direzione. Tocca per aprire.</p></div><button class="pill" type="button" id="wallx">Chiudi ✕</button></div><div id="wallin"></div><div class="wctl"><span class="wf" style="display:flex;gap:4px"><button type="button" data-f="all" aria-pressed="true">Tutto</button><button type="button" data-f="tela" aria-pressed="false">Tele</button><button type="button" data-f="det" aria-pressed="false">Dettagli</button><button type="button" data-f="foto" aria-pressed="false">Foto</button><button type="button" data-f="video" aria-pressed="false">Video</button></span><i></i><button class="z" type="button" id="zo" aria-label="Rimpicciolisci">−</button><button class="z" type="button" id="zi" aria-label="Ingrandisci">+</button></div></div>
 <div class="playing" id="playing" role="status"><i aria-hidden="true"></i><span id="playt">Mostra in corso</span><span class="pbar" aria-hidden="true"><b id="pbar"></b></span><button type="button" id="stop">Ferma ■</button></div>
 <nav class="rail" id="rail" aria-label="Vai a una tela"></nav>
 <button class="gyro" id="gyro" type="button">✦ Muovi il telefono: tocca per attivare</button>
 
 <section id="indice"><div class="wrap">
- <div class="top"><h2 class="big">Tutte e sette</h2><p>Tocca una tela per tornarci. Oppure apri la parete e guardale tutte insieme, dettagli compresi.<br><button class="pill openwall" type="button" id="openwall2" style="color:#fff">Apri la parete ⊞</button></p></div>
+ <div class="top"><h2 class="big">Tutte e sette</h2><p>Tocca una tela per tornarci. Oppure apri la parete: altre sei opere, la sera della mostra, tutte le foto e i video.<br><button class="pill openwall" type="button" id="openwall2" style="color:#fff">Apri la parete ⊞</button></p></div>
  <div class="index" id="index"></div>
 </div></section>
 
@@ -359,7 +364,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 <dialog id="lb" aria-label="Opera" data-lenis-prevent>
  <div class="lb">
   <div class="lb-top wrap"><b><span id="lb-t" style="all:unset"></span><span id="lb-c"></span></b><button class="pill" id="lb-x" type="button" style="color:#fff">Chiudi</button></div>
-  <div class="lb-main" id="lb-main"><button class="lb-nav lb-prev" id="lb-p" type="button" aria-label="Precedente">←</button><img id="lb-img" alt="" draggable="false"><button class="lb-nav lb-next" id="lb-n" type="button" aria-label="Successiva">→</button><span class="lb-tip" id="lb-tip">Tocca per ingrandire · frecce o swipe per cambiare</span></div>
+  <div class="lb-main" id="lb-main"><button class="lb-nav lb-prev" id="lb-p" type="button" aria-label="Precedente">←</button><img id="lb-img" alt="" draggable="false"><video id="lb-v" muted loop playsinline controls hidden></video><button class="lb-nav lb-next" id="lb-n" type="button" aria-label="Successiva">→</button><span class="lb-tip" id="lb-tip">Tocca per ingrandire · frecce o swipe per cambiare</span></div>
   <div class="lb-foot wrap"><p id="lb-d"></p><div class="lb-th" id="lb-th"></div><a class="ask" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener">Chiedi di quest'opera</a></div>
  </div>
 </dialog>
@@ -376,6 +381,15 @@ const works=[
  {t:"Opera V",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Il verde acido al centro spinge tutte le altre forme verso i bordi.",alt:"Forme lucide verdi, azzurre e gialle su fondo nero"},
  {t:"Opera VI",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Magenta, viola e blu: le forme si toccano senza confondersi.",alt:"Forme lucide magenta, viola e blu su fondo nero"},
  {t:"Opera VII",m:"Acrilico e spray su tela",d:2,x:"jpg",p:"Rosso, arancio e argento, così lucidi che sembra di poterli toccare.",alt:"Forme lucide rosse, arancio e argento su fondo nero"}];
+const ph={"1": ["0001-01", "0001-03", "0001-04", "0001-05", "0001-06", "0001-07"], "2": ["0002-01", "0002-02", "0002-04", "0002-05", "0002-06", "0002-07"], "3": ["0003-02", "0003-03", "0003-04", "0003-05", "0003-06", "0003-07"], "4": ["0004-02", "0004-03", "0004-04", "0004-05", "0004-06"], "5": ["0006-01", "0006-03", "0006-04", "0006-05", "0006-06", "0006-07", "0006-08", "0006-09", "0006-10"], "6": ["0007-01", "0007-03", "0007-04", "0007-05", "0007-06", "0007-07", "0007-08"], "7": ["0008-02", "0008-03"]};
+const extra=[
+ {t:"Opera VIII",m:"Spray e acrilico su tela",d:2,x:"jpg",p:"Una scrittura che non si lascia leggere: segni azzurri, rosa e neri che si sovrappongono fino a diventare trama.",alt:"Tela quadrata coperta da segni intrecciati azzurri, rosa e neri"},
+ {t:"Opera IX",m:"Tecnica mista su tela",d:2,x:"jpg",p:"Un grande occhio blu che cola sul lilla, accanto a lame di pesca e giallo.",alt:"Grande cerchio blu con colature su fondo lilla, pesca e giallo"},
+ {t:"Opera X",m:"Spray e acrilico su tela",d:2,x:"jpg",p:"Forme da graffito che si incastrano e gocciolano: arancio, blu petrolio e un occhio che ti fissa.",alt:"Forme arancio, blu e grigie con colature e contorni neri"},
+ {t:"Opera XI",m:"Acrilico e spray su tela",d:2,x:"jpg",p:"Una sola bolla arancio, enorme, che sembra spingere fuori dalla tela.",alt:"Grande forma lucida arancio con riflesso bianco e contorno blu"},
+ {t:"Opera XII",m:"Tecnica mista su tela",d:2,x:"jpg",p:"Il colore cade in verticale: pesca, magenta e viola che colano su un fondo bianco.",alt:"Forme pesca, magenta e viola con lunghe colature verticali"},
+ {t:"Opera XIII",m:"Acrilico e spray su bottiglia",d:2,x:"jpg",p:"La pittura esce dalla tela: una bottiglia magnum dipinta a mano, giro dopo giro.",alt:"Bottiglia magnum dipinta a mano con forme geometriche colorate",vids:["0011-04","0011-05","0011-06","0011-07"]},
+ {t:"La mostra",mostra:1,m:"Banca Mediolanum, Azzano Decimo",p:"La sera dell'apertura e le sale con le tele appese.",alt:"Foto dalla mostra",ph:["0005-01", "0005-02", "0005-04", "0005-05", "0005-06", "0005-08", "0005-09", "0005-10", "0005-11", "0005-13", "0005-14", "0005-15", "0005-16", "0005-17", "0005-18", "0005-19"],vids:["0005-03","0005-07","0005-12"]}];
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 // scorrimento morbido: la rotella scorre con inerzia, il dito resta nativo
 let lenis=null;if(!reduce&&window.Lenis&&window.gsap){lenis=new Lenis({duration:1.3,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),wheelMultiplier:.9,anchors:{duration:1.6}});gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);lenis.stop()}
@@ -576,19 +590,24 @@ document.fonts.ready.then(()=>entered).then(()=>requestAnimationFrame(stage));
 
 // visore: tutte le immagini di tutte le tele in fila, zoom, frecce, swipe
 const lb=document.getElementById('lb'),li=document.getElementById('lb-img'),th=document.getElementById('lb-th'),lm=document.getElementById('lb-main');
-const seq=[];works.forEach((w,i)=>{const n=i+1;seq.push({w,n,k:0,src:`img/opera${n}-grande.${w.x}`});for(let k=1;k<=w.d;k++)seq.push({w,n,k,src:`img/opera${n}-dettaglio${k}.jpg`})});
+const seq=[];[...works,...extra].forEach((w,i)=>{const n=i+1;
+ if(!w.mostra){seq.push({w,n,k:0,c:'tela',src:`img/opera${n}-grande.${w.x}`,th:`img/th/opera${n}-grande.jpg`});for(let k=1;k<=w.d;k++)seq.push({w,n,k,c:'det',src:`img/opera${n}-dettaglio${k}.jpg`,th:`img/th/opera${n}-dettaglio${k}.jpg`})}
+ (ph[n]||w.ph||[]).forEach((g,q)=>seq.push({w,n,k:'f'+(q+1),q:q+1,c:'foto',src:`img/g/${g}.jpg`,th:`img/g/th/${g}.jpg`}));
+ (w.vids||[]).forEach((v,q)=>seq.push({w,n,k:'v'+(q+1),q:q+1,c:'video',src:`img/g/th/v${v}.jpg`,th:`img/g/th/v${v}.jpg`,v:`vid/${v}.mp4`}))});
+const glowOfN=n=>{const e=document.getElementById('opera-'+n);return e?e.style.getPropertyValue('--glow'):''},nameOf=it=>it.w.mostra?it.w.t:`${pad(it.n)} ${it.w.t}`;
+const lv=document.getElementById('lb-v');
 let cur=0,curWork=-1;
 function show(j,dir=0){cur=(j+seq.length)%seq.length;const it=seq[cur];lm.classList.remove('zoom');
- if(it.n!==curWork){curWork=it.n;document.getElementById('lb-t').textContent=`${pad(it.n)} ${it.w.t}`;document.getElementById('lb-d').textContent=`${it.w.m}. ${it.w.p}`;document.querySelector('.lb-foot').style.setProperty('--glow',document.getElementById('opera-'+it.n).style.getPropertyValue('--glow'));th.innerHTML='';
-  seq.forEach((o,jj)=>{if(o.n!==it.n)return;const b=document.createElement('button');b.type='button';b.dataset.j=jj;b.setAttribute('aria-label',o.k?`Dettaglio ${o.k}`:'Opera intera');b.innerHTML=`<img src="${o.src}" alt="">`;b.onclick=()=>show(jj,jj>cur?1:-1);th.appendChild(b)})}
- const tot=it.w.d+1;document.getElementById('lb-c').textContent=it.k?`dettaglio ${it.k} di ${it.w.d}`:'tela intera';
+ if(it.n!==curWork){curWork=it.n;document.getElementById('lb-t').textContent=nameOf(it);document.getElementById('lb-d').textContent=`${it.w.m}. ${it.w.p}`;document.querySelector('.lb-foot').style.setProperty('--glow',glowOfN(it.n));th.innerHTML='';
+  seq.forEach((o,jj)=>{if(o.n!==it.n)return;const b=document.createElement('button');b.type='button';b.dataset.j=jj;b.setAttribute('aria-label',o.c==='tela'?'Opera intera':o.c==='det'?`Dettaglio ${o.k}`:o.c==='video'?`Video ${o.q}`:`Foto ${o.q}`);b.innerHTML=`<img src="${o.th}" alt="" loading="lazy">`+(o.v?'<i>▶</i>':'');b.onclick=()=>show(jj,jj>cur?1:-1);th.appendChild(b)})}
+ const tot=it.w.d+1;const cnt=c=>seq.filter(o=>o.n===it.n&&o.c===c).length;document.getElementById('lb-c').textContent=it.c==='tela'?'tela intera':it.c==='det'?`dettaglio ${it.k} di ${it.w.d}`:it.c==='foto'?`foto ${it.q} di ${cnt('foto')}`:`video ${it.q} di ${cnt('video')}`;
  [...th.children].forEach(c=>c.setAttribute('aria-current',+c.dataset.j===cur));
- li.src=it.src;li.alt=it.k?`${it.w.t}, dettaglio ${it.k}`:it.w.alt;
- if(window.gsap&&!reduce&&dir)gsap.fromTo(li,{x:dir*60,opacity:0},{x:0,opacity:1,duration:.45,ease:'power3.out',clearProps:'transform'});
- const nx=seq[(cur+1)%seq.length];new Image().src=nx.src}
+ if(it.v){li.hidden=true;lv.hidden=false;lv.poster=it.src;lv.src=it.v;lv.play().catch(()=>{})}else{lv.pause();lv.removeAttribute('src');lv.load();lv.hidden=true;li.hidden=false;li.src=it.src;li.alt=it.c==='tela'?it.w.alt:it.c==='det'?`${it.w.t}, dettaglio ${it.k}`:`${it.w.t}, foto ${it.q}`}
+ if(window.gsap&&!reduce&&dir)gsap.fromTo(it.v?lv:li,{x:dir*60,opacity:0},{x:0,opacity:1,duration:.45,ease:'power3.out',clearProps:'transform'});
+ const nx=seq[(cur+1)%seq.length];new Image().src=nx.src;th.querySelector('[aria-current="true"]')?.scrollIntoView({block:'nearest',inline:'center'})}
 function openAt(j){curWork=-1;show(j);lb.showModal();lenis&&lenis.stop()}
 function openLb(w,n){curWork=-1;show(seq.findIndex(o=>o.n===n));lb.showModal();lenis&&lenis.stop()}
-lb.addEventListener('close',()=>{if(!document.getElementById('wall').classList.contains('open'))lenis&&lenis.start()});
+lb.addEventListener('close',()=>{lv.pause();if(!document.getElementById('wall').classList.contains('open'))lenis&&lenis.start()});
 document.getElementById('lb-x').onclick=()=>lb.close();
 document.getElementById('lb-p').onclick=e=>{e.stopPropagation();show(cur-1,-1)};
 document.getElementById('lb-n').onclick=e=>{e.stopPropagation();show(cur+1,1)};
@@ -606,15 +625,16 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
  // ordine misto: ogni tela seguita dai suoi dettagli, poi rimescolato a blocchi
  const all=seq.map((o,j)=>({...o,j}));seed=3;for(let i=all.length-1;i>0;i--){const k=Math.floor(rnd()*(i+1));[all[i],all[k]]=[all[k],all[i]]}
  let items=all,zoom=1;
- const setFilter=f=>{items=f==='tele'?all.filter(o=>!o.k):f==='det'?all.filter(o=>o.k):all;document.querySelectorAll('.wf button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===f));tiles=[];layout();pop()};
+ const setFilter=f=>{items=f==='all'?all:all.filter(o=>o.c===f);document.querySelectorAll('.wf button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===f));tiles=[];layout();pop()};
  const setZoom=z=>{const oz=zoom;zoom=gsap.utils.clamp(.55,1.9,z);if(zoom===oz)return;const cx=innerWidth/2,cy=innerHeight/2,k=zoom/oz;ox=cx-(cx-ox)*k;oy=cy-(cy-oy)*k;tiles=[];layout()};
  const pop=()=>{if(window.gsap&&!reduce)gsap.fromTo(tiles.map(t=>t.el.firstElementChild),{scale:0,rotate:()=>gsap.utils.random(-25,25)},{scale:1,rotate:0,duration:.6,ease:'back.out(1.6)',stagger:{each:.01,from:'random'}})};
  let tiles=[],S=0,C=0,R=0,W=0,H=0,ox=0,oy=0,vx=0,vy=0,drag=null,moved=0,raf=0;
  function layout(){S=Math.round((innerWidth<700?innerWidth/2.3:Math.max(240,innerWidth/5.2))*zoom);C=Math.max(Math.ceil(innerWidth/S)+2,Math.ceil(Math.sqrt(items.length*1.4)));R=Math.ceil(items.length/C);
   while(R*S<innerHeight+2*S){R++}W=C*S;H=R*S;
-  if(!tiles.length){inn.innerHTML='';const n=C*R;for(let k=0;k<n;k++){const it=items[k%items.length],t=document.createElement('div');t.className='tile'+(it.k?'':' whole');
-   const g=document.getElementById('opera-'+it.n).style.getPropertyValue('--glow');if(g)t.style.setProperty('--glow',g);
-   t.innerHTML=`<button type="button" aria-label="${it.w.t}${it.k?', dettaglio '+it.k:''}"><img src="${it.src.replace(/^img\/(.*)\.\w+$/,'img/th/$1.jpg')}" alt="" decoding="async" draggable="false"><b>${it.k?'Dettaglio '+it.k:pad(it.n)+' '+it.w.t}</b></button>`;
+  if(!tiles.length){inn.innerHTML='';const n=C*R;for(let k=0;k<n;k++){const it=items[k%items.length],t=document.createElement('div');t.className='tile'+(it.c==='tela'?' whole':'');
+   const g=glowOfN(it.n);if(g)t.style.setProperty('--glow',g);
+   const lab=it.c==='tela'?nameOf(it):it.c==='det'?'Dettaglio '+it.k:(it.c==='video'?'Video · ':'')+it.w.t;t.innerHTML=`<button type="button" aria-label="${lab}"><img src="${it.th}" alt="" decoding="async" loading="lazy" draggable="false">${it.v?'<span class="play" aria-hidden="true">▶</span>':''}<b>${lab}</b></button>`;
+   if(it.v&&matchMedia('(hover:hover)').matches){const bt=t.querySelector('button');bt.onpointerenter=()=>{if(drag)return;const v=document.createElement('video');v.muted=v.loop=v.playsInline=true;v.src=it.v;bt.insertBefore(v,bt.querySelector('.play'));v.play().catch(()=>{})};bt.onpointerleave=()=>bt.querySelector('video')?.remove()}
    t.querySelector('button').onclick=e=>{if(moved>6){e.preventDefault();return}openAt(it.j)};inn.appendChild(t);tiles.push({el:t,c:k%C,r:Math.floor(k/C)})}}
   tiles.forEach(t=>{t.el.style.width=t.el.style.height=S+'px';t.sh=(t.c%2)*S*.5});lx=NaN}
  const wrap=(v,m)=>((v%m)+m)%m;
@@ -629,7 +649,7 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
   pop();
   document.getElementById('wallx').focus()}
  function close(){wall.classList.remove('open');cancelAnimationFrame(raf);document.documentElement.style.overflow='';lenis&&lenis.start()}
- window.openWall=open;
+ window.openWall=open;document.getElementById('wcount').textContent=`${all.filter(o=>o.c==='tela').length} opere, ${all.filter(o=>o.c!=='video').length} immagini, ${all.filter(o=>o.c==='video').length} video.`;
  btn.onclick=open;document.getElementById('openwall2').onclick=open;document.getElementById('navwall').onclick=e=>{e.preventDefault();open()};
  document.getElementById('wallx').onclick=close;
  addEventListener('keydown',e=>{if(!wall.classList.contains('open')||lb.open)return;if(e.key==='Escape')close();const k={ArrowLeft:[8,0],ArrowRight:[-8,0],ArrowUp:[0,8],ArrowDown:[0,-8]}[e.key];if(k){vx+=k[0];vy+=k[1]}});
