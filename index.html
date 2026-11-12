@@ -18,7 +18,7 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-html,body{margin:0;background:var(--wall);color:var(--ink);font:400 1rem/1.6 var(--display);font-variation-settings:"opsz" 14;overflow-x:clip;-webkit-font-smoothing:antialiased}
+html,body{margin:0;background:var(--tint,var(--wall));transition:background-color 1.4s ease;color:var(--ink);font:400 1rem/1.6 var(--display);font-variation-settings:"opsz" 14;overflow-x:clip;-webkit-font-smoothing:antialiased}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -26,7 +26,7 @@ a{color:inherit}
 
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--wall)}
 header{position:fixed;z-index:9;top:env(safe-area-inset-top,0px);left:0;right:0;display:flex;justify-content:space-between;gap:16px;padding-block:14px;font:500 .95rem/1 var(--display);pointer-events:none}
-header a{pointer-events:auto;text-decoration:none;background:var(--wall);padding:6px 8px}
+header a{pointer-events:auto;text-decoration:none;background:var(--tint,var(--wall));transition:background-color 1.4s ease;padding:6px 8px}
 header nav{display:flex;gap:4px}
 header nav a{color:var(--grey)} header nav a:hover{color:var(--ink)}
 
@@ -46,13 +46,16 @@ header nav a{color:var(--grey)} header nav a:hover{color:var(--ink)}
 .hero-foot .m{justify-self:end;text-align:right}
 
 /* sale */
-.room{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;padding-block:18vh 34vh;align-items:start}
+.room{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:start}
 .room .work{position:relative;grid-column:2/9;justify-self:start}
 .room.r .work{grid-column:5/12;justify-self:end}
 .room .work button{all:unset;cursor:zoom-in;display:block;position:relative;z-index:1}
 .room .work img{display:block;width:auto;height:auto;max-width:100%;max-height:74svh;box-shadow:0 1px 0 rgba(0,0,0,.06),14px 22px 30px -18px rgba(0,0,0,.35)}
 .room .work.round img{box-shadow:none;filter:drop-shadow(14px 20px 18px rgba(0,0,0,.22))}
-.room .work canvas{position:absolute;left:0;top:0;pointer-events:none;z-index:2}
+.loupe{position:absolute;z-index:3;width:clamp(180px,17vw,260px);aspect-ratio:1;border-radius:50%;pointer-events:none;left:0;top:0;transform:translate(-50%,-50%) scale(.6);opacity:0;transition:opacity .25s ease,transform .25s ease;background-repeat:no-repeat;box-shadow:0 0 0 3px var(--wall),0 18px 40px -10px rgba(0,0,0,.45)}
+.work.looking .loupe{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.work.looking button{cursor:none}
+.room{padding-block:16vh 20vh}
 .cap{grid-column:10/13;grid-row:1;align-self:end;display:grid;gap:6px;padding-bottom:4px}
 .room.r .cap{grid-column:1/4}
 .cap h3{margin:0;font:800 clamp(2.4rem,4vw,3.6rem)/.9 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.03em}
@@ -100,7 +103,8 @@ dialog::backdrop{background:var(--wall)}
  .hero h1{font-size:29vw}
  .hero-foot{grid-template-columns:1fr;gap:14px;margin-top:150px}
  .hero-foot .m{justify-self:start;text-align:left}
- .room{grid-template-columns:1fr;gap:20px;padding-block:10vh 26vh}
+ .room{grid-template-columns:1fr;gap:20px;padding-block:10vh 12vh}
+ .loupe{display:none}
  .room .work,.room.r .work{grid-column:1;justify-self:center}
  .room .work img{max-height:58svh}
  .cap,.room.r .cap{grid-column:1;grid-row:auto;order:-1}
@@ -118,7 +122,7 @@ dialog::backdrop{background:var(--wall)}
   <h1 id="name"><span>Marco</span><span>Bomben</span></h1>
   <div class="hero-foot">
     <h2>Sensazioni senza contorni</h2>
-    <p>Sette tele in mostra alla Banca Mediolanum di Azzano Decimo. Il colore non resta dentro il bordo: scorri e lo vedi scendere sulla parete.</p>
+    <p>Sette tele in mostra alla Banca Mediolanum di Azzano Decimo. Passa il cursore su una tela per guardarla da vicino, come davanti al quadro vero.</p>
     <span class="m">Marco Bomben, nato a Pordenone nel 1990.<br>In mostra dal 1 ottobre 2026.</span>
   </div>
 </section>
@@ -204,22 +208,23 @@ function makeDrips(n,wd,startY,colorAt,maxL){const a=[];for(let i=0;i<n;i++){con
  const long=rnd()<.22;a.push({x,y:sy,w:2+rnd()*rnd()*12,L:(long?.55+rnd()*.45:.08+rnd()*.35)*maxL,del:rnd()*.35,col:colorAt(fx)})}return a}
 const css=c=>Array.isArray(c)?`rgb(${c[0]},${c[1]},${c[2]})`:c;
 
-// tele con colature
-const rooms=document.getElementById('rooms'),pad=n=>String(n).padStart(2,'0'),list=[];
+// tele: lente d'ingrandimento sull'immagine grande, parete che prende il colore dell'opera
+const rooms=document.getElementById('rooms'),pad=n=>String(n).padStart(2,'0'),fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+const tintOf=img=>{const p=palette(img,1);if(!p)return null;seed=5;let r=0,g=0,b=0;for(let k=0;k<14;k++){const c=p(rnd(),rnd());r+=c[0];g+=c[1];b+=c[2]}r/=14;g/=14;b/=14;const m=.9;return `rgb(${Math.round(255*m+r*(1-m))},${Math.round(255*m+g*(1-m))},${Math.round(255*m+b*(1-m))})`};
 works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='room gut'+(i%2?' r':'');s.id='opera-'+n;s.setAttribute('aria-label',w.t);
- s.innerHTML=`<div class="work${w.round?' round':''}"><button type="button" aria-label="Guarda da vicino ${w.t}"><img src="img/opera${n}.${w.x}" alt="${w.alt}"></button><canvas aria-hidden="true"></canvas></div>
+ const big=`img/opera${n}-grande.${w.x}`;
+ s.innerHTML=`<div class="work${w.round?' round':''}"><button type="button" aria-label="Guarda da vicino ${w.t}"><img src="img/opera${n}.${w.x}" alt="${w.alt}"></button><div class="loupe" aria-hidden="true"></div></div>
  <div class="cap"><h3>${w.t}</h3><span class="m">${w.m}</span><p>${w.p}</p><button type="button">Guarda da vicino</button></div>`;
  s.querySelectorAll('button').forEach(b=>b.onclick=()=>openLb(w,n));rooms.appendChild(s);
- const img=s.querySelector('img'),cv=s.querySelector('canvas'),o={s,img,cv,round:w.round,drips:null,t:-1};list.push(o);
- const build=()=>{seed=97*n;const W=img.offsetWidth,H=img.offsetHeight;if(!W)return;const fall=Math.max(60,Math.min(innerHeight*.42,420,parseFloat(getComputedStyle(o.s).paddingBottom)-28)),dpr=Math.min(devicePixelRatio||1,2);
-  cv.width=W*dpr;cv.height=(H+fall)*dpr;cv.style.width=W+'px';cv.style.height=(H+fall)+'px';o.ctx=cv.getContext('2d');o.ctx.setTransform(dpr,0,0,dpr,0,0);o.H=H;
-  const pal=palette(img,.12)||(()=>FALL[Math.floor(rnd()*FALL.length)]);
-  const sy=w.round?(x=>{const r=W/2,dx=x-r;if(Math.abs(dx)>r*.86)return null;return r+Math.sqrt(r*r-dx*dx)-2}):(()=>H-1);
-  o.drips=makeDrips(Math.round(W/16),W,sy,fx=>css(pal(fx)),fall);o.t=-1;draw(o)};
- img.complete?build():img.addEventListener('load',build);o.build=build});
-function draw(o){if(!o.drips)return;const r=o.img.getBoundingClientRect();
- const t=reduce?1:clamp((innerHeight*.92-r.bottom)/(innerHeight*.65));if(Math.abs(t-o.t)<.002)return;o.t=t;
- const c=o.ctx;c.clearRect(0,0,o.cv.width,o.cv.height);for(const d of o.drips){const k=ease(clamp((t-d.del)/(1-d.del)));drip(c,d.x,d.y,d.w,d.L*k,d.col)}}
+ const img=s.querySelector('img'),wk=s.querySelector('.work'),lp=s.querySelector('.loupe');
+ const setTint=()=>{s.dataset.tint=tintOf(img)||''};img.complete?setTint():img.addEventListener('load',setTint);
+ if(fine&&!reduce){let loaded=false;const Z=2.6;
+  img.addEventListener('pointerenter',()=>{if(!loaded){loaded=true;lp.style.backgroundImage=`url(${big})`}wk.classList.add('looking')});
+  img.addEventListener('pointerleave',()=>wk.classList.remove('looking'));
+  img.addEventListener('pointermove',e=>{const r=img.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,L=lp.offsetWidth;
+   lp.style.left=x+'px';lp.style.top=y+'px';lp.style.backgroundSize=`${r.width*Z}px ${r.height*Z}px`;lp.style.backgroundPosition=`${-(x*Z-L/2)}px ${-(y*Z-L/2)}px`})}});
+const tio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)document.documentElement.style.setProperty('--tint',e.target.dataset.tint||'var(--wall)')}),{rootMargin:'-48% 0px -48% 0px'});
+document.querySelectorAll('.room,.hero,.sec').forEach(el=>tio.observe(el));
 
 // nome dipinto che cola
 const h1=document.getElementById('name'),hc=document.getElementById('heroDrip'),hero=document.getElementById('top');let hd=null,hstart=0;
@@ -244,9 +249,9 @@ function buildHero(){const cs=getComputedStyle(h1),hr=hero.getBoundingClientRect
  hd={ctx,drips};hstart=performance.now();if(reduce)drawHero(1)}
 function drawHero(force){if(!hd)return;const intro=force||clamp((performance.now()-hstart)/2600),sc=clamp(scrollY/(innerHeight*.9)),t=clamp(intro*.6+sc*.4+(force?1:0));
  const c=hd.ctx;c.clearRect(0,0,hc.width,hc.height);for(const d of hd.drips){const k=ease(clamp((t-d.del*.6)/(1-d.del*.6)));drip(c,d.x,d.y,d.w,d.L*k,d.col)}}
-function loop(){drawHero();list.forEach(draw);requestAnimationFrame(loop)}
-document.fonts.ready.then(()=>{const go=()=>{buildHero();if(!reduce)requestAnimationFrame(loop);else list.forEach(draw)};heroImg.complete?go():(heroImg.onload=go,heroImg.onerror=go)});
-let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{buildHero();list.forEach(o=>o.build())},150)});
+function loop(){drawHero();requestAnimationFrame(loop)}
+document.fonts.ready.then(()=>{const go=()=>{buildHero();if(!reduce)requestAnimationFrame(loop)};heroImg.complete?go():(heroImg.onload=go,heroImg.onerror=go)});
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{buildHero()},150)});
 
 // lightbox
 const lb=document.getElementById('lb'),li=document.getElementById('lb-img'),th=document.getElementById('lb-th');
