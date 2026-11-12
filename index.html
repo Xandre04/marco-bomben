@@ -40,8 +40,9 @@ header .wrap{height:60px;display:flex;align-items:center;justify-content:space-b
 header nav{display:flex;gap:var(--s3)}
 header nav a{font-size:var(--t-s);font-weight:500;text-decoration:none;color:var(--grey)}
 header nav a:hover{color:var(--ink)}
-header .logo{display:flex;gap:.16em;font-weight:800;font-size:22px;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;text-decoration:none;
+header .logo{display:grid;font-weight:800;font-size:17px;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;text-decoration:none;
   background:url(img/opera6-grande.jpg) 30% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
+header .logo span+span{margin-left:.12em}
 .anim header .logo{visibility:hidden}
 .anim header .logo.on{visibility:visible}
 
@@ -49,10 +50,10 @@ header .logo{display:flex;gap:.16em;font-weight:800;font-size:22px;line-height:.
 .hero{padding-top:calc(60px + var(--s5))}
 .mark{position:relative;z-index:20;padding-bottom:clamp(88px,15vh,180px);transform-origin:0 0;will-change:transform}
 #heroDrip{position:absolute;left:0;top:0;width:100%;pointer-events:none;z-index:0}
-.hero h1{position:relative;z-index:1;margin:0;font-weight:800;font-size:15vw;line-height:.82;white-space:nowrap;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;
+.hero h1{position:relative;z-index:1;margin:0;font-weight:800;font-size:21vw;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;
   background:url(img/opera6-grande.jpg) 30% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero h1 span{display:inline-block}
-.hero h1 span+span{margin-left:.16em}
+.hero h1 span{display:block;width:max-content}
+.hero h1 span+span{margin-left:.12em}
 .hero h1 i{font-style:normal}
 .hero h1 .bl{display:inline-block;width:0;height:0}
 .intro{row-gap:var(--s3);padding-bottom:var(--s6);border-bottom:1px solid var(--rule);align-items:start}
@@ -131,10 +132,7 @@ dialog::backdrop{background:var(--wall)}
 }
 @media (max-width:640px){
  header nav{gap:var(--s2)} header nav a:nth-child(n+3){display:none}
- header .logo{display:grid;font-size:17px}
- .hero h1{font-size:28vw;white-space:normal}
- .hero h1 span{display:block}
- .hero h1 span+span{margin-left:.12em}
+ .hero h1{font-size:28vw}
  .works{grid-template-columns:1fr;row-gap:var(--s4)}
  .work{aspect-ratio:auto;padding:28px}
  .work button{height:auto}
@@ -267,7 +265,7 @@ h1.querySelectorAll('span').forEach(sp=>{const t=sp.textContent;sp.setAttribute(
 const mark=document.getElementById('mark');
 const textW=el=>{const sp=el.querySelectorAll(':scope>span');return sp[sp.length-1].getBoundingClientRect().right-sp[0].getBoundingClientRect().left};
 function fitName(){if(matchMedia('(max-width:640px)').matches){h1.style.fontSize='';return}const keep=mark.style.transform;mark.style.transform='none';h1.style.fontSize='';
- const avail=h1.clientWidth,fs=parseFloat(getComputedStyle(h1).fontSize);h1.style.fontSize=(fs*avail/textW(h1)*.995)+'px';mark.style.transform=keep}
+ const avail=h1.clientWidth,fs=parseFloat(getComputedStyle(h1).fontSize);h1.style.fontSize=(fs*avail*.66/textW(h1))+'px';mark.style.transform=keep}
 function buildHero(){const keep=mark.style.transform;mark.style.transform='none';const cs=getComputedStyle(h1),hr=mark.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5),fs=parseFloat(cs.fontSize);
  hc.width=hr.width*dpr;hc.height=hr.height*dpr;hc.style.height=hr.height+'px';const ctx=hc.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
  const pal=heroImg.complete&&heroImg.naturalWidth?palette(heroImg,1):null;seed=11;const drips=[];
