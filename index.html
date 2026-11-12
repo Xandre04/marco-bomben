@@ -185,11 +185,11 @@ header nav a{font-size:15px}
 .sticker svg{position:absolute;inset:6%;width:88%;height:88%;animation:spin 16s linear infinite}
 .sticker b{font:800 clamp(1.4rem,2.2vw,2rem)/.85 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;text-align:center;text-transform:uppercase}
 @keyframes spin{to{transform:rotate(360deg)}}
-.intro{border-bottom:0;position:relative;z-index:3}
+.intro{border-bottom:0;position:relative;z-index:3;padding-bottom:var(--s3)}
 .intro h2{background:var(--pink);color:var(--ink);justify-self:start;padding:.12em .35em .18em;transform:rotate(-2deg);border:3px solid var(--ink);box-shadow:var(--hard);font-size:clamp(1.9rem,3vw,3rem)}
 .intro p{font-size:1.25rem;line-height:1.45}
 /* nastri incrociati: nero e rosa */
-.marq{position:relative;margin-top:var(--s4);border:0;padding:0;height:clamp(150px,19vw,260px);overflow:hidden}
+.marq{position:relative;margin-top:0;border:0;padding:0;height:clamp(150px,19vw,260px);overflow:hidden}
 .tape{position:absolute;left:-5vw;right:-5vw;top:50%;border-block:3px solid var(--ink);padding-block:clamp(8px,1.2vw,16px);overflow:hidden}
 .tape.a{background:var(--ink);transform:translateY(-50%) rotate(-3deg);z-index:2}
 .tape.b{background:var(--pink);transform:translateY(-50%) rotate(3deg);z-index:1}
@@ -223,7 +223,8 @@ header nav a{font-size:15px}
 .photos figure:nth-child(odd){transform:rotate(-1deg)}.photos figure:nth-child(even){transform:rotate(1.2deg)}
 .photos figure::before{content:"";position:absolute;z-index:2;left:50%;top:-12px;width:76px;height:22px;margin-left:-38px;background:rgba(255,46,136,.85);transform:rotate(-4deg)}
 .photos figure:nth-child(even)::before{transform:rotate(5deg)}
-.photos figcaption{font-weight:600;color:var(--ink)}
+.photos figcaption{position:absolute!important;z-index:2;left:12px!important;bottom:12px!important;top:auto!important;background:var(--ink);color:#fff;font-weight:700;padding:4px 10px;transform:rotate(-2deg)}
+.photos figure:first-child img{inset:0;height:100%}
 /* artista su rosa */
 #artista{background:var(--pink);color:var(--ink)}
 #artista .head p,#artista .m{color:#4a0d27}
@@ -243,6 +244,16 @@ footer .wrap{border-top:1px solid #2a2a2a;color:#8d8c87}
 header nav a{color:var(--ink);font-weight:700;padding:6px 12px;border-radius:999px;border:2px solid transparent;transition:background .15s,border-color .15s}
 header nav a:hover{background:var(--pink);border-color:var(--ink)}
 .cur{background:var(--pink)}
+.kairos blockquote{grid-column:1/9;grid-row:1}
+.portrait{grid-column:9/13;grid-row:1/3;margin:0;position:relative;transform:rotate(3deg);align-self:start}
+.portrait img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border:clamp(6px,.7vw,10px) solid #fff;outline:3px solid var(--ink);box-shadow:10px 10px 0 var(--ink)}
+.portrait::before{content:"";position:absolute;z-index:2;left:50%;top:-14px;width:90px;height:26px;margin-left:-45px;background:rgba(255,255,255,.75);transform:rotate(-5deg)}
+.kairos .txt{grid-column:1/9;grid-row:2}
+.kairos .txt>.bio{grid-column:1/7}.kairos .txt>.facts{grid-column:7/13}
+/* chiusura: il nome enorme dipinto */
+.bigname{display:block;font-weight:800;font-size:30vw;line-height:.8;letter-spacing:-.03em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;white-space:nowrap;
+ background:url(img/opera1-grande.jpg) 50% 60%/cover;-webkit-background-clip:text;background-clip:text;color:transparent;padding-top:var(--s4);text-align:center;overflow:hidden}
+@media (max-width:900px){.kairos blockquote,.kairos .txt{grid-column:1/-1}.portrait{grid-column:1/-1;grid-row:auto;width:min(70%,360px);justify-self:end}.kairos .txt{grid-row:auto}}
 @media (max-width:900px){.stack{position:relative;right:auto;top:auto;width:min(78vw,420px);margin:var(--s4) 0 0 auto}}
 @media (max-width:640px){.stack{width:74vw;margin-right:4vw}.sticker{width:96px;left:-18%}.marq{height:130px}.cap{grid-template-columns:auto minmax(0,1fr)}.cap .link{grid-column:1/-1;grid-row:auto;justify-self:start}}
 @media (prefers-reduced-motion:reduce){.sticker svg,.tape.b .marq-track{animation:none}}
@@ -309,6 +320,7 @@ header nav a:hover{background:var(--pink);border-color:var(--ink)}
 <section class="sec" id="artista"><div class="wrap">
   <div class="head grid"><h2>Kairos</h2><p>In greco, il momento giusto. Per Marco è quando un quadro smette di avere bisogno di lui.</p></div>
   <div class="kairos grid">
+    <figure class="portrait"><img src="img/mostra4.jpg" alt="Marco Bomben accanto alle sue tele" loading="lazy"></figure>
     <blockquote>Un quadro è finito quando diventa <em>autosufficiente</em>. Il momento giusto per fermarsi non si decide: si riconosce.</blockquote>
     <div class="txt"><div class="bio">
       <p>Marco Bomben nasce a Pordenone nel 1990. Coltiva la pittura per anni accanto agli studi di filosofia: laurea all'Università Ca' Foscari di Venezia, poi la magistrale in Scienze Filosofiche.</p>
@@ -333,7 +345,7 @@ header nav a:hover{background:var(--pink);border-color:var(--ink)}
   </div>
 </div></section>
 </main>
-<footer><div class="wrap m"><span>© 2026 Marco Bomben</span><span>Tutte le opere sono di proprietà dell'artista</span></div></footer>
+<footer><div class="bigname" aria-hidden="true">Bomben</div><div class="wrap m"><span>© 2026 Marco Bomben</span><span>Tutte le opere sono di proprietà dell'artista</span></div></footer>
 
 <dialog id="lb" aria-label="Opera">
   <div class="lb">
@@ -405,7 +417,7 @@ function paintLetters(){if(!heroImg.naturalWidth)return;const keep=mark.style.tr
  h1.querySelectorAll('i').forEach(el=>{const L=el.getBoundingClientRect();Object.assign(el.style,{backgroundImage:"url(img/opera6-grande.jpg)",backgroundSize:`${bw}px ${bh}px`,backgroundPosition:`${ox-(L.left-h.left)}px ${oy-(L.top-h.top)}px`,webkitBackgroundClip:'text',backgroundClip:'text',color:'transparent'})});
  h1.classList.add('lettered');mark.style.transform=keep}
 function fitName(){if(matchMedia('(max-width:640px)').matches){h1.style.fontSize='';return}const keep=mark.style.transform;mark.style.transform='none';h1.style.fontSize='';
- const avail=h1.clientWidth,fs=parseFloat(getComputedStyle(h1).fontSize);h1.style.fontSize=(fs*avail*.66/textW(h1))+'px';mark.style.transform=keep}
+ const avail=h1.clientWidth,fs=parseFloat(getComputedStyle(h1).fontSize);h1.style.fontSize=(fs*avail*.6/textW(h1))+'px';mark.style.transform=keep}
 function buildHero(){const keep=mark.style.transform;mark.style.transform='none';const cs=getComputedStyle(h1),hr=mark.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5),fs=parseFloat(cs.fontSize);
  hc.width=hr.width*dpr;hc.height=hr.height*dpr;hc.style.height=hr.height+'px';const ctx=hc.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
  const pal=heroImg.complete&&heroImg.naturalWidth?palette(heroImg,1):null;seed=11;const drips=[];
@@ -461,6 +473,8 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   const q=document.querySelector('.kairos blockquote');if(window.SplitText&&q){const sw=SplitText.create(q,{type:'words'});
    gsap.fromTo(sw.words,{opacity:.12},{opacity:1,ease:'none',stagger:.1,scrollTrigger:{trigger:q,start:'top 78%',end:'bottom 42%',scrub:true}})}
   gsap.from('#artista dl.cv div',{x:-40,opacity:0,duration:.6,stagger:.08,ease:'power3.out',scrollTrigger:{trigger:'#artista dl.cv',start:'top 85%',once:true}});
+  gsap.from('.portrait',{y:120,rotate:-12,opacity:0,duration:1,ease:'back.out(1.3)',scrollTrigger:{trigger:'.portrait',start:'top 85%',once:true}});
+  gsap.fromTo('.bigname',{yPercent:60,letterSpacing:'.1em'},{yPercent:0,letterSpacing:'-.03em',ease:'none',scrollTrigger:{trigger:'footer',start:'top bottom',end:'bottom bottom',scrub:true}});
   // contatti: il nome instagram arriva enorme
   gsap.from('.ig b',{scale:.55,yPercent:30,opacity:0,duration:1.1,ease:'expo.out',scrollTrigger:{trigger:'.ig',start:'top 85%',once:true}});
   gsap.from('.contact>*',{y:40,opacity:0,duration:.7,stagger:.08,ease:'power3.out',scrollTrigger:{trigger:'.contact',start:'top 90%',once:true}});
@@ -493,7 +507,8 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   document.querySelectorAll('.room').forEach(r=>{const img=r.querySelector('.work img'),cap=r.querySelector('.cap');
    gsap.timeline({scrollTrigger:{trigger:r,start:'top 82%',once:true}})
     .fromTo(img,{clipPath:'inset(100% 0% 0% 0%)',scale:1.1,rotate:-3},{clipPath:'inset(0% 0% 0% 0%)',scale:1,rotate:0,duration:.9,ease:'power3.out',clearProps:'clipPath'})
-    .from(cap.children,{y:22,opacity:0,duration:.6,ease:'power2.out',stagger:.06},'-=.45')})});
+    .from(cap.children,{y:22,opacity:0,duration:.6,ease:'power2.out',stagger:.06},'-=.45');
+   ScrollTrigger.create({trigger:r,start:'top 60%',end:'bottom 40%',toggleClass:'lit'})})});
  addEventListener('load',()=>ScrollTrigger.refresh());
 }
 document.fonts.ready.then(()=>requestAnimationFrame(stage));
