@@ -328,7 +328,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 
 <section id="contatti"><div class="wrap">
  <h2 class="big">Porta a casa un'opera</h2>
- <a class="ig" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Le tele in mostra sono disponibili. Scrivi a Marco su Instagram</span><b class="wave" aria-label="@mbomben">@mbomben</b></a>
+ <a class="ig" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Le tele in mostra sono disponibili. Scrivi a Marco su Instagram</span><b>@mbomben</b></a>
  <div class="contact">
   <a href="https://www.gigarte.com/marco-bomben" target="_blank" rel="noopener"><span class="m">Catalogo</span><b>Gigarte</b></a>
   <div><span class="m">Email</span><b>da inserire</b></div>
@@ -448,7 +448,7 @@ const entered=new Promise(res=>{const pre=document.getElementById('pre'),pcn=doc
  list.forEach(src=>{const im=new Image();im.onload=im.onerror=()=>{if(++done>=list.length)finish()};im.src=src});setTimeout(finish,7000)});
 document.fonts.ready.then(()=>entered).then(()=>{const go=()=>{fitName();paintLetters();
   const intro=!reduce&&window.gsap;hstart=performance.now()+(intro?1150:0);buildHero();
-  if(intro)gsap.from(h1.querySelectorAll('i'),{yPercent:115,rotate:()=>gsap.utils.random(-28,28),opacity:0,duration:.95,ease:'back.out(1.8)',stagger:.055});
+  if(intro)gsap.from(h1.querySelectorAll('i'),{yPercent:100,opacity:0,duration:1.1,ease:'power4.out',stagger:.045});
   if(!reduce)requestAnimationFrame(loop)};heroImg.complete?go():(heroImg.onload=go,heroImg.onerror=go)});
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{fitName();paintLetters();buildHero();window.ScrollTrigger&&ScrollTrigger.refresh()},150)});
 
@@ -493,10 +493,6 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
  // barra di avanzamento in alto
  gsap.to('#bar2',{scaleX:1,ease:'none',scrollTrigger:{start:0,end:'max',scrub:.3}});
  document.getElementById('up').onclick=()=>lenis?lenis.scrollTo(0,{duration:2.2}):scrollTo({top:0,behavior:'smooth'});
- // @mbomben: le lettere fanno l'onda
- const wv=document.querySelector('.wave');if(wv){wv.innerHTML=[...wv.textContent].map(c=>`<span aria-hidden="true" style="display:inline-block">${c}</span>`).join('');const ls=wv.children;
-  const wave=()=>{if(!reduce&&!gsap.isTweening(ls[0]))gsap.timeline().to(ls,{yPercent:-22,rotate:-6,duration:.22,ease:'power2.out',stagger:.04}).to(ls,{yPercent:0,rotate:0,duration:.7,ease:'elastic.out(1,.35)',stagger:.04},.2)};
-  wv.closest('a').addEventListener('pointerenter',wave);ScrollTrigger.create({trigger:wv,start:'top 80%',onEnter:wave})}
  // ritratto: si inclina col mouse
  const pt=document.querySelector('.portrait img');if(pt&&!reduce&&matchMedia('(hover:hover) and (pointer:fine)').matches){gsap.set(pt,{transformPerspective:1000});
   const prx=gsap.quickTo(pt,'rotationX',{duration:.6,ease:'power3'}),pry=gsap.quickTo(pt,'rotationY',{duration:.6,ease:'power3'});
@@ -533,8 +529,6 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
     .fromTo(s.querySelector('.aura'),{opacity:0,scale:.6},{opacity:.32,scale:1,duration:.4},.24)
     .fromTo(info,{y:50,opacity:0,rotate:-2},{y:0,opacity:1,rotate:0,stagger:.025,duration:.14,ease:'back.out(1.6)'},.56)
     .to({},{duration:.2},.8)});
-  // le lettere del nome saltano quando ci passi sopra
-  if(matchMedia('(hover:hover)').matches)h1.querySelectorAll('i').forEach(el=>el.addEventListener('pointerenter',()=>{if(gsap.isTweening(el))return;gsap.timeline().to(el,{yPercent:-14,rotate:gsap.utils.random(-12,12),duration:.18,ease:'power2.out'}).to(el,{yPercent:0,rotate:0,duration:.6,ease:'elastic.out(1,.35)'})}));
   gsap.from('.index button',{y:60,opacity:0,rotate:()=>gsap.utils.random(-6,6),duration:.8,ease:'back.out(1.4)',stagger:.06,scrollTrigger:{trigger:'.index',start:'top 85%',once:true}});
   gsap.from('.portrait',{y:120,rotate:-12,opacity:0,duration:1,ease:'back.out(1.3)',scrollTrigger:{trigger:'#marco',start:'top 75%',once:true}});
   gsap.from('.story>*',{y:40,opacity:0,duration:.8,ease:'power3.out',stagger:.08,scrollTrigger:{trigger:'.story',start:'top 80%',once:true}});
@@ -624,7 +618,7 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
  wall.addEventListener('wheel',e=>{e.preventDefault();if(e.ctrlKey){setZoom(zoom*(e.deltaY<0?1.08:1/1.08));return}vx-=e.deltaX*.12+(e.shiftKey?e.deltaY*.12:0);vy-=e.shiftKey?0:e.deltaY*.12},{passive:false});
  addEventListener('resize',()=>{if(wall.classList.contains('open')){tiles=[];layout()}});
  // il bottone compare dopo l'apertura e resta sempre a portata
- const tog=()=>btn.classList.toggle('show',scrollY>innerHeight*.6);addEventListener('scroll',tog,{passive:true});tog();
+ const mk=document.getElementById('marco');const tog=()=>btn.classList.toggle('show',scrollY>innerHeight*.6&&scrollY+innerHeight<mk.offsetTop+innerHeight*.4);addEventListener('scroll',tog,{passive:true});tog();
  if(location.hash==='#parete')setTimeout(open,300);
 })();
 </script>
