@@ -99,7 +99,12 @@ html.gyro-on .tiltnote{display:block}
 .info h3{margin:0;font:800 clamp(2.2rem,3.6vw,3.6rem)/.9 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.02em}
 .info .m{color:#a3a29d;margin:0}
 .info p{margin:0;max-width:34ch}
-.info .pill{color:#fff}.info .pill:hover{background:var(--glow,var(--pink));border-color:var(--glow,var(--pink));color:var(--ink)}
+.info .pill{color:#fff}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3)}
+.ask{font-weight:700;font-size:var(--t-s);color:#fff;text-decoration:none;border-bottom:2px solid var(--glow,var(--pink));padding-bottom:2px}.ask:hover{color:var(--glow,var(--pink))}
+.chip{display:inline-block;margin-left:.5em;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);background:var(--glow,var(--pink));padding:3px 8px;border-radius:999px;vertical-align:1px}
+.keys{display:none;font-size:12px;font-weight:700;color:#a3a29d;text-align:right;margin-top:6px}@media (hover:hover) and (pointer:fine){.keys{display:block}}
+.up{all:unset;cursor:pointer;font-weight:700;color:#fff}.up:hover{color:var(--pink)}.info .pill:hover{background:var(--glow,var(--pink));border-color:var(--glow,var(--pink));color:var(--ink)}
 .det{position:absolute;inset:0;z-index:3;transform-origin:calc(100% - var(--side)) calc(100% - 48px);transform:scale(.2);border-radius:0;overflow:hidden;will-change:transform;pointer-events:none}
 .det img{width:100%;height:100%;object-fit:cover;display:block}
 .det::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 40px #fff;opacity:var(--f,1)}
@@ -176,11 +181,6 @@ dialog::backdrop{background:var(--dark)}
 .lb-th button{all:unset;cursor:pointer;opacity:.4}.lb-th button[aria-current="true"],.lb-th button:hover{opacity:1}
 .lb-th img{width:60px;height:60px;object-fit:cover;display:block}
 
-.cur{position:fixed;left:0;top:0;z-index:60;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--pink);pointer-events:none;opacity:0;transition:width .25s,height .25s,margin .25s,opacity .2s}
-.cur{display:grid;place-items:center;color:var(--ink);font:800 14px/1 var(--display);font-variation-settings:"wdth" 85}
-.cur span{opacity:0;transition:opacity .15s}
-.cur.on{opacity:1}.cur.big{width:56px;height:56px;margin:-28px 0 0 -28px;mix-blend-mode:difference;background:#fff}
-.cur.say{width:92px;height:92px;margin:-46px 0 0 -46px;mix-blend-mode:normal;background:var(--pink)}.cur.say span{opacity:1}
 /* ingresso */
 html.loading{overflow:hidden}
 html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}.lenis.lenis-stopped{overflow:clip}
@@ -204,7 +204,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
  .stage{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;padding:84px var(--side) 28px;row-gap:var(--s3)}
  .full{grid-column:1;grid-row:1}.info{grid-column:1;grid-row:2;padding-bottom:0;gap:var(--s1)}
  .info{grid-template-columns:auto 1fr;column-gap:var(--s2);align-items:end}
- .num{grid-row:1/3;font-size:5rem}.info h3{font-size:2.2rem}.info p{grid-column:1/-1}.info .pill{grid-column:1/-1}
+ .num{grid-row:1/3;font-size:5rem}.info h3{font-size:2.2rem}.info p{grid-column:1/-1}.info .acts,.info .tiltnote{grid-column:1/-1}
  .det{transform-origin:calc(100% - var(--side)) 100px}
  .aura{background:radial-gradient(closest-side at 50% 40%,var(--glow,#ff2e88),transparent)}
  .cnt{top:auto;bottom:28px}
@@ -231,7 +231,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 
 <div id="pre" aria-hidden="true"><div class="pc"><span id="pcn">00</span></div><div class="pl"><span>Marco Bomben</span><span>Sensazioni senza contorni</span></div>
 <svg viewBox="0 0 1000 100" preserveAspectRatio="none"><path fill="#ff2e88" d="M0,0H1000V18C990,18 985,30 984,48C983,62 975,62 974,48C973,30 960,20 930,20C900,20 890,26 889,70C888,92 876,92 875,70C874,40 860,22 800,22C760,22 752,28 751,40C750,52 740,52 739,40C738,28 700,20 640,20C600,20 590,30 589,84C588,100 574,100 573,84C572,40 560,22 520,22C470,22 462,30 461,52C460,66 448,66 447,52C446,30 420,18 360,18C320,18 312,24 311,36C310,46 300,46 299,36C298,24 270,20 230,20C190,20 182,30 181,76C180,96 166,96 165,76C164,40 150,20 100,20C60,20 52,28 51,44C50,58 38,58 37,44C36,26 20,18 0,18Z"/></svg></div>
-<div class="cur" id="cur" aria-hidden="true"><span></span></div><div class="peek" id="peek" aria-hidden="true"><img alt=""></div>
+<div class="peek" id="peek" aria-hidden="true"><img alt=""></div>
 <header id="bar"><div class="wrap"><a class="logo" href="#top" aria-label="Marco Bomben, torna su"><span>Marco</span><span>Bomben</span></a><nav aria-label="Sezioni"><a href="#opere">Opere</a><a href="#indice">Indice</a><a href="#marco">Marco</a><a href="#contatti">Contatti</a></nav></div></header>
 
 <main>
@@ -293,7 +293,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
  </div>
 </div></section>
 </main>
-<footer><div class="bigname" aria-hidden="true">Bomben</div><div class="wrap m"><span>© 2026 Marco Bomben</span><span>Tutte le opere sono di proprietà dell'artista</span></div></footer>
+<footer><div class="bigname" aria-hidden="true">Bomben</div><div class="wrap m"><span>© 2026 Marco Bomben</span><span>Tutte le opere sono di proprietà dell'artista</span><button class="up" type="button" id="up">Torna su ↑</button></div></footer>
 
 <dialog id="lb" aria-label="Opera" data-lenis-prevent>
  <div class="lb">
@@ -342,7 +342,7 @@ const fitAll=()=>[...scenes.children].forEach(fitFull);
 works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='scene';s.id='opera-'+n;s.setAttribute('aria-label',w.t);
  s.innerHTML=`<div class="stage"><div class="aura" aria-hidden="true"></div>
   <div class="full${w.x==="webp"?" round":""}"><button type="button" aria-label="Guarda i dettagli di ${w.t}"><img src="img/opera${n}-grande.${w.x}" alt="${w.alt}" decoding="async"><span class="sheen" aria-hidden="true"></span></button></div>
-  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m}</p><p>${w.p}</p><button class="pill" type="button">Guarda i dettagli ↗</button><span class="tiltnote">Inclina il telefono: la luce scorre sulla vernice</span></div>
+  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m} <span class="chip">Disponibile</span></p><p>${w.p}</p><span class="acts"><button class="pill" type="button">Guarda i dettagli ↗</button><a class="ask" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener">Chiedi di quest'opera</a></span><span class="tiltnote">Inclina il telefono: la luce scorre sulla vernice</span></div>
   <div class="det" aria-hidden="true"><img src="img/opera${n}-dettaglio1.jpg" alt="" decoding="async"></div>
   <div class="hint" aria-hidden="true"><b>${w.t}, da vicino</b><span>Scorri per fare un passo indietro</span></div>
   <span class="cnt">${pad(n)} / ${pad(works.length)}</span></div>`;
@@ -350,6 +350,7 @@ works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.classNam
  const b=document.createElement('button');b.type='button';b.innerHTML=`<span class="th"><img src="img/opera${n}.${w.x}" alt="" loading="lazy"></span><b>${pad(n)} ${w.t}</b><span>${w.m}</span>`;
  b.onclick=()=>goTo(i);index.appendChild(b);
  const r=document.createElement('button');r.type='button';r.setAttribute('aria-label',`${pad(n)} ${w.t}`);r.innerHTML=`<span>${pad(n)} ${w.t}</span><i></i>`;r.onclick=()=>goTo(i);rail.appendChild(r);
+ if(i===works.length-1){const k=document.createElement('span');k.className='keys';k.textContent='← → per cambiare';rail.appendChild(k)}
  const img=s.querySelector('.full img'),setGlow=()=>{const g=glowOf(img);if(!g)return;const c=css(g);s.style.setProperty('--glow',c);b.style.setProperty('--glow',c);
   s.dataset.tint=`rgb(${Math.round(11+g[0]*.16)},${Math.round(11+g[1]*.16)},${Math.round(11+g[2]*.16)})`};
  const ready=()=>{setGlow();fitFull(s)};img.complete&&img.naturalWidth?ready():img.addEventListener('load',ready,{once:true})});
@@ -436,7 +437,13 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   // ogni tela si posa da sola sul dettaglio o sulla tela intera quando smetti di scorrere
   let idle;lenis.on('scroll',()=>{clearTimeout(idle);idle=setTimeout(()=>{if(lenis.isStopped||lb.open)return;const y=lenis.scroll;
    for(const s of scenes.children){const len=s.offsetHeight-innerHeight,p=(y-s.offsetTop)/len;if(p<=0||p>=1)continue;
-    const t=p<REST/2?0:p<(1+REST)/2?REST:1,ty=s.offsetTop+len*t;if(Math.abs(ty-y)>3)lenis.scrollTo(ty,{duration:.9});break}},200)})}
+    const t=p<REST/2?0:p<(1+REST)/2?REST:1,ty=s.offsetTop+len*t;if(Math.abs(ty-y)>3)lenis.scrollTo(ty,{duration:.9,onComplete:()=>navigator.vibrate&&navigator.vibrate(8)});break}},200)})}
+ // tastiera: frecce sinistra e destra per passare da una tela all'altra
+ addEventListener('keydown',e=>{if(lb.open||e.altKey||e.metaKey||e.ctrlKey||/input|textarea/i.test(e.target.tagName))return;if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
+  const y=lenis?lenis.scroll:scrollY,list=[...scenes.children];let i=list.findIndex(s=>y>=s.offsetTop-innerHeight*.5&&y<s.offsetTop+s.offsetHeight-innerHeight*.5);if(i<0)return;
+  e.preventDefault();const r=restY(list[i]),j=e.key==='ArrowRight'?(y<r-20?i:i+1):(y>r+20?i:i-1);
+  if(j>=list.length){const t=document.getElementById('indice').offsetTop;lenis?lenis.scrollTo(t,{duration:1.6}):scrollTo({top:t,behavior:'smooth'})}else goTo(Math.max(0,j))});
+ document.getElementById('up').onclick=()=>lenis?lenis.scrollTo(0,{duration:2.2}):scrollTo({top:0,behavior:'smooth'});
  const mm=gsap.matchMedia();
  mm.add('(prefers-reduced-motion: no-preference)',()=>{
   document.documentElement.classList.add('anim');
@@ -473,11 +480,7 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   gsap.from('.story>*',{y:40,opacity:0,duration:.8,ease:'power3.out',stagger:.08,scrollTrigger:{trigger:'.story',start:'top 80%',once:true}});
   gsap.from('.ig b',{scale:.55,yPercent:30,opacity:0,duration:1.1,ease:'expo.out',scrollTrigger:{trigger:'.ig',start:'top 85%',once:true}});
   gsap.fromTo('.bigname',{yPercent:60,letterSpacing:'.1em'},{yPercent:0,letterSpacing:'-.03em',ease:'none',scrollTrigger:{trigger:'footer',start:'top bottom',end:'bottom bottom',scrub:true}});
-  if(matchMedia('(hover:hover) and (pointer:fine)').matches){const cur=document.getElementById('cur'),cx=gsap.quickTo(cur,'x',{duration:.25,ease:'power3'}),cy=gsap.quickTo(cur,'y',{duration:.25,ease:'power3'});
-   const lab=cur.querySelector('span');
-   addEventListener('pointermove',e=>{cur.classList.add('on');cx(e.clientX);cy(e.clientY);const t=e.target;
-    const say=t.closest('.full button')?'Guarda':t.closest('.reel')?'Trascina':t.closest('.index button')?'Vai':t.closest('.ig,.contact a')?'Scrivi':'';
-    lab.textContent=say;cur.classList.toggle('say',!!say);cur.classList.toggle('big',!say&&!!t.closest('a,button'))},{passive:true});
+  if(matchMedia('(hover:hover) and (pointer:fine)').matches){
    // pulsanti magnetici
    document.querySelectorAll('.cue,.ig,.contact>a,header nav a').forEach(el=>{const mx=gsap.quickTo(el,'x',{duration:.5,ease:'elastic.out(1,.5)'}),my=gsap.quickTo(el,'y',{duration:.5,ease:'elastic.out(1,.5)'}),k=el.classList.contains('ig')?.08:.3;
     el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();mx((e.clientX-r.left-r.width/2)*k);my((e.clientY-r.top-r.height/2)*k)});el.addEventListener('pointerleave',()=>{mx(0);my(0)})});
@@ -491,7 +494,7 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
    reel.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;dx=e.clientX;sl=reel.scrollLeft;reel.classList.add('drag');e.preventDefault()});
    addEventListener('pointermove',e=>{if(dx!==null)reel.scrollLeft=sl-(e.clientX-dx)});
    addEventListener('pointerup',()=>{if(dx===null)return;dx=null;reel.classList.remove('drag');const f=reel.children[0].offsetWidth+16;reel.scrollTo({left:Math.round(reel.scrollLeft/f)*f,behavior:'smooth'})});
-   document.addEventListener('pointerleave',()=>cur.classList.remove('on'))}
+   }
   return()=>document.documentElement.classList.remove('anim')});
  addEventListener('load',()=>ScrollTrigger.refresh());
 }
@@ -520,7 +523,7 @@ const aim=e=>{const r=li.getBoundingClientRect();li.style.transformOrigin=`${cla
 li.addEventListener('pointerdown',e=>{px=e.clientX;moved=false});
 li.addEventListener('pointermove',e=>{if(lm.classList.contains('zoom'))aim(e);if(px!==null&&Math.abs(e.clientX-px)>8)moved=true});
 li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
- if(!lm.classList.contains('zoom')&&Math.abs(dx)>50){show(cur+(dx<0?1:-1),dx<0?1:-1);return}
+ if(!lm.classList.contains('zoom')&&Math.abs(dx)>50){navigator.vibrate&&navigator.vibrate(6);show(cur+(dx<0?1:-1),dx<0?1:-1);return}
  if(!moved||lm.classList.contains('zoom')&&e.pointerType!=='mouse'&&!moved){aim(e);lm.classList.toggle('zoom');document.getElementById('lb-tip').style.opacity=0}});
 </script>
 </body>
