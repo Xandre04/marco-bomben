@@ -5,411 +5,298 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Marco Bomben</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Marco Bomben, pittore. Sensazioni senza contorni: il colore esce dalla tela e cola sulla parete.">
+<meta name="description" content="Marco Bomben, pittore. Sensazioni senza contorni: sette tele da guardare prima da vicino, poi per intero.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
 <style>
-/* Layout: catalogo di galleria su bianco. Un contenitore unico per tutta la pagina, griglia a 12 colonne,
-   scala di spaziature a passi fissi. Le tele stanno in pannelli uguali, così i quadri di formati diversi restano in ordine.
-   Unico gesto forte: il nome dipinto che cola e poi diventa il logo. Tema unico chiaro, per scelta. */
+/* Struttura: apertura bianca col nome dipinto, poi le opere al buio una per schermo.
+   Ogni tela si guarda come dal vero: prima il dettaglio a tutto schermo, poi un passo indietro e la tela intera.
+   Dopo: indice delle sette, Marco con ritratto fisso, contatti su rosa. */
 :root{
-  --wall:#ffffff; --panel:#f1f1ef; --ink:#0a0a0a; --grey:#6f6e6a; --rule:#e3e2de;
+  --wall:#fff;--ink:#0a0a0a;--grey:#55544f;--rule:#e3e2de;--pink:#ff2e88;--dark:#0b0b0b;
   --display:"Bricolage Grotesque","Arial Narrow",system-ui,sans-serif;
-  /* spaziature */ --s1:8px; --s2:16px; --s3:24px; --s4:40px; --s5:64px; --s6:clamp(72px,9vw,120px);
-  /* tipografia */ --t-s:.875rem; --t-b:1.0625rem; --t-l:1.375rem; --t-xl:clamp(1.75rem,2.6vw,2.5rem); --t-xxl:clamp(2.75rem,6.4vw,6rem);
-  --side:clamp(20px,4.5vw,64px); --max:1360px; --gap:clamp(16px,2vw,32px);
+  --s1:8px;--s2:16px;--s3:24px;--s4:40px;--s5:64px;--s6:clamp(80px,10vw,140px);
+  --t-s:.9375rem;--t-b:1.125rem;--t-l:1.5rem;--t-xl:clamp(1.9rem,3vw,3rem);--t-xxl:clamp(3rem,7vw,7rem);
+  --side:clamp(20px,4.5vw,64px);--max:1360px;--gap:clamp(16px,2vw,32px);--hard:6px 6px 0 var(--ink);
   color-scheme:light;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
 html,body{margin:0;background:var(--wall);color:var(--ink);font:400 var(--t-b)/1.55 var(--display);font-variation-settings:"opsz" 14;overflow-x:clip;-webkit-font-smoothing:antialiased}
-a{color:inherit}
-img{max-width:100%}
-:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+a{color:inherit}img{max-width:100%}
+:focus-visible{outline:2px solid var(--pink);outline-offset:4px}
 .wrap{width:100%;max-width:calc(var(--max) + 2*var(--side));margin-inline:auto;padding-left:max(var(--side),env(safe-area-inset-left,0px));padding-right:max(var(--side),env(safe-area-inset-right,0px))}
-.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap)}
 .m{font-size:var(--t-s);line-height:1.45;color:var(--grey)}
-.link{font-weight:600;text-decoration:none;border-bottom:2px solid currentColor;padding-bottom:2px}
-.link:hover{color:var(--grey)}
+.big{font:800 var(--t-xxl)/.88 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.025em;margin:0;text-wrap:balance}
+.pill{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:.5em;font-weight:700;font-size:var(--t-s);border:2px solid currentColor;border-radius:999px;padding:9px 18px;transition:background .15s,color .15s,border-color .15s}
+.pill:hover{background:var(--pink);border-color:var(--pink);color:var(--ink)}
 
-/* barra in alto */
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--wall)}
-header{position:fixed;z-index:9;top:env(safe-area-inset-top,0px);left:0;right:0;background:var(--wall);border-bottom:1px solid transparent;transition:border-color .3s}
-header.lined{border-bottom-color:var(--rule)}
-header .wrap{height:60px;display:flex;align-items:center;justify-content:space-between;gap:var(--s3)}
-header nav{display:flex;gap:var(--s3)}
-header nav a{font-size:var(--t-s);font-weight:500;text-decoration:none;color:var(--grey)}
-header nav a:hover{color:var(--ink)}
-header .logo{display:grid;font-weight:800;font-size:17px;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;text-decoration:none;
-  background:url(img/opera6-grande.jpg) 30% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
+/* barra: pillole leggibili su qualunque fondo */
+header{position:fixed;z-index:30;top:env(safe-area-inset-top,0px);left:0;right:0;pointer-events:none}
+header .wrap{height:68px;display:flex;align-items:center;justify-content:space-between;gap:var(--s2)}
+header a{pointer-events:auto}
+header .logo{display:grid;font-weight:800;font-size:18px;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;text-decoration:none;
+  background:url(img/opera6-grande.jpg) 30% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent;padding:8px 12px;position:relative}
+header .logo::before{content:"";position:absolute;inset:0;background:#fff;border:2px solid var(--ink);border-radius:10px;z-index:-1}
 header .logo span+span{margin-left:.12em}
-.anim header .logo{visibility:hidden}
-.anim header .logo.on{visibility:visible}
+.anim header .logo{visibility:hidden}.anim header .logo.on{visibility:visible}
+header nav{pointer-events:auto;display:flex;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:3px}
+header nav a{font-size:15px;font-weight:700;text-decoration:none;padding:6px 14px;border-radius:999px;transition:background .15s}
+header nav a:hover,header nav a.on{background:var(--pink)}
 
 /* apertura */
-.hero{padding-top:calc(60px + var(--s5))}
-.mark{position:relative;z-index:20;padding-bottom:clamp(88px,15vh,180px);transform-origin:0 0;will-change:transform}
+.hero{position:relative;padding-top:calc(68px + var(--s5));overflow:hidden}
+.mark{position:relative;z-index:20;padding-bottom:clamp(80px,13vh,160px);transform-origin:0 0;will-change:transform}
 #heroDrip{position:absolute;left:0;top:0;width:100%;pointer-events:none;z-index:0}
 .hero h1{position:relative;z-index:1;margin:0;font-weight:800;font-size:21vw;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;
   background:url(img/opera6-grande.jpg) 30% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero h1 span{display:block;width:max-content}
-.hero h1 span+span{margin-left:.12em}
-.hero h1 i{font-style:normal;display:inline-block}
-.hero h1.lettered{background:none}
+.hero h1 span{display:block;width:max-content}.hero h1 span+span{margin-left:.12em}
+.hero h1 i{font-style:normal;display:inline-block}.hero h1.lettered{background:none}
 .hero h1 .bl{display:inline-block;width:0;height:0}
-.intro{row-gap:var(--s3);padding-bottom:var(--s6);border-bottom:1px solid var(--rule);align-items:start}
-.intro h2{grid-column:1/6;margin:0;font:700 var(--t-xl)/1.05 var(--display);font-variation-settings:"opsz" 48,"wdth" 85;letter-spacing:-.02em;text-wrap:balance}
-.intro p{grid-column:7/11;margin:0;max-width:44ch}
-.intro .m{grid-column:11/13;margin:0}
+.sticker{position:absolute;z-index:21;right:var(--side);top:calc(68px + var(--s4));width:clamp(120px,13vw,190px);aspect-ratio:1;border-radius:50%;background:var(--pink);border:3px solid var(--ink);box-shadow:var(--hard);display:grid;place-items:center}
+.sticker svg{position:absolute;inset:6%;width:88%;height:88%;animation:spin 16s linear infinite}
+.sticker b{font:800 clamp(1.5rem,2.4vw,2.3rem)/.85 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;text-align:center;text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+.intro{position:relative;z-index:21;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);row-gap:var(--s3);align-items:end;padding-bottom:var(--s5)}
+.intro h2{grid-column:1/6;justify-self:start;margin:0;font:800 var(--t-xl)/1 var(--display);font-variation-settings:"opsz" 48,"wdth" 85;letter-spacing:-.02em;background:var(--pink);padding:.12em .35em .18em;transform:rotate(-2deg);border:3px solid var(--ink);box-shadow:var(--hard)}
+.intro p{grid-column:7/11;margin:0;font-size:1.25rem;line-height:1.45}
+.cue{grid-column:11/13;justify-self:end;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;border:2px solid var(--ink);text-decoration:none;font-size:26px;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(8px)}}
 
-/* intestazione di sezione: titolo a sinistra, frase a destra, sempre uguale */
-.head{align-items:end;row-gap:var(--s2);margin-bottom:var(--s5)}
-.head h2{grid-column:1/8;margin:0;font:800 var(--t-xxl)/.9 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.02em;text-wrap:balance}
-.head p{grid-column:9/13;margin:0;color:var(--grey);max-width:40ch}
-.sec{padding-block:var(--s6)}
-.sec+.sec{border-top:1px solid var(--rule)}
+/* soglia: si entra al buio */
+.door{background:var(--dark);color:#fff;padding-block:var(--s6) var(--s5)}
+.door .big{max-width:14ch}
+.door .big em{font-style:normal;color:var(--pink)}
+.door p{max-width:46ch;color:#a3a29d;margin:var(--s3) 0 0}
 
-/* opere: pannelli uguali a due colonne, la tela larga occupa tutta la riga */
-.works{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--gap);row-gap:var(--s5)}
-.room{min-width:0;display:grid;gap:var(--s2);align-content:start}
-.room.wide{grid-column:1/-1}
-.work{background:var(--panel);transition:background-color .6s ease;aspect-ratio:5/4;display:flex;align-items:center;justify-content:center;padding:clamp(28px,4.5vw,64px)}
-.room.wide .work{aspect-ratio:auto;padding-block:clamp(32px,6vw,88px)}
-.work button{all:unset;position:relative;display:block;cursor:zoom-in;height:100%;max-width:100%}
-.work button img{height:100%;width:auto;max-width:100%;object-fit:contain}
-.work img{display:block;box-shadow:0 1px 1px rgba(0,0,0,.08),10px 16px 24px -14px rgba(0,0,0,.4)}
-.room.wide .work button{height:auto}
-.room.wide .work img{height:auto;width:min(100%,1000px)}
-.work.round img{box-shadow:none;filter:drop-shadow(8px 14px 14px rgba(0,0,0,.25))}
-.cap{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:var(--s3);row-gap:var(--s1);align-items:baseline}
-.cap h3{margin:0;font:700 var(--t-l)/1.15 var(--display);font-variation-settings:"opsz" 36,"wdth" 85;letter-spacing:-.01em}
-.cap .m{grid-column:1}
-.cap p{grid-column:1;margin:0;max-width:52ch}
-.cap .link{grid-column:2;grid-row:1;justify-self:end;font-size:var(--t-s);background:none;border-top:0;border-left:0;border-right:0;cursor:pointer;font-family:inherit;color:inherit;padding:0 0 2px}
-.loupe{position:absolute;z-index:3;width:clamp(170px,15vw,240px);aspect-ratio:1;border-radius:50%;pointer-events:none;left:0;top:0;transform:translate(-50%,-50%) scale(.6);opacity:0;transition:opacity .2s ease,transform .2s ease;background-repeat:no-repeat;box-shadow:0 0 0 3px var(--wall),0 14px 32px -10px rgba(0,0,0,.45)}
-.work.looking .loupe{opacity:1;transform:translate(-50%,-50%) scale(1)}
-.work.looking button{cursor:none}
+/* le opere: una per schermo */
+.scene{position:relative;height:240vh;background:var(--dark)}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--dark);color:#fff;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:var(--gap);align-items:center;padding:90px var(--side) 48px}
+.aura{position:absolute;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(closest-side at 62% 50%,var(--glow,#ff2e88),transparent);opacity:.32}
+.full,.info{position:relative;z-index:1}
+.full{grid-column:2;grid-row:1;height:100%;min-height:0;display:flex;align-items:center;justify-content:center}
+.full button{all:unset;cursor:zoom-in;display:block;height:100%;max-width:100%;position:relative}
+.full img{display:block;height:100%;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 40px 50px rgba(0,0,0,.6))}
+.info{grid-column:1;grid-row:1;align-self:end;position:relative;z-index:2;display:grid;gap:var(--s2);justify-items:start;padding-bottom:var(--s3)}
+.num{font:800 clamp(5rem,11vw,10rem)/.78 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;color:transparent;-webkit-text-stroke:2px var(--glow,#fff)}
+.info h3{margin:0;font:800 clamp(2.2rem,3.6vw,3.6rem)/.9 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.02em}
+.info .m{color:#a3a29d;margin:0}
+.info p{margin:0;max-width:34ch}
+.info .pill{color:#fff}.info .pill:hover{background:var(--glow,var(--pink));border-color:var(--glow,var(--pink));color:var(--ink)}
+.det{position:absolute;inset:0;z-index:3;transform-origin:calc(100% - var(--side)) calc(100% - 48px);transform:scale(.2);border-radius:0;overflow:hidden;will-change:transform;pointer-events:none}
+.det img{width:100%;height:100%;object-fit:cover;display:block}
+.det::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 40px #fff;opacity:var(--f,1)}
+.cnt{position:absolute;z-index:4;right:var(--side);top:90px;font:800 1.1rem/1 var(--display);font-variant-numeric:tabular-nums;color:#fff;mix-blend-mode:difference}
+.hint{position:absolute;z-index:4;left:var(--side);bottom:48px;display:grid;gap:4px;color:#fff;opacity:0;text-shadow:0 1px 12px rgba(0,0,0,.6)}
+.hint b{font:800 clamp(2.4rem,5vw,4.5rem)/.9 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.02em}
+.hint span{font-weight:600}
 
-/* foto */
-.photos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:auto auto;gap:var(--gap)}
-.photos figure{align-content:start}
-.photos figure:first-child{grid-column:1/3;grid-row:1/3;position:relative;min-height:320px}
-.photos figure:first-child img{position:absolute;inset:0 0 28px 0;width:100%;height:calc(100% - 28px);aspect-ratio:auto}
-.photos figure:first-child figcaption{position:absolute;left:0;bottom:0}
-.photos figure{margin:0;display:grid;gap:var(--s1)}
-.photos img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+/* indice */
+#indice{background:var(--dark);color:#fff;padding-block:var(--s6)}
+#indice .top{display:flex;justify-content:space-between;align-items:end;gap:var(--s3);flex-wrap:wrap;margin-bottom:var(--s5)}
+#indice .top p{margin:0;color:#a3a29d;max-width:36ch}
+.index{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:var(--gap)}
+.index button{all:unset;cursor:pointer;display:grid;gap:var(--s1);align-content:start}
+.index .th{aspect-ratio:1;background:#161616;display:grid;place-items:center;padding:12%;transition:background .3s,transform .3s cubic-bezier(.3,1.6,.5,1)}
+.index img{max-height:100%;max-width:100%;object-fit:contain;display:block}
+.index b{font:800 1.25rem/1 var(--display);font-variation-settings:"wdth" 80}
+.index span{font-size:var(--t-s);color:#a3a29d}
+.index button:hover .th{background:var(--glow,var(--pink));transform:rotate(-3deg) translateY(-6px)}
 
-/* artista */
-.kairos{row-gap:var(--s4);align-items:start}
-.kairos blockquote{grid-column:1/12;margin:0 0 var(--s4);font:700 clamp(2rem,4.6vw,4.25rem)/1.02 var(--display);font-variation-settings:"opsz" 96,"wdth" 80;letter-spacing:-.025em;text-wrap:balance}
-.kairos blockquote em{font-style:normal;color:#d81b72}
-.kairos .txt{grid-column:1/13;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);align-items:start}
-.kairos .txt>.bio{grid-column:1/6}
-.kairos .txt>.facts{grid-column:7/13}
-.kairos .txt p{margin:0 0 var(--s2)}
-dl.cv{margin:0 0 var(--s3);display:grid}
-dl.cv div{display:grid;grid-template-columns:5rem 1fr;gap:var(--s2);padding-block:12px;border-top:1px solid var(--rule)}
-dl.cv div:last-child{border-bottom:1px solid var(--rule)}
-dl.cv dt{font-weight:700;font-variant-numeric:tabular-nums}
-dl.cv dd{margin:0}
+/* Marco */
+#marco{padding-block:var(--s6)}
+.marco{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);align-items:start}
+.portrait{grid-column:1/6;position:sticky;top:100px;margin:0;transform:rotate(-2deg)}
+.portrait img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border:10px solid #fff;outline:3px solid var(--ink);box-shadow:12px 12px 0 var(--pink)}
+.portrait::before{content:"";position:absolute;z-index:2;left:50%;top:-14px;width:100px;height:28px;margin-left:-50px;background:rgba(255,46,136,.85);transform:rotate(-5deg)}
+.portrait figcaption{margin-top:var(--s3)}
+.story{grid-column:7/13;display:grid;gap:var(--s4)}
+.story .kicker{font-weight:700;color:var(--pink);text-transform:uppercase;letter-spacing:.08em;font-size:var(--t-s);margin:0 0 calc(-1*var(--s3))}
+.story blockquote{margin:0;font:800 clamp(2rem,3.8vw,3.6rem)/1 var(--display);font-variation-settings:"opsz" 96,"wdth" 80;letter-spacing:-.025em;text-wrap:balance}
+.story blockquote em{font-style:normal;background:var(--pink);padding:0 .12em}
+.story p{margin:0}
+dl.cv{margin:0;display:grid}
+dl.cv div{display:grid;grid-template-columns:5rem 1fr;gap:var(--s2);padding-block:14px;border-top:2px solid var(--ink)}
+dl.cv dt{font-weight:800;font-variant-numeric:tabular-nums}dl.cv dd{margin:0}
+.reel{display:flex;gap:var(--s2);overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 6px 18px;margin-inline:-6px;scrollbar-width:thin}
+.reel figure{flex:0 0 78%;margin:0;scroll-snap-align:start;position:relative}
+.reel img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border:3px solid var(--ink)}
+.reel figcaption{position:absolute;left:10px;bottom:10px;background:var(--ink);color:#fff;font-weight:700;font-size:var(--t-s);padding:3px 10px}
+.link{font-weight:700;text-decoration:none;border-bottom:2px solid currentColor;padding-bottom:2px;justify-self:start}
+.link:hover{color:var(--pink)}
 
 /* contatti */
-.ig{display:grid;gap:var(--s1);text-decoration:none;margin-bottom:var(--s5)}
-.ig b{font:800 clamp(3.5rem,13vw,12rem)/.85 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.03em;background:url(img/opera6-grande.jpg) 60% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent;transition:background-position .8s ease}
-.ig:hover b{background-position:20% 50%}
+#contatti{background:var(--pink);padding-block:var(--s6) var(--s5)}
+.ig{display:grid;gap:var(--s1);text-decoration:none;margin:var(--s4) 0 var(--s5)}
+.ig .m{color:#4a0d27}
+.ig b{font:800 clamp(4rem,15vw,14rem)/.85 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.03em;transition:color .2s}
+.ig:hover b{color:#fff}
 .contact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
-.contact>*{display:grid;gap:var(--s1);padding-top:var(--s2);border-top:2px solid var(--ink);text-decoration:none}
-.contact b{font:700 var(--t-xl)/1.05 var(--display);font-variation-settings:"opsz" 48,"wdth" 85;letter-spacing:-.02em;overflow-wrap:anywhere}
-.contact a:hover b{color:var(--grey)}
-footer .wrap{display:flex;justify-content:space-between;gap:var(--s2);flex-wrap:wrap;padding-block:var(--s3);border-top:1px solid var(--rule)}
+.contact>*{display:grid;gap:var(--s1);padding-top:var(--s2);border-top:3px solid var(--ink);text-decoration:none}
+.contact .m{color:#4a0d27}
+.contact b{font:800 var(--t-xl)/1.05 var(--display);font-variation-settings:"opsz" 48,"wdth" 85;letter-spacing:-.02em}
+.contact a:hover b{color:#fff}
+footer{background:var(--dark);color:#8d8c87}
+.bigname{display:block;font-weight:800;font-size:30vw;line-height:.8;letter-spacing:-.03em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;white-space:nowrap;text-align:center;overflow:hidden;padding-top:var(--s4);
+  background:url(img/opera1-grande.jpg) 50% 60%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
+footer .wrap{display:flex;justify-content:space-between;gap:var(--s2);flex-wrap:wrap;padding-block:var(--s3);border-top:1px solid #2a2a2a}
 
 /* lightbox */
-dialog{border:0;padding:0;background:var(--wall);color:var(--ink);width:100vw;height:100dvh;max-width:100vw;max-height:100dvh}
-dialog::backdrop{background:var(--wall)}
+dialog{border:0;padding:0;background:var(--dark);color:#fff;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh}
+dialog::backdrop{background:var(--dark)}
 .lb{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
-.lb-top{display:flex;justify-content:space-between;align-items:center;height:60px}
-.lb-top b{font:700 var(--t-l)/1 var(--display);font-variation-settings:"wdth" 85}
-.lb-x{all:unset;cursor:pointer;font-weight:600;border-bottom:2px solid currentColor;padding-bottom:2px}
+.lb-top{display:flex;justify-content:space-between;align-items:center;height:68px}
+.lb-top b{font:800 var(--t-l)/1 var(--display);font-variation-settings:"wdth" 80}
 .lb-main{display:grid;place-items:center;min-height:0;padding:var(--s2)}
 .lb-main img{max-width:100%;max-height:100%;object-fit:contain;display:block}
 .lb-th{display:flex;justify-content:center;gap:var(--s1);padding-block:var(--s2)}
-.lb-th button{all:unset;cursor:pointer;opacity:.35}
-.lb-th button[aria-current="true"],.lb-th button:hover{opacity:1}
-.lb-th img{width:56px;height:56px;object-fit:cover;display:block}
+.lb-th button{all:unset;cursor:pointer;opacity:.4}.lb-th button[aria-current="true"],.lb-th button:hover{opacity:1}
+.lb-th img{width:60px;height:60px;object-fit:cover;display:block}
 
-/* nastro che scorre */
-.marq{overflow:hidden;padding-block:clamp(20px,3vw,40px);border-block:1px solid var(--rule);margin-top:var(--s5)}
-.marq-track{display:flex;width:max-content;will-change:transform}
-.marq span{font:800 clamp(3.4rem,9vw,8.5rem)/.9 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;letter-spacing:-.02em;white-space:nowrap;padding-right:.35em}
-.marq span:nth-child(even){color:transparent;-webkit-text-stroke:2px var(--ink)}
-.marq span i{font-style:normal;color:#d81b72;-webkit-text-stroke:0;display:inline-block;margin-left:.35em}
-/* galleria orizzontale (solo desktop con animazioni) */
-.horiz #opere{padding-block:0}
-.horiz #opere>.wrap{max-width:none;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:76px 0 24px;overflow:hidden}
-.horiz #opere .head{padding-inline:var(--side);margin-bottom:var(--s3);width:100%;max-width:calc(var(--max) + 2*var(--side))}
-.horiz .works{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:clamp(24px,3vw,56px);width:max-content;padding-inline:var(--side);will-change:transform}
-.horiz .room{width:min(36vw,calc((100vh - 360px)*1.25));flex:none}
-.horiz .room.wide{width:min(64vw,calc((100vh - 360px)*2.2))}
-.horiz .room.wide .work{aspect-ratio:2.2/1}
-.horiz .room.wide .work button{height:100%}
-.horiz .room.wide .work img{height:100%;width:auto}
-.horiz .cap p{display:none}
-.counter{font:800 clamp(1rem,1.4vw,1.25rem)/1 var(--display);font-variant-numeric:tabular-nums;display:none}
-.horiz .counter{display:block}
-/* cursore */
-.cur{position:fixed;left:0;top:0;z-index:60;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#d81b72;pointer-events:none;display:grid;place-items:center;color:#fff;font:700 13px/1 var(--display);transition:width .25s,height .25s,margin .25s,opacity .2s;opacity:0}
-.cur.on{opacity:1}
-.cur.big{width:80px;height:80px;margin:-40px 0 0 -40px}
-.cur.hide{opacity:0}
-.cur span{opacity:0;transition:opacity .2s}.cur.big span{opacity:1}
-/* artista al buio */
-#artista{background:var(--ink);color:#fff}
-#artista .head p,#artista .m{color:#9c9b96}
-#artista dl.cv div{border-color:#2b2b2b}
-#artista .link:hover{color:#9c9b96}
-.sec+#artista,#artista+.sec{border-top:0}
-.photos figure{overflow:hidden}
+.cur{position:fixed;left:0;top:0;z-index:60;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--pink);pointer-events:none;opacity:0;transition:width .25s,height .25s,margin .25s,opacity .2s}
+.cur.on{opacity:1}.cur.big{width:56px;height:56px;margin:-28px 0 0 -28px;mix-blend-mode:difference;background:#fff}
 
-/* ===== pop con disciplina: nero, bianco, un rosa acceso. Il colore vero lo portano le tele. ===== */
-:root{--pink:#ff2e88;--hard:6px 6px 0 var(--ink);--t-s:.9375rem;--t-b:1.125rem;--grey:#55544f}
-header nav a{font-size:15px}
-/* apertura: nome dipinto a sinistra, una pila di tele vere a destra */
-.hero{position:relative;overflow:hidden}
-.hero .wrap{position:relative;z-index:1}
-.stack{position:absolute;z-index:2;right:max(var(--side),3vw);top:0;width:clamp(260px,29vw,460px);aspect-ratio:1/1.05;pointer-events:none}
-.stack img{position:absolute;display:block;border:clamp(6px,.7vw,10px) solid #fff;outline:3px solid var(--ink);box-shadow:10px 10px 0 var(--ink);will-change:transform}
-.stack img:nth-child(1){width:92%;left:4%;top:4%;transform:rotate(-9deg)}
-.stack img:nth-child(2){width:62%;right:-2%;top:30%;transform:rotate(7deg)}
-.stack img:nth-child(3){width:56%;left:-6%;top:44%;transform:rotate(-3deg)}
-.sticker{position:absolute;z-index:3;left:-14%;top:-8%;width:clamp(110px,10vw,150px);aspect-ratio:1;border-radius:50%;background:var(--pink);border:3px solid var(--ink);box-shadow:var(--hard);display:grid;place-items:center;color:var(--ink)}
-.sticker svg{position:absolute;inset:6%;width:88%;height:88%;animation:spin 16s linear infinite}
-.sticker b{font:800 clamp(1.4rem,2.2vw,2rem)/.85 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;text-align:center;text-transform:uppercase}
-@keyframes spin{to{transform:rotate(360deg)}}
-.intro{border-bottom:0;position:relative;z-index:3;padding-bottom:var(--s3)}
-.intro h2{background:var(--pink);color:var(--ink);justify-self:start;padding:.12em .35em .18em;transform:rotate(-2deg);border:3px solid var(--ink);box-shadow:var(--hard);font-size:clamp(1.9rem,3vw,3rem)}
-.intro p{font-size:1.25rem;line-height:1.45}
-/* nastri incrociati: nero e rosa */
-.marq{position:relative;margin-top:0;border:0;padding:0;height:clamp(150px,19vw,260px);overflow:hidden}
-.tape{position:absolute;left:-5vw;right:-5vw;top:50%;border-block:3px solid var(--ink);padding-block:clamp(8px,1.2vw,16px);overflow:hidden}
-.tape.a{background:var(--ink);transform:translateY(-50%) rotate(-3deg);z-index:2}
-.tape.b{background:var(--pink);transform:translateY(-50%) rotate(3deg);z-index:1}
-.tape.b .marq-track{animation:tapeR 26s linear infinite}
-@keyframes tapeR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
-.marq span{font-size:clamp(2.4rem,6vw,5.5rem)}
-.tape.a span{color:#fff}.tape.a span:nth-child(even){color:transparent;-webkit-text-stroke:2px #fff}
-.tape.b span{color:var(--ink)}.tape.b span:nth-child(even){color:transparent;-webkit-text-stroke:2px var(--ink)}
-.marq span i{color:var(--ink)}.tape.a span i{color:var(--pink)}
-.head h2{justify-self:start}
-/* opere al buio: le tele si accendono del loro colore */
-#opere{background:var(--ink);color:#fff}
-#opere .head p,#opere .m{color:#a3a29d}
-#opere .counter{color:var(--pink)}
-.sec+#opere{border-top:0}
-.work{background:#161616;transition:box-shadow .5s ease,background-color .5s ease}
-.room:hover .work,.room.lit .work{box-shadow:0 0 0 2px var(--glow),0 0 120px -20px var(--glow)}
-.work img{box-shadow:0 30px 60px -24px rgba(0,0,0,.9)}
-.work.round img{box-shadow:none;filter:drop-shadow(0 24px 30px rgba(0,0,0,.7))}
-.cap{grid-template-columns:auto minmax(0,1fr) auto;column-gap:var(--s2)}
-.cap::before{content:attr(data-n);grid-row:1/3;font:800 clamp(2.4rem,3.4vw,3.4rem)/.8 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;color:transparent;-webkit-text-stroke:1.5px var(--glow,#fff)}
-.cap h3{font-weight:800;font-size:clamp(1.4rem,1.8vw,1.75rem);grid-column:2}
-.cap .m{grid-column:2}.cap p{grid-column:1/-1}
-.cap .link{grid-column:3;grid-row:1/3;align-self:center;border:2px solid #fff;border-radius:999px;padding:9px 16px;background:transparent;color:#fff;font-weight:700;transition:background .15s,color .15s,border-color .15s}
-.cap .link:hover{background:var(--glow);border-color:var(--glow);color:var(--ink)}
-.loupe{box-shadow:0 0 0 3px #fff,0 14px 32px -10px rgba(0,0,0,.6)}
-/* foto come stampe attaccate */
-.photos{gap:clamp(18px,2.4vw,36px)}
-.photos figure{overflow:visible;position:relative}
-.photos img{border:3px solid var(--ink);box-shadow:var(--hard)}
-.photos figure:nth-child(odd){transform:rotate(-1deg)}.photos figure:nth-child(even){transform:rotate(1.2deg)}
-.photos figure::before{content:"";position:absolute;z-index:2;left:50%;top:-12px;width:76px;height:22px;margin-left:-38px;background:rgba(255,46,136,.85);transform:rotate(-4deg)}
-.photos figure:nth-child(even)::before{transform:rotate(5deg)}
-.photos figcaption{position:absolute!important;z-index:2;left:12px!important;bottom:12px!important;top:auto!important;background:var(--ink);color:#fff;font-weight:700;padding:4px 10px;transform:rotate(-2deg)}
-.photos figure:first-child img{inset:0;height:100%}
-/* artista su rosa */
-#artista{background:var(--pink);color:var(--ink)}
-#artista .head p,#artista .m{color:#4a0d27}
-#artista dl.cv div{border-color:rgba(0,0,0,.25)}
-.kairos blockquote em{color:#fff;background:var(--ink);padding:0 .15em}
-#artista .link:hover{color:#fff}
-/* contatti al buio, il nome instagram dipinto */
-#contatti{background:var(--ink);color:#fff}
-#contatti .head p,#contatti .m{color:#a3a29d}
-.sec+#contatti{border-top:0}
-.contact>*{border-top:2px solid #fff}
-.contact a:hover b{color:var(--pink)}
-.ig b{font-size:clamp(4rem,15vw,14rem);background:none;color:var(--pink);transition:color .2s}.ig:hover b{color:#fff}
-footer{background:var(--ink);color:#fff}
-footer .wrap{border-top:1px solid #2a2a2a;color:#8d8c87}
-/* barra */
-header nav a{color:var(--ink);font-weight:700;padding:6px 12px;border-radius:999px;border:2px solid transparent;transition:background .15s,border-color .15s}
-header nav a:hover{background:var(--pink);border-color:var(--ink)}
-.cur{background:var(--pink)}
-.kairos blockquote{grid-column:1/9;grid-row:1}
-.portrait{grid-column:9/13;grid-row:1/3;margin:0;position:relative;transform:rotate(3deg);align-self:start}
-.portrait img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border:clamp(6px,.7vw,10px) solid #fff;outline:3px solid var(--ink);box-shadow:10px 10px 0 var(--ink)}
-.portrait::before{content:"";position:absolute;z-index:2;left:50%;top:-14px;width:90px;height:26px;margin-left:-45px;background:rgba(255,255,255,.75);transform:rotate(-5deg)}
-.kairos .txt{grid-column:1/9;grid-row:2}
-.kairos .txt>.bio{grid-column:1/7}.kairos .txt>.facts{grid-column:7/13}
-/* chiusura: il nome enorme dipinto */
-.bigname{display:block;font-weight:800;font-size:30vw;line-height:.8;letter-spacing:-.03em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;white-space:nowrap;
- background:url(img/opera1-grande.jpg) 50% 60%/cover;-webkit-background-clip:text;background-clip:text;color:transparent;padding-top:var(--s4);text-align:center;overflow:hidden}
-@media (max-width:900px){.kairos blockquote,.kairos .txt{grid-column:1/-1}.portrait{grid-column:1/-1;grid-row:auto;width:min(70%,360px);justify-self:end}.kairos .txt{grid-row:auto}}
-@media (max-width:900px){.stack{position:relative;right:auto;top:auto;width:min(78vw,420px);margin:var(--s4) 0 0 auto}}
-@media (max-width:640px){.stack{width:74vw;margin-right:4vw}.sticker{width:96px;left:-18%}.marq{height:130px}.cap{grid-template-columns:auto minmax(0,1fr)}.cap .link{grid-column:1/-1;grid-row:auto;justify-self:start}}
-@media (prefers-reduced-motion:reduce){.sticker svg,.tape.b .marq-track{animation:none}}
 @media (max-width:900px){
- .intro h2,.intro p,.intro .m,.head h2,.head p,.kairos blockquote,.kairos .txt{grid-column:1/-1}
- .kairos .txt>.bio{grid-column:1/7}.kairos .txt>.facts{grid-column:7/13}
- .photos{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .intro h2,.intro p{grid-column:1/-1}.cue{grid-column:1/-1;justify-self:start}
+ .stage{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;padding:84px var(--side) 28px;row-gap:var(--s3)}
+ .full{grid-column:1;grid-row:1}.info{grid-column:1;grid-row:2;padding-bottom:0;gap:var(--s1)}
+ .info{grid-template-columns:auto 1fr;column-gap:var(--s2);align-items:end}
+ .num{grid-row:1/3;font-size:5rem}.info h3{font-size:2.2rem}.info p{grid-column:1/-1}.info .pill{grid-column:1/-1}
+ .det{transform-origin:calc(100% - var(--side)) 100px}
+ .aura{background:radial-gradient(closest-side at 50% 40%,var(--glow,#ff2e88),transparent)}
+ .cnt{top:auto;bottom:28px}
+ .hint{bottom:auto;top:120px}
+ .index{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .portrait{grid-column:1/-1;position:relative;top:auto;width:min(80%,420px);margin-bottom:var(--s5)}
+ .story{grid-column:1/-1}
 }
 @media (max-width:640px){
- header nav{gap:var(--s2)} header nav a:nth-child(n+3){display:none}
+ header nav a:nth-child(n+3){display:none}
  .hero h1{font-size:28vw}
- .works{grid-template-columns:1fr;row-gap:var(--s4)}
- .work{aspect-ratio:auto;padding:28px}
- .work button{height:auto}
- .work button img{height:auto;max-height:62vh}
- .cap{grid-template-columns:1fr}
- .cap .link{grid-column:1;grid-row:auto;justify-self:start}
- .loupe{display:none}
+ .sticker{width:92px;top:auto;bottom:var(--s3)}
+ .info p{display:none}
+ .index{grid-template-columns:repeat(2,minmax(0,1fr))}
  .contact{grid-template-columns:1fr}
- .kairos .txt>.bio,.kairos .txt>.facts{grid-column:1/-1}
- .photos{grid-template-columns:1fr 1fr}
- .photos figure:first-child{grid-column:1/-1;grid-row:auto}
- .photos figure:first-child{position:static;min-height:0}
- .photos figure:first-child img{position:static;height:auto;aspect-ratio:4/3}
- .photos figure:first-child figcaption{position:static}
+ .reel figure{flex-basis:88%}
 }
-@media (max-width:640px){.cap{grid-template-columns:auto minmax(0,1fr)}.cap h3,.cap .m{grid-column:2}.cap p{grid-column:1/-1}.cap .link{grid-column:1/-1;grid-row:auto;justify-self:start}.stack{margin-top:var(--s5)}}
+@media (prefers-reduced-motion:reduce){.sticker svg,.cue{animation:none}.scene{height:auto}.stage{position:relative;height:auto;min-height:100vh}}
 </style>
 </head>
 <body>
 
-<div class="cur" id="cur" aria-hidden="true"><span>Apri</span></div>
-<header id="bar"><div class="wrap"><a class="logo" href="#top" aria-label="Marco Bomben, torna su"><span>Marco</span><span>Bomben</span></a><nav aria-label="Sezioni"><a href="#opere">Opere</a><a href="#mostra">Mostra</a><a href="#artista">Artista</a><a href="#contatti">Contatti</a></nav></div></header>
+<div class="cur" id="cur" aria-hidden="true"></div>
+<header id="bar"><div class="wrap"><a class="logo" href="#top" aria-label="Marco Bomben, torna su"><span>Marco</span><span>Bomben</span></a><nav aria-label="Sezioni"><a href="#opere">Opere</a><a href="#indice">Indice</a><a href="#marco">Marco</a><a href="#contatti">Contatti</a></nav></div></header>
 
 <main>
-<section class="hero" id="top"><div class="wrap">
+<section class="hero" id="top">
+ <div class="sticker" aria-hidden="true"><svg viewBox="0 0 100 100"><defs><path id="ring" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><text font-size="11" font-weight="800" letter-spacing="2" font-family="Bricolage Grotesque, sans-serif"><textPath href="#ring">MOSTRA PERSONALE ✺ AZZANO DECIMO ✺ 2026 ✺</textPath></text></svg><b>Dal<br>1.10</b></div>
+ <div class="wrap">
   <div class="mark" id="mark"><canvas id="heroDrip" aria-hidden="true"></canvas><h1 id="name"><span>Marco</span><span>Bomben</span></h1></div>
-  <div class="stack" id="stack" aria-hidden="true"><img src="img/opera1.jpg" alt=""><img src="img/opera6.jpg" alt=""><img src="img/opera7.jpg" alt=""><div class="sticker"><svg viewBox="0 0 100 100"><defs><path id="ring" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><text font-size="11" font-weight="800" letter-spacing="2" font-family="Bricolage Grotesque, sans-serif"><textPath href="#ring">MOSTRA PERSONALE ✺ AZZANO DECIMO ✺ 2026 ✺</textPath></text></svg><b>Dal<br>1.10</b></div></div>
-  <div class="intro grid">
-    <h2>Sensazioni senza contorni</h2>
-    <p>Sette tele in mostra alla Banca Mediolanum di Azzano Decimo. Passa il cursore su una tela per guardarla da vicino.</p>
-    <p class="m">Marco Bomben<br>Pordenone, 1990<br>Dal 1 ottobre 2026</p>
+  <div class="intro">
+   <h2>Sensazioni senza contorni</h2>
+   <p>Sette tele in mostra alla Banca Mediolanum di Azzano Decimo, dal 1 ottobre 2026. Le guardi come dal vero: prima da vicino, poi fai un passo indietro.</p>
+   <a class="cue" href="#opere" aria-label="Vai alle opere">↓</a>
   </div>
+ </div>
+</section>
+
+<section class="door" id="opere"><div class="wrap">
+ <h2 class="big">Prima <em>da vicino.</em> Poi un passo indietro.</h2>
+ <p>Ogni tela si apre su un dettaglio fotografato a pochi centimetri: la grana, lo spray, le colature. Scorri e la vedi intera.</p>
+</div></section>
+<div id="scenes"></div>
+
+<section id="indice"><div class="wrap">
+ <div class="top"><h2 class="big">Tutte e sette</h2><p>Tocca una tela per tornarci, oppure aprila per vedere i dettagli uno per uno.</p></div>
+ <div class="index" id="index"></div>
 </div></section>
 
-<div class="marq" aria-hidden="true"><div class="tape b"><div class="marq-track" id="marq2"></div></div><div class="tape a"><div class="marq-track" id="marq"></div></div></div>
-
-<section class="sec" id="opere"><div class="wrap">
-  <div class="head grid"><h2>Le opere</h2><p>Acrilico, spray e tecnica mista. Tocca una tela per vederla intera e nei dettagli. <span class="counter" id="cnt">01 / 07</span></p></div>
-  <div class="works" id="rooms"></div>
+<section id="marco"><div class="wrap marco">
+ <figure class="portrait"><img src="img/mostra4.jpg" alt="Marco Bomben accanto alle sue tele" loading="lazy"><figcaption class="m">Marco Bomben alla sera dell'apertura</figcaption></figure>
+ <div class="story">
+  <p class="kicker">Marco Bomben · Pordenone, 1990</p>
+  <blockquote>Un quadro è finito quando diventa <em>autosufficiente</em>. Il momento giusto per fermarsi non si decide: si riconosce.</blockquote>
+  <p>Kairos, in greco, è il momento giusto. Marco coltiva la pittura per anni accanto agli studi di filosofia: laurea all'Università Ca' Foscari di Venezia, poi la magistrale in Scienze Filosofiche.</p>
+  <p>Lavora con acrilici su tela e su carta e con tecniche miste. Negli ultimi anni ha aggiunto la vernice spray, che dà alle sue forme una superficie lucida, quasi di vetro.</p>
+  <dl class="cv">
+   <div><dt>1990</dt><dd>Nasce a Pordenone</dd></div>
+   <div><dt>400+</dt><dd>Opere realizzate</dd></div>
+   <div><dt>2026</dt><dd>Sensazioni senza contorni, Banca Mediolanum, Azzano Decimo</dd></div>
+  </dl>
+  <h3 class="kicker" style="margin:0">La sera dell'apertura</h3>
+  <div class="reel" tabindex="0" aria-label="Foto dell'inaugurazione">
+   <figure><img src="img/live1.jpg" alt="Visitatori all'inaugurazione davanti alle tele" loading="lazy"><figcaption>Il pubblico</figcaption></figure>
+   <figure><img src="img/mostra1.jpg" alt="Le tele lungo il corridoio della sede Banca Mediolanum" loading="lazy"><figcaption>Il corridoio</figcaption></figure>
+   <figure><img src="img/live2.jpg" alt="Marco Bomben racconta un'opera ai visitatori" loading="lazy"><figcaption>Davanti alle tele</figcaption></figure>
+   <figure><img src="img/live4.jpg" alt="Sala con quattro tele e poltrone rosse" loading="lazy"><figcaption>La sala</figcaption></figure>
+  </div>
+  <a class="link" href="https://www.nordestnews.com/arte/dirompenti-cromatismi-improvvisi-marco-bomben/" target="_blank" rel="noopener">Leggi l'articolo su Nordest News</a>
+ </div>
 </div></section>
 
-<section class="sec" id="mostra"><div class="wrap">
-  <div class="head grid"><h2>La sera dell'apertura</h2><p>1 ottobre 2026, nella sede della Banca Mediolanum di Azzano Decimo.</p></div>
-  <div class="photos">
-    <figure><img src="img/live1.jpg" alt="Visitatori all'inaugurazione davanti alle tele" loading="lazy"><figcaption class="m">Il pubblico</figcaption></figure>
-    <figure><img src="img/mostra1.jpg" alt="Le tele lungo il corridoio della sede Banca Mediolanum" loading="lazy"><figcaption class="m">Il corridoio</figcaption></figure>
-    <figure><img src="img/live2.jpg" alt="Marco Bomben racconta un'opera ai visitatori" loading="lazy"><figcaption class="m">Davanti alle tele</figcaption></figure>
-    <figure><img src="img/live4.jpg" alt="Sala con quattro tele e poltrone rosse" loading="lazy"><figcaption class="m">La sala</figcaption></figure>
-    <figure><img src="img/mostra4.jpg" alt="Marco Bomben accanto alle sue opere" loading="lazy"><figcaption class="m">L'artista</figcaption></figure>
-  </div>
-</div></section>
-
-<section class="sec" id="artista"><div class="wrap">
-  <div class="head grid"><h2>Kairos</h2><p>In greco, il momento giusto. Per Marco è quando un quadro smette di avere bisogno di lui.</p></div>
-  <div class="kairos grid">
-    <figure class="portrait"><img src="img/mostra4.jpg" alt="Marco Bomben accanto alle sue tele" loading="lazy"></figure>
-    <blockquote>Un quadro è finito quando diventa <em>autosufficiente</em>. Il momento giusto per fermarsi non si decide: si riconosce.</blockquote>
-    <div class="txt"><div class="bio">
-      <p>Marco Bomben nasce a Pordenone nel 1990. Coltiva la pittura per anni accanto agli studi di filosofia: laurea all'Università Ca' Foscari di Venezia, poi la magistrale in Scienze Filosofiche.</p>
-      <p>Lavora con acrilici su tela e su carta e con tecniche miste. Negli ultimi anni ha aggiunto la vernice spray, che dà alle sue forme una superficie lucida, quasi di vetro.</p></div>
-      <div class="facts"><dl class="cv">
-        <div><dt>1990</dt><dd>Nasce a Pordenone</dd></div>
-        <div><dt>400+</dt><dd>Opere realizzate</dd></div>
-        <div><dt>2026</dt><dd>Sensazioni senza contorni, Banca Mediolanum, Azzano Decimo</dd></div>
-      </dl>
-      <a class="link" href="https://www.nordestnews.com/arte/dirompenti-cromatismi-improvvisi-marco-bomben/" target="_blank" rel="noopener">Leggi l'articolo su Nordest News</a></div>
-    </div>
-  </div>
-</div></section>
-
-<section class="sec" id="contatti"><div class="wrap">
-  <div class="head grid"><h2>Porta a casa un'opera</h2><p>Le tele in mostra sono disponibili. Scrivi a Marco per prezzi e visite in studio.</p></div>
-  <a class="ig" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Scrivigli su Instagram</span><b>@mbomben</b></a>
-  <div class="contact">
-    <a href="https://www.gigarte.com/marco-bomben" target="_blank" rel="noopener"><span class="m">Catalogo</span><b>Gigarte</b></a>
-    <div><span class="m">Email</span><b>da inserire</b></div>
-    <div><span class="m">Mostra</span><b>Azzano Decimo</b></div>
-  </div>
+<section id="contatti"><div class="wrap">
+ <h2 class="big">Porta a casa un'opera</h2>
+ <a class="ig" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Le tele in mostra sono disponibili. Scrivi a Marco su Instagram</span><b>@mbomben</b></a>
+ <div class="contact">
+  <a href="https://www.gigarte.com/marco-bomben" target="_blank" rel="noopener"><span class="m">Catalogo</span><b>Gigarte</b></a>
+  <div><span class="m">Email</span><b>da inserire</b></div>
+  <div><span class="m">Mostra</span><b>Azzano Decimo</b></div>
+ </div>
 </div></section>
 </main>
 <footer><div class="bigname" aria-hidden="true">Bomben</div><div class="wrap m"><span>© 2026 Marco Bomben</span><span>Tutte le opere sono di proprietà dell'artista</span></div></footer>
 
 <dialog id="lb" aria-label="Opera">
-  <div class="lb">
-    <div class="lb-top wrap"><b id="lb-t"></b><button class="lb-x" id="lb-x" type="button">Chiudi</button></div>
-    <div class="lb-main"><img id="lb-img" alt=""></div>
-    <div class="lb-th" id="lb-th"></div>
-  </div>
+ <div class="lb">
+  <div class="lb-top wrap"><b id="lb-t"></b><button class="pill" id="lb-x" type="button" style="color:#fff">Chiudi</button></div>
+  <div class="lb-main"><img id="lb-img" alt=""></div>
+  <div class="lb-th" id="lb-th"></div>
+ </div>
 </dialog>
 
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
-<script src="js/SplitText.min.js"></script>
 <script>
 const works=[
  {t:"Opera I",m:"Tecnica mista su tela",d:3,x:"jpg",p:"Forme nere che si annodano su un fondo azzurro, attraversate da colature rosa e graffi.",alt:"Tela astratta con forme nere su fondo azzurro, rosa, lilla e giallo"},
  {t:"Opera II",m:"Tecnica mista su tela",d:2,x:"jpg",p:"Due fasce di schizzi corrono da un bordo all'altro e lasciano al centro una linea di bianco.",alt:"Fasce orizzontali di schizzi di colore su fondo bianco"},
- {wide:1,t:"Opera III",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Sfere lucide che sembrano gonfiarsi verso chi guarda, chiuse da un contorno nero deciso.",alt:"Tela orizzontale con forme sferiche lucide magenta, blu e arancio"},
- {t:"Opera IV",m:"Tecnica mista su tela tonda",d:2,x:"webp",round:1,p:"Linee nere sottili legano quadrati, cerchi e triangoli. Un omaggio alla geometria del Novecento.",alt:"Tela tonda con linee nere e forme geometriche colorate"},
+ {t:"Opera III",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Sfere lucide che sembrano gonfiarsi verso chi guarda, chiuse da un contorno nero deciso.",alt:"Tela orizzontale con forme sferiche lucide magenta, blu e arancio"},
+ {t:"Opera IV",m:"Tecnica mista su tela tonda",d:2,x:"webp",p:"Linee nere sottili legano quadrati, cerchi e triangoli. Un omaggio alla geometria del Novecento.",alt:"Tela tonda con linee nere e forme geometriche colorate"},
  {t:"Opera V",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Il verde acido al centro spinge tutte le altre forme verso i bordi.",alt:"Forme lucide verdi, azzurre e gialle su fondo nero"},
  {t:"Opera VI",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Magenta, viola e blu: le forme si toccano senza confondersi.",alt:"Forme lucide magenta, viola e blu su fondo nero"},
  {t:"Opera VII",m:"Acrilico e spray su tela",d:2,x:"jpg",p:"Rosso, arancio e argento, così lucidi che sembra di poterli toccare.",alt:"Forme lucide rosse, arancio e argento su fondo nero"}];
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),ease=t=>1-Math.pow(1-t,3);
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),ease=t=>1-Math.pow(1-t,3),pad=n=>String(n).padStart(2,'0');
 let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const css=c=>Array.isArray(c)?`rgb(${c[0]},${c[1]},${c[2]})`:c;
 
-// colori: pixel saturi presi dalla tela
+// colori presi dalla tela
 function palette(img,band){const c=document.createElement('canvas'),W=80,H=Math.round(80*img.naturalHeight/img.naturalWidth)||80;c.width=W;c.height=H;
  const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0,W,H);let d;try{d=x.getImageData(0,0,W,H).data}catch(e){return null}
  return (fx,fy)=>{let best=null,bs=-1;for(let k=0;k<6;k++){const px=clamp(Math.round(fx*W+(rnd()-.5)*6),0,W-1),py=clamp(Math.round((fy??(1-band*rnd()))*H),0,H-1),i=(py*W+px)*4,r=d[i],g=d[i+1],b=d[i+2],a=d[i+3];
   if(a<200)continue;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),s=mx?(mx-mn)/mx:0,sc=s*.92+(mx/255)*.08;if(sc>bs){bs=sc;best=[r,g,b]}}return best||[20,20,20]}}
+const glowOf=img=>{const p=palette(img,1);if(!p)return null;seed=5;let best=null,bs=-1;for(let k=0;k<30;k++){const c=p(rnd(),rnd()),mx=Math.max(...c),mn=Math.min(...c),sat=mx?(mx-mn)/mx*(mx/255):0;if(sat>bs){bs=sat;best=c}}return best};
 const FALL=["#ff2f8a","#2f7cff","#ffcc1f","#18c08a","#111"];
 
-// una colatura: corpo che si assottiglia, goccia in fondo
-function drip(ctx,x,y,w,len,col){if(len<1)return;ctx.fillStyle=col;ctx.beginPath();
- const tip=Math.max(w*.42,1.2);ctx.moveTo(x-w/2,y);ctx.lineTo(x+w/2,y);
- ctx.bezierCurveTo(x+w/2,y+len*.4,x+tip,y+len*.7,x+tip,y+len);ctx.lineTo(x-tip,y+len);ctx.bezierCurveTo(x-tip,y+len*.7,x-w/2,y+len*.4,x-w/2,y);ctx.fill();
- ctx.beginPath();ctx.ellipse(x,y+len,tip*1.35,tip*1.6,0,0,Math.PI*2);ctx.fill();}
-function makeDrips(n,wd,startY,colorAt,maxL){const a=[];for(let i=0;i<n;i++){const fx=(i+.5+(rnd()-.5)*.8)/n,x=fx*wd;const sy=startY(x);if(sy==null)continue;
- const long=rnd()<.22;a.push({x,y:sy,w:2+rnd()*rnd()*12,L:(long?.55+rnd()*.45:.08+rnd()*.35)*maxL,del:rnd()*.35,col:colorAt(fx)})}return a}
-const css=c=>Array.isArray(c)?`rgb(${c[0]},${c[1]},${c[2]})`:c;
-
-// tele: lente d'ingrandimento sull'immagine grande, parete che prende il colore dell'opera
-const rooms=document.getElementById('rooms'),pad=n=>String(n).padStart(2,'0'),fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
-const glowOf=img=>{const p=palette(img,1);if(!p)return null;seed=5;let best=null,bs=-1;for(let k=0;k<30;k++){const c=p(rnd(),rnd()),mx=Math.max(...c),mn=Math.min(...c),sat=mx?(mx-mn)/mx*(mx/255):0;if(sat>bs){bs=sat;best=c}}return css(best)};
-works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='room'+(w.wide?' wide':'');s.id='opera-'+n;s.setAttribute('aria-label',w.t);
- const big=`img/opera${n}-grande.${w.x}`;
- s.innerHTML=`<div class="work${w.round?' round':''}"><button type="button" aria-label="Guarda da vicino ${w.t}"><img src="img/opera${n}.${w.x}" alt="${w.alt}" decoding="async"><span class="loupe" aria-hidden="true"></span></button></div>
- <div class="cap" data-n="${pad(n)}"><h3>${w.t}</h3><span class="m">${w.m}</span><p>${w.p}</p><button class="link" type="button">Guarda da vicino</button></div>`;
- s.querySelectorAll('button').forEach(b=>b.onclick=()=>openLb(w,n));rooms.appendChild(s);
- const img=s.querySelector('img'),wk=s.querySelector('.work'),lp=s.querySelector('.loupe');
- const setGlow=()=>{const g=glowOf(img);if(g)s.style.setProperty('--glow',g)};img.complete&&img.naturalWidth?setGlow():img.addEventListener('load',setGlow,{once:true});
- if(fine&&!reduce){let loaded=false;const Z=2.6;
-  img.addEventListener('pointerenter',()=>{if(!loaded){loaded=true;lp.style.backgroundImage=`url(${big})`}wk.classList.add('looking')});
-  img.addEventListener('pointerleave',()=>wk.classList.remove('looking'));
-  img.addEventListener('pointermove',e=>{const r=img.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,L=lp.offsetWidth;
-   lp.style.left=x+'px';lp.style.top=y+'px';lp.style.backgroundSize=`${r.width*Z}px ${r.height*Z}px`;lp.style.backgroundPosition=`${-(x*Z-L/2)}px ${-(y*Z-L/2)}px`})}});
-const bar=document.getElementById('bar');addEventListener('scroll',()=>bar.classList.toggle('lined',scrollY>40),{passive:true});
+// scene: dettaglio a tutto schermo, poi la tela intera
+const scenes=document.getElementById('scenes'),index=document.getElementById('index');
+works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='scene';s.id='opera-'+n;s.setAttribute('aria-label',w.t);
+ s.innerHTML=`<div class="stage"><div class="aura" aria-hidden="true"></div>
+  <div class="full"><button type="button" aria-label="Guarda i dettagli di ${w.t}"><img src="img/opera${n}-grande.${w.x}" alt="${w.alt}" decoding="async"></button></div>
+  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m}</p><p>${w.p}</p><button class="pill" type="button">Guarda i dettagli ↗</button></div>
+  <div class="det" aria-hidden="true"><img src="img/opera${n}-dettaglio1.jpg" alt="" decoding="async"></div>
+  <div class="hint" aria-hidden="true"><b>${w.t}, da vicino</b><span>Scorri per fare un passo indietro</span></div>
+  <span class="cnt">${pad(n)} / ${pad(works.length)}</span></div>`;
+ s.querySelectorAll('.full button,.info .pill').forEach(b=>b.onclick=()=>openLb(w,n));scenes.appendChild(s);
+ const b=document.createElement('button');b.type='button';b.innerHTML=`<span class="th"><img src="img/opera${n}.${w.x}" alt="" loading="lazy"></span><b>${pad(n)} ${w.t}</b><span>${w.m}</span>`;
+ b.onclick=()=>scrollTo({top:s.offsetTop+s.offsetHeight-innerHeight,behavior:reduce?'auto':'smooth'});index.appendChild(b);
+ const img=s.querySelector('.full img'),setGlow=()=>{const g=glowOf(img);if(!g)return;const c=css(g);s.style.setProperty('--glow',c);b.style.setProperty('--glow',c);
+  s.dataset.tint=`rgb(${Math.round(11+g[0]*.16)},${Math.round(11+g[1]*.16)},${Math.round(11+g[2]*.16)})`};
+ img.complete&&img.naturalWidth?setGlow():img.addEventListener('load',setGlow,{once:true})});
 
 // nome dipinto che cola
-const h1=document.getElementById('name'),hc=document.getElementById('heroDrip'),hero=document.getElementById('top');let hd=null,hstart=0;
+const h1=document.getElementById('name'),hc=document.getElementById('heroDrip'),hero=document.getElementById('top'),mark=document.getElementById('mark');let hd=null,hstart=0;
 const heroImg=new Image();heroImg.src='img/opera6-grande.jpg';
-// ogni lettera in un suo elemento: le gocce partono dal fondo reale di ogni lettera
 h1.querySelectorAll('span').forEach(sp=>{const t=sp.textContent;sp.setAttribute('aria-label',t);sp.innerHTML=[...t].map(c=>`<i aria-hidden="true">${c}</i>`).join('')+'<b class="bl" aria-hidden="true"></b>'});
-const mark=document.getElementById('mark');
 const textW=el=>{const sp=el.querySelectorAll(':scope>span');return sp[sp.length-1].getBoundingClientRect().right-sp[0].getBoundingClientRect().left};
 function paintLetters(){if(!heroImg.naturalWidth)return;const keep=mark.style.transform;mark.style.transform='none';
  const h=h1.getBoundingClientRect(),r=heroImg.naturalWidth/heroImg.naturalHeight;let bw,bh;if(h.width/h.height>r){bw=h.width;bh=h.width/r}else{bh=h.height;bw=h.height*r}
@@ -417,7 +304,11 @@ function paintLetters(){if(!heroImg.naturalWidth)return;const keep=mark.style.tr
  h1.querySelectorAll('i').forEach(el=>{const L=el.getBoundingClientRect();Object.assign(el.style,{backgroundImage:"url(img/opera6-grande.jpg)",backgroundSize:`${bw}px ${bh}px`,backgroundPosition:`${ox-(L.left-h.left)}px ${oy-(L.top-h.top)}px`,webkitBackgroundClip:'text',backgroundClip:'text',color:'transparent'})});
  h1.classList.add('lettered');mark.style.transform=keep}
 function fitName(){if(matchMedia('(max-width:640px)').matches){h1.style.fontSize='';return}const keep=mark.style.transform;mark.style.transform='none';h1.style.fontSize='';
- const avail=h1.clientWidth,fs=parseFloat(getComputedStyle(h1).fontSize);h1.style.fontSize=(fs*avail*.6/textW(h1))+'px';mark.style.transform=keep}
+ const avail=h1.clientWidth,fs=parseFloat(getComputedStyle(h1).fontSize);h1.style.fontSize=(fs*avail*.74/textW(h1))+'px';mark.style.transform=keep}
+function drip(ctx,x,y,w,len,col){if(len<1)return;ctx.fillStyle=col;ctx.beginPath();
+ const tip=Math.max(w*.42,1.2);ctx.moveTo(x-w/2,y);ctx.lineTo(x+w/2,y);
+ ctx.bezierCurveTo(x+w/2,y+len*.4,x+tip,y+len*.7,x+tip,y+len);ctx.lineTo(x-tip,y+len);ctx.bezierCurveTo(x-tip,y+len*.7,x-w/2,y+len*.4,x-w/2,y);ctx.fill();
+ ctx.beginPath();ctx.ellipse(x,y+len,tip*1.35,tip*1.6,0,0,Math.PI*2);ctx.fill();}
 function buildHero(){const keep=mark.style.transform;mark.style.transform='none';const cs=getComputedStyle(h1),hr=mark.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5),fs=parseFloat(cs.fontSize);
  hc.width=hr.width*dpr;hc.height=hr.height*dpr;hc.style.height=hr.height+'px';const ctx=hc.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
  const pal=heroImg.complete&&heroImg.naturalWidth?palette(heroImg,1):null;seed=11;const drips=[];
@@ -434,7 +325,7 @@ function buildHero(){const keep=mark.style.transform;mark.style.transform='none'
     let w=(3+rnd()*rnd()*16)*wk;w=Math.min(w,Math.max(3,feet.length*.6));
     drips.push({x:L.left-hr.left+fx,y,w,L:(long?.6+rnd()*.4:.08+rnd()*.3)*room,del:rnd()*.5,col:pal?css(pal((L.left+fx)/innerWidth,.2+rnd()*.6)):FALL[li%FALL.length]})}})});
  mark.style.transform=keep;hd={ctx,drips};if(!hstart)hstart=performance.now();if(reduce)drawHero(1)}
-function drawHero(force){if(!hd)return;const intro=force||clamp((performance.now()-hstart)/3200),t=clamp(intro+(force?1:0));
+function drawHero(force){if(!hd)return;const t=force?1:clamp((performance.now()-hstart)/3200);
  const c=hd.ctx;c.clearRect(0,0,hc.width,hc.height);for(const d of hd.drips){const k=ease(clamp((t-d.del*.6)/(1-d.del*.6)));drip(c,d.x,d.y,d.w,d.L*k,d.col)}}
 function loop(){drawHero();if(performance.now()-hstart<3400)requestAnimationFrame(loop)}
 document.fonts.ready.then(()=>{const go=()=>{fitName();paintLetters();
@@ -443,72 +334,45 @@ document.fonts.ready.then(()=>{const go=()=>{fitName();paintLetters();
   if(!reduce)requestAnimationFrame(loop)};heroImg.complete?go():(heroImg.onload=go,heroImg.onerror=go)});
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{fitName();paintLetters();buildHero();window.ScrollTrigger&&ScrollTrigger.refresh()},150)});
 
-// regia dello scroll: il nome si ritira nel logo, le sezioni entrano secondo il loro contenuto
-function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlugin(ScrollTrigger);if(window.SplitText)gsap.registerPlugin(SplitText);
+// regia dello scroll
+function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlugin(ScrollTrigger);
+ const nav=[...document.querySelectorAll('header nav a')];
+ ['#opere','#indice','#marco','#contatti'].forEach((id,k)=>{const el=k?document.querySelector(id):document.querySelector('#opere');
+  ScrollTrigger.create({trigger:el,endTrigger:k?el:'#scenes',start:'top 50%',end:'bottom 50%',onToggle:s=>nav[k].classList.toggle('on',s.isActive)})});
  const mm=gsap.matchMedia();
  mm.add('(prefers-reduced-motion: no-preference)',()=>{
   document.documentElement.classList.add('anim');
+  // il nome si ritira nel logo
   const logo=document.querySelector('header .logo');
-  // il nome dipinto, con le sue colature, si rimpicciolisce fino a diventare il logo in alto
   const target=()=>{const keep=mark.style.transform;mark.style.transform='none';const m=mark.getBoundingClientRect(),h=h1.getBoundingClientRect(),l=logo.getBoundingClientRect(),ps=getComputedStyle(logo),pt=parseFloat(ps.paddingTop),pl=parseFloat(ps.paddingLeft);
    mark.style.transform=keep;const sc=textW(logo)/textW(h1);return{x:l.left+pl-m.left-(h.left-m.left)*sc,y:l.top+pt-m.top-(h.top-m.top)*sc,scale:sc}};
   const tw=gsap.to(mark,{ease:'none',paused:true,x:()=>target().x,y:()=>target().y,scale:()=>target().scale});
-  const st=ScrollTrigger.create({trigger:mark,start:'top top+='+mark.getBoundingClientRect().top,end:()=>'+='+Math.max(200,mark.offsetHeight-90),pin:true,pinSpacing:false,scrub:true,animation:tw,invalidateOnRefresh:true,
+  ScrollTrigger.create({trigger:mark,start:'top top+='+mark.getBoundingClientRect().top,end:()=>'+='+Math.max(200,mark.offsetHeight-90),pin:true,pinSpacing:false,scrub:true,animation:tw,invalidateOnRefresh:true,
    onUpdate:self=>{const done=self.progress>.995;logo.classList.toggle('on',done);mark.style.visibility=done?'hidden':'visible'}});
-  // pila di tele: arrivano lanciate dal basso, poi seguono il mouse a strati
-  const sk=document.getElementById('stack');if(sk){const ims=[...sk.querySelectorAll('img')],stk=sk.querySelector('.sticker');
-   gsap.from(ims,{yPercent:120,rotate:i=>[-30,25,-20][i],opacity:0,duration:1.1,ease:'back.out(1.4)',stagger:.12,delay:.5});
-   gsap.from(stk,{scale:0,rotate:-180,duration:.8,ease:'back.out(2)',delay:1.2});
-   if(matchMedia('(hover:hover) and (pointer:fine)').matches){const q=ims.map((im,i)=>({x:gsap.quickTo(im,'x',{duration:.8,ease:'power3'}),y:gsap.quickTo(im,'y',{duration:.8,ease:'power3'}),k:[14,32,22][i]}));
-    hero.addEventListener('pointermove',e=>{const nx=e.clientX/innerWidth-.5,ny=e.clientY/innerHeight-.5;q.forEach(o=>{o.x(nx*o.k);o.y(ny*o.k)})},{passive:true})}
-   gsap.to(sk,{yPercent:-18,ease:'none',scrollTrigger:{trigger:hero,start:'top top',end:'bottom top',scrub:true}})}
-  // titoli: lettere che saltano su dalla linea di base
-  if(window.SplitText)document.querySelectorAll('.head h2').forEach(h=>{const sp=SplitText.create(h,{type:'lines,chars',mask:'lines'});
-   gsap.from(sp.chars,{yPercent:115,rotate:10,duration:.7,ease:'back.out(1.6)',stagger:.025,scrollTrigger:{trigger:h,start:'top 85%',once:true}})});
-  gsap.utils.toArray('.head p,.intro p,.intro h2').forEach(p=>gsap.from(p,{y:30,opacity:0,duration:.8,ease:'power3.out',scrollTrigger:{trigger:p,start:'top 90%',once:true}}));
-  // foto: entrano a ventaglio e scorrono dentro la cornice
-  gsap.from('.photos figure',{y:80,rotate:()=>gsap.utils.random(-5,5),opacity:0,duration:.9,ease:'power3.out',stagger:.09,scrollTrigger:{trigger:'.photos',start:'top 82%',once:true}});
-  document.querySelectorAll('.photos img').forEach(img=>gsap.fromTo(img,{yPercent:-6,scale:1.14},{yPercent:6,scale:1.14,ease:'none',scrollTrigger:{trigger:img.closest('figure'),start:'top bottom',end:'bottom top',scrub:true}}));
-  // kairos: la frase si accende parola per parola mentre scorri
-  const q=document.querySelector('.kairos blockquote');if(window.SplitText&&q){const sw=SplitText.create(q,{type:'words'});
-   gsap.fromTo(sw.words,{opacity:.12},{opacity:1,ease:'none',stagger:.1,scrollTrigger:{trigger:q,start:'top 78%',end:'bottom 42%',scrub:true}})}
-  gsap.from('#artista dl.cv div',{x:-40,opacity:0,duration:.6,stagger:.08,ease:'power3.out',scrollTrigger:{trigger:'#artista dl.cv',start:'top 85%',once:true}});
-  gsap.from('.portrait',{y:120,rotate:-12,opacity:0,duration:1,ease:'back.out(1.3)',scrollTrigger:{trigger:'.portrait',start:'top 85%',once:true}});
-  gsap.fromTo('.bigname',{yPercent:60,letterSpacing:'.1em'},{yPercent:0,letterSpacing:'-.03em',ease:'none',scrollTrigger:{trigger:'footer',start:'top bottom',end:'bottom bottom',scrub:true}});
-  // contatti: il nome instagram arriva enorme
+  gsap.from('.intro>*',{y:40,opacity:0,duration:.9,ease:'power3.out',stagger:.1,delay:1.4});
+  gsap.from('.sticker',{scale:0,rotate:-180,duration:.8,ease:'back.out(2)',delay:1.8});
+  // soglia: le parole si accendono
+  gsap.from('.door .big,.door p',{y:60,opacity:0,duration:1,ease:'power3.out',stagger:.15,scrollTrigger:{trigger:'.door',start:'top 75%',once:true}});
+  // ogni opera: dal dettaglio alla tela intera
+  document.querySelectorAll('.scene').forEach(s=>{const st=s.querySelector('.stage'),det=s.querySelector('.det'),di=det.querySelector('img'),full=s.querySelector('.full img'),info=s.querySelector('.info').children,hint=s.querySelector('.hint');
+   const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:s,start:'top top',end:'bottom bottom',scrub:.6}});
+   tl.fromTo(hint,{opacity:0,y:20},{opacity:1,y:0,duration:.06},0).to(hint,{opacity:0,y:-20,duration:.06},.16)
+    .fromTo(det,{scale:1},{scale:.2,duration:.42,ease:'power2.inOut'},.16)
+    .fromTo(di,{scale:1.15},{scale:1,duration:.42},.16)
+    .fromTo(det,{'--f':0},{'--f':1,duration:.2},.38)
+    .fromTo(full,{scale:1.35,opacity:0},{scale:1,opacity:1,duration:.4,ease:'power2.out'},.24)
+    .fromTo(s.querySelector('.aura'),{opacity:0,scale:.6},{opacity:.32,scale:1,duration:.4},.24)
+    .fromTo(info,{y:50,opacity:0},{y:0,opacity:1,stagger:.03,duration:.14,ease:'power2.out'},.56)
+    .to({},{duration:.2},.8)});
+  gsap.from('.index button',{y:60,opacity:0,rotate:()=>gsap.utils.random(-6,6),duration:.8,ease:'back.out(1.4)',stagger:.06,scrollTrigger:{trigger:'.index',start:'top 85%',once:true}});
+  gsap.from('.portrait',{y:120,rotate:-12,opacity:0,duration:1,ease:'back.out(1.3)',scrollTrigger:{trigger:'#marco',start:'top 75%',once:true}});
+  gsap.from('.story>*',{y:40,opacity:0,duration:.8,ease:'power3.out',stagger:.08,scrollTrigger:{trigger:'.story',start:'top 80%',once:true}});
   gsap.from('.ig b',{scale:.55,yPercent:30,opacity:0,duration:1.1,ease:'expo.out',scrollTrigger:{trigger:'.ig',start:'top 85%',once:true}});
-  gsap.from('.contact>*',{y:40,opacity:0,duration:.7,stagger:.08,ease:'power3.out',scrollTrigger:{trigger:'.contact',start:'top 90%',once:true}});
-  // nastro: scorre sempre, accelera e si inclina con la velocità dello scroll
-  const mq=document.getElementById('marq');const m2=document.getElementById('marq2');if(m2)m2.innerHTML='<span>Acrilico<i>✺</i></span><span>spray<i>✺</i></span><span>tecnica mista<i>✺</i></span>'.repeat(6);if(mq){const unit='<span>Sensazioni<i>✺</i></span><span>senza contorni<i>✺</i></span>';mq.innerHTML=unit.repeat(4);
-   const half=()=>mq.scrollWidth/2;let x=0,v=0;const skew=gsap.quickTo(mq,'skewX',{duration:.4,ease:'power3'});
-   ScrollTrigger.create({onUpdate:self=>{v=self.getVelocity()}});
-   const tick=()=>{const boost=1+Math.min(8,Math.abs(v)/250);x-=1.1*boost*(v<0?-1:1);const H=half();if(x<=-H)x+=H;if(x>0)x-=H;gsap.set(mq,{x});skew(gsap.utils.clamp(-14,14,-v/220));v*=.92};
-   ScrollTrigger.create({trigger:'.marq',start:'top bottom',end:'bottom top',onToggle:self=>{self.isActive?gsap.ticker.add(tick):gsap.ticker.remove(tick)}})}
-  // cursore: un punto magenta che segue il mouse e si allarga sui link
+  gsap.fromTo('.bigname',{yPercent:60,letterSpacing:'.1em'},{yPercent:0,letterSpacing:'-.03em',ease:'none',scrollTrigger:{trigger:'footer',start:'top bottom',end:'bottom bottom',scrub:true}});
   if(matchMedia('(hover:hover) and (pointer:fine)').matches){const cur=document.getElementById('cur'),cx=gsap.quickTo(cur,'x',{duration:.25,ease:'power3'}),cy=gsap.quickTo(cur,'y',{duration:.25,ease:'power3'});
-   addEventListener('pointermove',e=>{cur.classList.add('on');cx(e.clientX);cy(e.clientY);const t=e.target.closest('a,button');cur.classList.toggle('hide',!!e.target.closest('.work'));cur.classList.toggle('big',!!t&&!e.target.closest('.work'));cur.querySelector('span').textContent=t&&t.target==='_blank'?'Vai':'Apri'},{passive:true});
+   addEventListener('pointermove',e=>{cur.classList.add('on');cx(e.clientX);cy(e.clientY);cur.classList.toggle('big',!!e.target.closest('a,button'))},{passive:true});
    document.addEventListener('pointerleave',()=>cur.classList.remove('on'))}
   return()=>document.documentElement.classList.remove('anim')});
- // desktop: le opere scorrono in orizzontale mentre la sezione resta ferma
- mm.add('(min-width:901px) and (prefers-reduced-motion: no-preference)',()=>{
-  document.documentElement.classList.add('horiz');const box=document.querySelector('#opere>.wrap'),track=document.getElementById('rooms');
-  const dist=()=>track.scrollWidth-innerWidth;
-  const tw=gsap.to(track,{x:()=>-dist(),ease:'none'});
-  ScrollTrigger.create({trigger:box,start:'top top',end:()=>'+='+dist(),pin:true,scrub:true,animation:tw,invalidateOnRefresh:true,
-   onUpdate:self=>{const n=Math.min(7,1+Math.floor(self.progress*7));document.getElementById('cnt').textContent=String(n).padStart(2,'0')+' / 07';const c=innerWidth/2;track.querySelectorAll('.room').forEach(r=>{const b=r.getBoundingClientRect();r.classList.toggle('lit',b.left<c&&b.right>c)})}});
-  track.querySelectorAll('.room').forEach(r=>{const img=r.querySelector('.work img'),pan=r.querySelector('.work');
-   gsap.fromTo(img,{rotate:-7,scale:.8,yPercent:8},{rotate:0,scale:1,yPercent:0,ease:'none',scrollTrigger:{trigger:r,containerAnimation:tw,start:'left right',end:'center 60%',scrub:true}});
-   gsap.fromTo(img,{rotate:0},{rotate:5,scale:.92,ease:'none',immediateRender:false,scrollTrigger:{trigger:r,containerAnimation:tw,start:'center 40%',end:'right left',scrub:true}});
-   gsap.from(r.querySelector('.cap'),{y:30,opacity:0,ease:'none',scrollTrigger:{trigger:r,containerAnimation:tw,start:'left 85%',end:'left 55%',scrub:true}})});
-  requestAnimationFrame(()=>ScrollTrigger.refresh());
-  return()=>{document.documentElement.classList.remove('horiz');gsap.set(track,{clearProps:'transform'})}});
- // telefono: ogni tela si scopre dal basso e si assesta, poi la didascalia
- mm.add('(max-width:900px) and (prefers-reduced-motion: no-preference)',()=>{
-  document.querySelectorAll('.room').forEach(r=>{const img=r.querySelector('.work img'),cap=r.querySelector('.cap');
-   gsap.timeline({scrollTrigger:{trigger:r,start:'top 82%',once:true}})
-    .fromTo(img,{clipPath:'inset(100% 0% 0% 0%)',scale:1.1,rotate:-3},{clipPath:'inset(0% 0% 0% 0%)',scale:1,rotate:0,duration:.9,ease:'power3.out',clearProps:'clipPath'})
-    .from(cap.children,{y:22,opacity:0,duration:.6,ease:'power2.out',stagger:.06},'-=.45');
-   ScrollTrigger.create({trigger:r,start:'top 60%',end:'bottom 40%',toggleClass:'lit'})})});
  addEventListener('load',()=>ScrollTrigger.refresh());
 }
 document.fonts.ready.then(()=>requestAnimationFrame(stage));
