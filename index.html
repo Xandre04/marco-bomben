@@ -131,7 +131,7 @@ html.gyro-on .tiltnote{display:block}
 .wallbtn i{display:grid;grid-template-columns:repeat(2,8px);gap:3px}.wallbtn i b{width:8px;height:8px;background:var(--ink);border-radius:2px}
 #wall{position:fixed;inset:0;z-index:90;background:var(--dark);overflow:hidden;display:none;touch-action:none;cursor:grab;user-select:none}
 #wall.open{display:block}#wall.drag{cursor:grabbing}
-#wall .tile{position:absolute;left:0;top:0;padding:clamp(6px,1vw,14px);will-change:transform}
+#wall .tile{position:absolute;left:0;top:0;padding:clamp(6px,1vw,14px);will-change:transform;contain:layout paint}
 #wall .tile button{all:unset;cursor:pointer;display:block;width:100%;height:100%;position:relative;overflow:hidden;background:#161616;transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
 #wall .tile img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;transition:transform .6s ease}
 #wall .tile.whole img{object-fit:contain;padding:8%}
@@ -146,7 +146,7 @@ html.gyro-on .tiltnote{display:block}
 .wtop h2 span{color:var(--pink)}
 .wtop p{margin:4px 0 0;color:#a3a29d;font-size:var(--t-s)}
 .wtop .pill{color:#fff;background:#0b0b0b}
-#wallin{position:absolute;inset:0;transform-origin:50% 50%}
+#wallin{position:absolute;inset:0;transform-origin:50% 50%;will-change:transform;contain:strict}
 .wctl{position:fixed;z-index:91;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:8px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:5px;box-shadow:4px 4px 0 var(--pink)}
 .wctl button{all:unset;cursor:pointer;font:800 14px/1 var(--display);padding:8px 14px;border-radius:999px;color:var(--ink)}
 .wctl button[aria-pressed="true"]{background:var(--pink)}
@@ -600,14 +600,16 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
   while(R*S<innerHeight+2*S){R++}W=C*S;H=R*S;
   if(!tiles.length){inn.innerHTML='';const n=C*R;for(let k=0;k<n;k++){const it=items[k%items.length],t=document.createElement('div');t.className='tile'+(it.k?'':' whole');
    const g=document.getElementById('opera-'+it.n).style.getPropertyValue('--glow');if(g)t.style.setProperty('--glow',g);
-   t.innerHTML=`<button type="button" aria-label="${it.w.t}${it.k?', dettaglio '+it.k:''}"><img src="${it.src}" alt="" loading="lazy" draggable="false"><b>${it.k?'Dettaglio '+it.k:pad(it.n)+' '+it.w.t}</b></button>`;
+   t.innerHTML=`<button type="button" aria-label="${it.w.t}${it.k?', dettaglio '+it.k:''}"><img src="${it.src.replace(/^img\/(.*)\.\w+$/,'img/th/$1.jpg')}" alt="" decoding="async" draggable="false"><b>${it.k?'Dettaglio '+it.k:pad(it.n)+' '+it.w.t}</b></button>`;
    t.querySelector('button').onclick=e=>{if(moved>6){e.preventDefault();return}openAt(it.j)};inn.appendChild(t);tiles.push({el:t,c:k%C,r:Math.floor(k/C)})}}
-  tiles.forEach(t=>{t.el.style.width=t.el.style.height=S+'px';t.sh=(t.c%2)*S*.5})}
+  tiles.forEach(t=>{t.el.style.width=t.el.style.height=S+'px';t.sh=(t.c%2)*S*.5});lx=NaN}
  const wrap=(v,m)=>((v%m)+m)%m;
- function frame(){if(!drag){ox+=vx;oy+=vy;vx*=.93;vy*=.93}
-  for(const t of tiles){const x=wrap(t.c*S+ox,W)-S,y=wrap(t.r*S+t.sh+oy,H)-S;t.el.style.transform=`translate3d(${x}px,${y}px,0)`}
+ let lx=NaN,ly=NaN,lk=1;
+ function frame(){if(!drag){ox+=vx;oy+=vy;vx*=.92;vy*=.92;if(Math.abs(vx)<.05)vx=0;if(Math.abs(vy)<.05)vy=0}
+  // si ridisegna solo se la parete si è mossa davvero
+  if(ox!==lx||oy!==ly){lx=ox;ly=oy;for(const t of tiles){const x=wrap(t.c*S+ox,W)-S,y=wrap(t.r*S+t.sh+oy,H)-S;t.el.style.transform=`translate3d(${x|0}px,${y|0}px,0)`}}
   // più corri, più la parete si piega e si allontana, come gomma
-  const sp=Math.hypot(vx,vy);inn.style.transform=`scale(${1-Math.min(.14,sp*.004)}) skew(${gsap.utils.clamp(-7,7,-vx*.12)}deg,${gsap.utils.clamp(-5,5,-vy*.08)}deg)`;
+  const k=Math.round((1-Math.min(.08,Math.hypot(vx,vy)*.0025))*1000)/1000;if(k!==lk){lk=k;inn.style.transform=`scale(${k})`}
   raf=requestAnimationFrame(frame)}
  function open(){layout();wall.classList.add('open');lenis&&lenis.stop();document.documentElement.style.overflow='hidden';ox=-S*.5;oy=-S*.3;vx=-2.2;vy=-.6;cancelAnimationFrame(raf);frame();
   pop();
