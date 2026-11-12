@@ -170,85 +170,82 @@ dialog::backdrop{background:var(--wall)}
 .sec+#artista,#artista+.sec{border-top:0}
 .photos figure{overflow:hidden}
 
-/* ===== strato pop: colori pieni presi dalle tele, bordi neri spessi, ombre piene, adesivi ===== */
-:root{--pink:#ff2e88;--lime:#b8ff3c;--cyan:#27d4ff;--yellow:#ffd60a;--violet:#7a2cff;--orange:#ff6a1f;--hard:6px 6px 0 var(--ink)}
-/* apertura: macchie di colore che fluttuano dietro il nome e un adesivo che gira */
+/* ===== pop con disciplina: nero, bianco, un rosa acceso. Il colore vero lo portano le tele. ===== */
+:root{--pink:#ff2e88;--hard:6px 6px 0 var(--ink);--t-s:.9375rem;--t-b:1.125rem;--grey:#55544f}
+header nav a{font-size:15px}
+/* apertura: nome dipinto a sinistra, una pila di tele vere a destra */
 .hero{position:relative;overflow:hidden}
-.blobs{position:absolute;inset:0;pointer-events:none;z-index:0}
-.blobs i{position:absolute;border-radius:50%;will-change:transform}
-.blobs i:nth-child(1){width:34vw;height:34vw;right:-6vw;top:6vh;background:var(--yellow);animation:fl1 14s ease-in-out infinite alternate}
-.blobs i:nth-child(2){width:16vw;height:16vw;right:24vw;top:46vh;background:var(--cyan);animation:fl2 11s ease-in-out infinite alternate}
-.blobs i:nth-child(3){width:9vw;height:9vw;right:8vw;top:58vh;background:var(--pink);animation:fl1 9s ease-in-out infinite alternate-reverse}
-.blobs i:nth-child(4){width:6vw;height:6vw;right:36vw;top:14vh;background:var(--lime);border:3px solid var(--ink);animation:fl2 8s ease-in-out infinite alternate}
-@keyframes fl1{to{transform:translate(-3vw,4vh) scale(1.08)}}
-@keyframes fl2{to{transform:translate(2vw,-5vh) rotate(40deg)}}
 .hero .wrap{position:relative;z-index:1}
-.sticker{position:absolute;z-index:3;right:max(var(--side),4vw);top:calc(60px + 4vh);width:clamp(110px,12vw,170px);aspect-ratio:1;border-radius:50%;background:var(--pink);border:3px solid var(--ink);box-shadow:var(--hard);display:grid;place-items:center;color:var(--ink)}
+.stack{position:absolute;z-index:2;right:max(var(--side),3vw);top:0;width:clamp(260px,29vw,460px);aspect-ratio:1/1.05;pointer-events:none}
+.stack img{position:absolute;display:block;border:clamp(6px,.7vw,10px) solid #fff;outline:3px solid var(--ink);box-shadow:10px 10px 0 var(--ink);will-change:transform}
+.stack img:nth-child(1){width:92%;left:4%;top:4%;transform:rotate(-9deg)}
+.stack img:nth-child(2){width:62%;right:-2%;top:30%;transform:rotate(7deg)}
+.stack img:nth-child(3){width:56%;left:-6%;top:44%;transform:rotate(-3deg)}
+.sticker{position:absolute;z-index:3;left:-14%;top:-8%;width:clamp(110px,10vw,150px);aspect-ratio:1;border-radius:50%;background:var(--pink);border:3px solid var(--ink);box-shadow:var(--hard);display:grid;place-items:center;color:var(--ink)}
 .sticker svg{position:absolute;inset:6%;width:88%;height:88%;animation:spin 16s linear infinite}
-.sticker b{font:800 clamp(1.4rem,2.4vw,2.2rem)/.85 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;text-align:center;text-transform:uppercase}
+.sticker b{font:800 clamp(1.4rem,2.2vw,2rem)/.85 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;text-align:center;text-transform:uppercase}
 @keyframes spin{to{transform:rotate(360deg)}}
-.intro{border-bottom:0}
-.intro h2{background:var(--ink);color:var(--yellow);justify-self:start;padding:.15em .35em;transform:rotate(-2deg);box-shadow:4px 4px 0 var(--pink)}
-/* nastri incrociati */
+.intro{border-bottom:0;position:relative;z-index:3}
+.intro h2{background:var(--pink);color:var(--ink);justify-self:start;padding:.12em .35em .18em;transform:rotate(-2deg);border:3px solid var(--ink);box-shadow:var(--hard);font-size:clamp(1.9rem,3vw,3rem)}
+.intro p{font-size:1.25rem;line-height:1.45}
+/* nastri incrociati: nero e rosa */
 .marq{position:relative;margin-top:var(--s4);border:0;padding:0;height:clamp(150px,19vw,260px);overflow:hidden}
 .tape{position:absolute;left:-5vw;right:-5vw;top:50%;border-block:3px solid var(--ink);padding-block:clamp(8px,1.2vw,16px);overflow:hidden}
-.tape.a{background:var(--yellow);transform:translateY(-50%) rotate(-3deg);z-index:2}
+.tape.a{background:var(--ink);transform:translateY(-50%) rotate(-3deg);z-index:2}
 .tape.b{background:var(--pink);transform:translateY(-50%) rotate(3deg);z-index:1}
 .tape.b .marq-track{animation:tapeR 26s linear infinite}
 @keyframes tapeR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 .marq span{font-size:clamp(2.4rem,6vw,5.5rem)}
-.tape.b span{color:var(--ink)}
-.tape.b span:nth-child(even){color:transparent;-webkit-text-stroke:2px var(--ink)}
-.marq span i{color:var(--ink)}
-.tape.a span i{color:var(--pink)}
-/* titoli con adesivo */
-.head h2{position:relative}
+.tape.a span{color:#fff}.tape.a span:nth-child(even){color:transparent;-webkit-text-stroke:2px #fff}
+.tape.b span{color:var(--ink)}.tape.b span:nth-child(even){color:transparent;-webkit-text-stroke:2px var(--ink)}
+.marq span i{color:var(--ink)}.tape.a span i{color:var(--pink)}
 .head h2{justify-self:start}
-.head h2::after{content:"✺";position:absolute;left:100%;top:-.1em;margin-left:.12em;color:var(--pink);font-size:.6em;line-height:1;animation:spin 6s linear infinite}
-/* opere: pannelli a colore pieno, bordo nero, ombra piena */
-.work{border:3px solid var(--ink);box-shadow:var(--hard);background:var(--yellow)}
-.room:nth-child(7n+1) .work{background:var(--cyan)}
-.room:nth-child(7n+2) .work{background:var(--yellow)}
-.room:nth-child(7n+3) .work{background:var(--pink)}
-.room:nth-child(7n+4) .work{background:var(--lime)}
-.room:nth-child(7n+5) .work{background:var(--violet)}
-.room:nth-child(7n+6) .work{background:var(--orange)}
-.room:nth-child(7n+7) .work{background:var(--cyan)}
-.work img{box-shadow:0 0 0 3px var(--ink),10px 10px 0 rgba(0,0,0,.35)}
-.work.round img{box-shadow:none;filter:drop-shadow(8px 8px 0 rgba(0,0,0,.35))}
-.room{transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
-.room:hover{transform:rotate(-1deg) translateY(-4px)}
-.horiz .room:hover{transform:none}
-.cap h3{font-weight:800}
-.cap .link{border:3px solid var(--ink);border-radius:999px;padding:8px 14px;background:var(--wall);box-shadow:3px 3px 0 var(--ink);font-weight:700;transition:transform .15s,box-shadow .15s,background .15s}
-.cap .link:hover{background:var(--yellow);color:var(--ink);transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+/* opere al buio: le tele si accendono del loro colore */
+#opere{background:var(--ink);color:#fff}
+#opere .head p,#opere .m{color:#a3a29d}
+#opere .counter{color:var(--pink)}
+.sec+#opere{border-top:0}
+.work{background:#161616;transition:box-shadow .5s ease,background-color .5s ease}
+.room:hover .work,.room.lit .work{box-shadow:0 0 0 2px var(--glow),0 0 120px -20px var(--glow)}
+.work img{box-shadow:0 30px 60px -24px rgba(0,0,0,.9)}
+.work.round img{box-shadow:none;filter:drop-shadow(0 24px 30px rgba(0,0,0,.7))}
+.cap{grid-template-columns:auto minmax(0,1fr) auto;column-gap:var(--s2)}
+.cap::before{content:attr(data-n);grid-row:1/3;font:800 clamp(2.4rem,3.4vw,3.4rem)/.8 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;color:transparent;-webkit-text-stroke:1.5px var(--glow,#fff)}
+.cap h3{font-weight:800;font-size:clamp(1.4rem,1.8vw,1.75rem);grid-column:2}
+.cap .m{grid-column:2}.cap p{grid-column:1/-1}
+.cap .link{grid-column:3;grid-row:1/3;align-self:center;border:2px solid #fff;border-radius:999px;padding:9px 16px;background:transparent;color:#fff;font-weight:700;transition:background .15s,color .15s,border-color .15s}
+.cap .link:hover{background:var(--glow);border-color:var(--glow);color:var(--ink)}
+.loupe{box-shadow:0 0 0 3px #fff,0 14px 32px -10px rgba(0,0,0,.6)}
 /* foto come stampe attaccate */
 .photos{gap:clamp(18px,2.4vw,36px)}
-.photos figure{overflow:visible}
+.photos figure{overflow:visible;position:relative}
 .photos img{border:3px solid var(--ink);box-shadow:var(--hard)}
-.photos figure:nth-child(odd){transform:rotate(-1.5deg)}.photos figure:nth-child(even){transform:rotate(1.8deg)}
-.photos figure::before{content:"";position:absolute;z-index:2;left:50%;top:-12px;width:70px;height:22px;margin-left:-35px;background:rgba(255,214,10,.85);transform:rotate(-4deg)}
-.photos figure{position:relative}
-.photos figure:nth-child(even)::before{background:rgba(255,46,136,.8);transform:rotate(5deg)}
-/* artista su viola */
-#artista{background:var(--violet);color:#fff}
-#artista .head p,#artista .m{color:#e6dcff}
-#artista dl.cv div{border-color:rgba(255,255,255,.25)}
-.kairos blockquote em{color:var(--yellow)}
-#artista .head h2::after{color:var(--yellow)}
-#artista .link:hover{color:var(--yellow)}
-/* contatti su verde acido */
-#contatti{background:var(--lime)}
-#contatti .head p,#contatti .m{color:#2b3a00}
-.contact>*{border-top:3px solid var(--ink)}
-.ig b{-webkit-text-stroke:3px var(--ink)}
+.photos figure:nth-child(odd){transform:rotate(-1deg)}.photos figure:nth-child(even){transform:rotate(1.2deg)}
+.photos figure::before{content:"";position:absolute;z-index:2;left:50%;top:-12px;width:76px;height:22px;margin-left:-38px;background:rgba(255,46,136,.85);transform:rotate(-4deg)}
+.photos figure:nth-child(even)::before{transform:rotate(5deg)}
+.photos figcaption{font-weight:600;color:var(--ink)}
+/* artista su rosa */
+#artista{background:var(--pink);color:var(--ink)}
+#artista .head p,#artista .m{color:#4a0d27}
+#artista dl.cv div{border-color:rgba(0,0,0,.25)}
+.kairos blockquote em{color:#fff;background:var(--ink);padding:0 .15em}
+#artista .link:hover{color:#fff}
+/* contatti al buio, il nome instagram dipinto */
+#contatti{background:var(--ink);color:#fff}
+#contatti .head p,#contatti .m{color:#a3a29d}
+.sec+#contatti{border-top:0}
+.contact>*{border-top:2px solid #fff}
+.contact a:hover b{color:var(--pink)}
+.ig b{font-size:clamp(4rem,15vw,14rem);background:none;color:var(--pink);transition:color .2s}.ig:hover b{color:#fff}
 footer{background:var(--ink);color:#fff}
-footer .wrap{border-top:0;color:#bdbdbd}
+footer .wrap{border-top:1px solid #2a2a2a;color:#8d8c87}
 /* barra */
-header nav a{color:var(--ink);font-weight:700;padding:6px 10px;border-radius:999px;border:2px solid transparent;transition:background .15s,border-color .15s}
-header nav a:hover{background:var(--yellow);border-color:var(--ink)}
-@media (max-width:640px){.sticker{top:calc(60px + 8px);right:16px;width:96px}.blobs i:nth-child(1){width:62vw;height:62vw;top:24vh;right:-34vw}.blobs i:nth-child(3){top:auto;bottom:4vh}.marq{height:130px}}
-@media (prefers-reduced-motion:reduce){.blobs i,.sticker svg,.head h2::after,.tape.b .marq-track{animation:none}}
+header nav a{color:var(--ink);font-weight:700;padding:6px 12px;border-radius:999px;border:2px solid transparent;transition:background .15s,border-color .15s}
+header nav a:hover{background:var(--pink);border-color:var(--ink)}
+.cur{background:var(--pink)}
+@media (max-width:900px){.stack{position:relative;right:auto;top:auto;width:min(78vw,420px);margin:var(--s4) 0 0 auto}}
+@media (max-width:640px){.stack{width:74vw;margin-right:4vw}.sticker{width:96px;left:-18%}.marq{height:130px}.cap{grid-template-columns:auto minmax(0,1fr)}.cap .link{grid-column:1/-1;grid-row:auto;justify-self:start}}
+@media (prefers-reduced-motion:reduce){.sticker svg,.tape.b .marq-track{animation:none}}
 @media (max-width:900px){
  .intro h2,.intro p,.intro .m,.head h2,.head p,.kairos blockquote,.kairos .txt{grid-column:1/-1}
  .kairos .txt>.bio{grid-column:1/7}.kairos .txt>.facts{grid-column:7/13}
@@ -272,6 +269,7 @@ header nav a:hover{background:var(--yellow);border-color:var(--ink)}
  .photos figure:first-child img{position:static;height:auto;aspect-ratio:4/3}
  .photos figure:first-child figcaption{position:static}
 }
+@media (max-width:640px){.cap{grid-template-columns:auto minmax(0,1fr)}.cap h3,.cap .m{grid-column:2}.cap p{grid-column:1/-1}.cap .link{grid-column:1/-1;grid-row:auto;justify-self:start}.stack{margin-top:var(--s5)}}
 </style>
 </head>
 <body>
@@ -280,9 +278,9 @@ header nav a:hover{background:var(--yellow);border-color:var(--ink)}
 <header id="bar"><div class="wrap"><a class="logo" href="#top" aria-label="Marco Bomben, torna su"><span>Marco</span><span>Bomben</span></a><nav aria-label="Sezioni"><a href="#opere">Opere</a><a href="#mostra">Mostra</a><a href="#artista">Artista</a><a href="#contatti">Contatti</a></nav></div></header>
 
 <main>
-<section class="hero" id="top"><div class="blobs" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-<div class="sticker" aria-hidden="true"><svg viewBox="0 0 100 100"><defs><path id="ring" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><text font-size="11" font-weight="800" letter-spacing="2" font-family="Bricolage Grotesque, sans-serif"><textPath href="#ring">MOSTRA PERSONALE ✺ AZZANO DECIMO ✺ 2026 ✺</textPath></text></svg><b>Dal<br>1.10</b></div><div class="wrap">
+<section class="hero" id="top"><div class="wrap">
   <div class="mark" id="mark"><canvas id="heroDrip" aria-hidden="true"></canvas><h1 id="name"><span>Marco</span><span>Bomben</span></h1></div>
+  <div class="stack" id="stack" aria-hidden="true"><img src="img/opera1.jpg" alt=""><img src="img/opera6.jpg" alt=""><img src="img/opera7.jpg" alt=""><div class="sticker"><svg viewBox="0 0 100 100"><defs><path id="ring" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><text font-size="11" font-weight="800" letter-spacing="2" font-family="Bricolage Grotesque, sans-serif"><textPath href="#ring">MOSTRA PERSONALE ✺ AZZANO DECIMO ✺ 2026 ✺</textPath></text></svg><b>Dal<br>1.10</b></div></div>
   <div class="intro grid">
     <h2>Sensazioni senza contorni</h2>
     <p>Sette tele in mostra alla Banca Mediolanum di Azzano Decimo. Passa il cursore su una tela per guardarla da vicino.</p>
@@ -379,13 +377,14 @@ const css=c=>Array.isArray(c)?`rgb(${c[0]},${c[1]},${c[2]})`:c;
 
 // tele: lente d'ingrandimento sull'immagine grande, parete che prende il colore dell'opera
 const rooms=document.getElementById('rooms'),pad=n=>String(n).padStart(2,'0'),fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
-const tintOf=img=>{const p=palette(img,1);if(!p)return null;seed=5;let r=0,g=0,b=0;for(let k=0;k<14;k++){const c=p(rnd(),rnd());r+=c[0];g+=c[1];b+=c[2]}r/=14;g/=14;b/=14;const m=.84;return `rgb(${Math.round(255*m+r*(1-m))},${Math.round(255*m+g*(1-m))},${Math.round(255*m+b*(1-m))})`};
+const glowOf=img=>{const p=palette(img,1);if(!p)return null;seed=5;let best=null,bs=-1;for(let k=0;k<30;k++){const c=p(rnd(),rnd()),mx=Math.max(...c),mn=Math.min(...c),sat=mx?(mx-mn)/mx*(mx/255):0;if(sat>bs){bs=sat;best=c}}return css(best)};
 works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='room'+(w.wide?' wide':'');s.id='opera-'+n;s.setAttribute('aria-label',w.t);
  const big=`img/opera${n}-grande.${w.x}`;
  s.innerHTML=`<div class="work${w.round?' round':''}"><button type="button" aria-label="Guarda da vicino ${w.t}"><img src="img/opera${n}.${w.x}" alt="${w.alt}" decoding="async"><span class="loupe" aria-hidden="true"></span></button></div>
- <div class="cap"><h3>${w.t}</h3><span class="m">${w.m}</span><p>${w.p}</p><button class="link" type="button">Guarda da vicino</button></div>`;
+ <div class="cap" data-n="${pad(n)}"><h3>${w.t}</h3><span class="m">${w.m}</span><p>${w.p}</p><button class="link" type="button">Guarda da vicino</button></div>`;
  s.querySelectorAll('button').forEach(b=>b.onclick=()=>openLb(w,n));rooms.appendChild(s);
  const img=s.querySelector('img'),wk=s.querySelector('.work'),lp=s.querySelector('.loupe');
+ const setGlow=()=>{const g=glowOf(img);if(g)s.style.setProperty('--glow',g)};img.complete&&img.naturalWidth?setGlow():img.addEventListener('load',setGlow,{once:true});
  if(fine&&!reduce){let loaded=false;const Z=2.6;
   img.addEventListener('pointerenter',()=>{if(!loaded){loaded=true;lp.style.backgroundImage=`url(${big})`}wk.classList.add('looking')});
   img.addEventListener('pointerleave',()=>wk.classList.remove('looking'));
@@ -444,6 +443,13 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   const tw=gsap.to(mark,{ease:'none',paused:true,x:()=>target().x,y:()=>target().y,scale:()=>target().scale});
   const st=ScrollTrigger.create({trigger:mark,start:'top top+='+mark.getBoundingClientRect().top,end:()=>'+='+Math.max(200,mark.offsetHeight-90),pin:true,pinSpacing:false,scrub:true,animation:tw,invalidateOnRefresh:true,
    onUpdate:self=>{const done=self.progress>.995;logo.classList.toggle('on',done);mark.style.visibility=done?'hidden':'visible'}});
+  // pila di tele: arrivano lanciate dal basso, poi seguono il mouse a strati
+  const sk=document.getElementById('stack');if(sk){const ims=[...sk.querySelectorAll('img')],stk=sk.querySelector('.sticker');
+   gsap.from(ims,{yPercent:120,rotate:i=>[-30,25,-20][i],opacity:0,duration:1.1,ease:'back.out(1.4)',stagger:.12,delay:.5});
+   gsap.from(stk,{scale:0,rotate:-180,duration:.8,ease:'back.out(2)',delay:1.2});
+   if(matchMedia('(hover:hover) and (pointer:fine)').matches){const q=ims.map((im,i)=>({x:gsap.quickTo(im,'x',{duration:.8,ease:'power3'}),y:gsap.quickTo(im,'y',{duration:.8,ease:'power3'}),k:[14,32,22][i]}));
+    hero.addEventListener('pointermove',e=>{const nx=e.clientX/innerWidth-.5,ny=e.clientY/innerHeight-.5;q.forEach(o=>{o.x(nx*o.k);o.y(ny*o.k)})},{passive:true})}
+   gsap.to(sk,{yPercent:-18,ease:'none',scrollTrigger:{trigger:hero,start:'top top',end:'bottom top',scrub:true}})}
   // titoli: lettere che saltano su dalla linea di base
   if(window.SplitText)document.querySelectorAll('.head h2').forEach(h=>{const sp=SplitText.create(h,{type:'lines,chars',mask:'lines'});
    gsap.from(sp.chars,{yPercent:115,rotate:10,duration:.7,ease:'back.out(1.6)',stagger:.025,scrollTrigger:{trigger:h,start:'top 85%',once:true}})});
@@ -475,7 +481,7 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   const dist=()=>track.scrollWidth-innerWidth;
   const tw=gsap.to(track,{x:()=>-dist(),ease:'none'});
   ScrollTrigger.create({trigger:box,start:'top top',end:()=>'+='+dist(),pin:true,scrub:true,animation:tw,invalidateOnRefresh:true,
-   onUpdate:self=>{const n=Math.min(7,1+Math.floor(self.progress*7));document.getElementById('cnt').textContent=String(n).padStart(2,'0')+' / 07'}});
+   onUpdate:self=>{const n=Math.min(7,1+Math.floor(self.progress*7));document.getElementById('cnt').textContent=String(n).padStart(2,'0')+' / 07';const c=innerWidth/2;track.querySelectorAll('.room').forEach(r=>{const b=r.getBoundingClientRect();r.classList.toggle('lit',b.left<c&&b.right>c)})}});
   track.querySelectorAll('.room').forEach(r=>{const img=r.querySelector('.work img'),pan=r.querySelector('.work');
    gsap.fromTo(img,{rotate:-7,scale:.8,yPercent:8},{rotate:0,scale:1,yPercent:0,ease:'none',scrollTrigger:{trigger:r,containerAnimation:tw,start:'left right',end:'center 60%',scrub:true}});
    gsap.fromTo(img,{rotate:0},{rotate:5,scale:.92,ease:'none',immediateRender:false,scrollTrigger:{trigger:r,containerAnimation:tw,start:'center 40%',end:'right left',scrub:true}});
