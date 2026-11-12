@@ -116,6 +116,7 @@ html.gyro-on .tiltnote{display:block}
 .chip{display:inline-block;margin-left:.5em;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);background:var(--glow,var(--pink));padding:3px 8px;border-radius:999px;vertical-align:1px}
 .keys{display:none;font-size:12px;font-weight:700;color:#a3a29d;text-align:right;margin-top:6px}@media (hover:hover) and (pointer:fine){.keys{display:block}}
 .up{all:unset;cursor:pointer;font-weight:700;color:#fff}.up:hover{color:var(--pink)}.info .pill:hover{background:var(--glow,var(--pink));border-color:var(--glow,var(--pink));color:var(--ink)}
+.det.rest{pointer-events:auto;cursor:zoom-in}.det.rest:hover{outline:3px solid var(--glow,var(--pink));outline-offset:-3px}
 .det{position:absolute;inset:0;z-index:3;transform-origin:calc(100% - var(--side)) calc(100% - 48px);transform:scale(.2);border-radius:0;overflow:hidden;will-change:transform;pointer-events:none}
 .det img{width:100%;height:100%;object-fit:cover;display:block}
 .det::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 40px #fff;opacity:var(--f,1)}
@@ -216,7 +217,10 @@ dialog::backdrop{background:var(--dark)}
 .lb-nav:hover{background:var(--pink);border-color:var(--pink);color:var(--ink)}
 .lb-prev{left:clamp(10px,2vw,32px)}.lb-next{right:clamp(10px,2vw,32px)}
 .lb-tip{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:13px;color:#a3a29d;white-space:nowrap}
-.lb-th{display:flex;justify-content:center;gap:var(--s1);padding-block:var(--s2);overflow-x:auto}
+.lb-foot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:var(--s3);padding-block:var(--s2)}
+.lb-foot p{margin:0;color:#a3a29d;font-size:var(--t-s);max-width:42ch}.lb-foot .ask{justify-self:end}
+@media (max-width:900px){.lb-foot{grid-template-columns:1fr;justify-items:center;text-align:center;gap:var(--s2)}.lb-foot .ask{justify-self:center}.lb-foot p{display:none}}
+.lb-th{display:flex;justify-content:center;gap:var(--s1);overflow-x:auto}
 .lb-th button{all:unset;cursor:pointer;opacity:.4}.lb-th button[aria-current="true"],.lb-th button:hover{opacity:1}
 .lb-th img{width:60px;height:60px;object-fit:cover;display:block}
 
@@ -342,7 +346,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
  <div class="lb">
   <div class="lb-top wrap"><b><span id="lb-t" style="all:unset"></span><span id="lb-c"></span></b><button class="pill" id="lb-x" type="button" style="color:#fff">Chiudi</button></div>
   <div class="lb-main" id="lb-main"><button class="lb-nav lb-prev" id="lb-p" type="button" aria-label="Precedente">←</button><img id="lb-img" alt="" draggable="false"><button class="lb-nav lb-next" id="lb-n" type="button" aria-label="Successiva">→</button><span class="lb-tip" id="lb-tip">Tocca per ingrandire · frecce o swipe per cambiare</span></div>
-  <div class="lb-th" id="lb-th"></div>
+  <div class="lb-foot wrap"><p id="lb-d"></p><div class="lb-th" id="lb-th"></div><a class="ask" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener">Chiedi di quest'opera</a></div>
  </div>
 </dialog>
 
@@ -386,10 +390,11 @@ works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.classNam
  s.innerHTML=`<div class="stage"><div class="aura" aria-hidden="true"></div><div class="shade" aria-hidden="true"></div>
   <div class="full${w.x==="webp"?" round":""}"><button type="button" aria-label="Guarda i dettagli di ${w.t}"><img src="img/opera${n}-grande.${w.x}" alt="${w.alt}" decoding="async"><span class="sheen" aria-hidden="true"></span></button></div>
   <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m} <span class="chip">Disponibile</span> <button class="share" type="button">Condividi ↗</button></p><p>${w.p}</p><span class="acts"><button class="pill" type="button">Guarda i dettagli ↗</button><a class="ask" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener">Chiedi di quest'opera</a></span><span class="tiltnote">Inclina il telefono: la luce scorre sulla vernice</span></div>
-  <div class="det" aria-hidden="true"><img src="img/opera${n}-dettaglio1.jpg" alt="" decoding="async"></div>
+  <div class="det" aria-hidden="true" title="Apri il dettaglio"><img src="img/opera${n}-dettaglio1.jpg" alt="" decoding="async"></div>
   <div class="hint" aria-hidden="true"><b>${w.t}, da vicino</b><span>Scorri per fare un passo indietro</span></div>
   <span class="cnt">${pad(n)} / ${pad(works.length)}</span></div>`;
  s.querySelectorAll('.full button,.info .pill').forEach(b=>b.onclick=()=>openLb(w,n));
+ s.querySelector('.det').onclick=()=>{if(s.querySelector('.det').classList.contains('rest'))openAt(seq.findIndex(o=>o.n===n&&o.k===1))};
  const sh=s.querySelector('.share');sh.onclick=async()=>{const url=location.href.split('#')[0]+'#opera-'+n,data={title:`${w.t} · Marco Bomben`,text:`${w.t} di Marco Bomben, Sensazioni senza contorni`,url};
   try{if(navigator.share){await navigator.share(data);return}await navigator.clipboard.writeText(url);sh.textContent='Link copiato ✓';setTimeout(()=>sh.textContent='Condividi',1800)}catch(e){}};scenes.appendChild(s);
  const b=document.createElement('button');b.type='button';b.innerHTML=`<span class="th"><img src="img/opera${n}.${w.x}" alt="" loading="lazy"></span><b>${pad(n)} ${w.t}</b><span>${w.m}</span>`;
@@ -439,12 +444,12 @@ function loop(){drawHero();if(performance.now()-hstart<3400)requestAnimationFram
 // ingresso: la percentuale sale mentre si scaricano le tele, poi il rosa si ritira colando
 const entered=new Promise(res=>{const pre=document.getElementById('pre'),pcn=document.getElementById('pcn'),de=document.documentElement;
  if(reduce||!window.gsap){pre.remove();lenis&&lenis.start();res();return}
- de.classList.add('loading');const list=['img/opera6-grande.jpg'];works.forEach((w,i)=>{list.push(`img/opera${i+1}-grande.${w.x}`,`img/opera${i+1}-dettaglio1.jpg`)});
+ de.classList.add('loading');const list=['img/opera6-grande.jpg'],later=[];works.forEach((w,i)=>{(i<2?list:later).push(`img/opera${i+1}-dettaglio1.jpg`,`img/opera${i+1}-grande.${w.x}`)});
  let done=0,shown={v:0};const t0=performance.now();
  const tick=()=>{const target=done/list.length*100;shown.v+=(target-shown.v)*.12;pcn.textContent=String(Math.min(100,Math.round(shown.v))).padStart(2,'0')};gsap.ticker.add(tick);
  const finish=()=>{if(finish.d)return;finish.d=1;const wait=Math.max(0,1300-(performance.now()-t0));
   gsap.to(shown,{v:100,duration:.4,delay:wait/1000,onComplete:()=>{gsap.ticker.remove(tick);pcn.textContent='100';
-   gsap.to(pre,{yPercent:-120,duration:1.1,ease:'power4.inOut',delay:.15,onStart:()=>{de.classList.remove('loading');lenis&&lenis.start();setTimeout(res,350)},onComplete:()=>pre.remove()})}})};
+   gsap.to(pre,{yPercent:-120,duration:1.1,ease:'power4.inOut',delay:.15,onStart:()=>{de.classList.remove('loading');lenis&&lenis.start();setTimeout(res,350);later.forEach(src=>{const im=new Image();im.decoding='async';im.src=src})},onComplete:()=>pre.remove()})}})};
  list.forEach(src=>{const im=new Image();im.onload=im.onerror=()=>{if(++done>=list.length)finish()};im.src=src});setTimeout(finish,7000)});
 document.fonts.ready.then(()=>entered).then(()=>{const go=()=>{fitName();paintLetters();
   const intro=!reduce&&window.gsap;hstart=performance.now()+(intro?1150:0);buildHero();
@@ -528,7 +533,8 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
     .fromTo(full,{scale:1.3,opacity:0},{scale:1,opacity:1,duration:.4,ease:'power2.out'},.24)
     .fromTo(s.querySelector('.aura'),{opacity:0,scale:.6},{opacity:.32,scale:1,duration:.4},.24)
     .fromTo(info,{y:50,opacity:0,rotate:-2},{y:0,opacity:1,rotate:0,stagger:.025,duration:.14,ease:'back.out(1.6)'},.56)
-    .to({},{duration:.2},.8)});
+    .to({},{duration:.2},.8);
+   tl.eventCallback('onUpdate',()=>det.classList.toggle('rest',tl.progress()>.6))});
   gsap.from('.index button',{y:60,opacity:0,rotate:()=>gsap.utils.random(-6,6),duration:.8,ease:'back.out(1.4)',stagger:.06,scrollTrigger:{trigger:'.index',start:'top 85%',once:true}});
   gsap.from('.portrait',{y:120,rotate:-12,opacity:0,duration:1,ease:'back.out(1.3)',scrollTrigger:{trigger:'#marco',start:'top 75%',once:true}});
   gsap.from('.story>*',{y:40,opacity:0,duration:.8,ease:'power3.out',stagger:.08,scrollTrigger:{trigger:'.story',start:'top 80%',once:true}});
@@ -559,7 +565,7 @@ const lb=document.getElementById('lb'),li=document.getElementById('lb-img'),th=d
 const seq=[];works.forEach((w,i)=>{const n=i+1;seq.push({w,n,k:0,src:`img/opera${n}-grande.${w.x}`});for(let k=1;k<=w.d;k++)seq.push({w,n,k,src:`img/opera${n}-dettaglio${k}.jpg`})});
 let cur=0,curWork=-1;
 function show(j,dir=0){cur=(j+seq.length)%seq.length;const it=seq[cur];lm.classList.remove('zoom');
- if(it.n!==curWork){curWork=it.n;document.getElementById('lb-t').textContent=`${pad(it.n)} ${it.w.t}`;th.innerHTML='';
+ if(it.n!==curWork){curWork=it.n;document.getElementById('lb-t').textContent=`${pad(it.n)} ${it.w.t}`;document.getElementById('lb-d').textContent=`${it.w.m}. ${it.w.p}`;document.querySelector('.lb-foot').style.setProperty('--glow',document.getElementById('opera-'+it.n).style.getPropertyValue('--glow'));th.innerHTML='';
   seq.forEach((o,jj)=>{if(o.n!==it.n)return;const b=document.createElement('button');b.type='button';b.dataset.j=jj;b.setAttribute('aria-label',o.k?`Dettaglio ${o.k}`:'Opera intera');b.innerHTML=`<img src="${o.src}" alt="">`;b.onclick=()=>show(jj,jj>cur?1:-1);th.appendChild(b)})}
  const tot=it.w.d+1;document.getElementById('lb-c').textContent=it.k?`dettaglio ${it.k} di ${it.w.d}`:'tela intera';
  [...th.children].forEach(c=>c.setAttribute('aria-current',+c.dataset.j===cur));
