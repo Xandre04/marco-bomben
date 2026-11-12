@@ -80,6 +80,11 @@ header nav a:hover,header nav a.on{background:var(--pink)}
 .sheen{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;opacity:0;transition:opacity .5s;background:radial-gradient(circle at var(--mx,50%) var(--my,30%),rgba(255,255,255,.95),rgba(255,255,255,0) 42%)}
 .round .sheen{border-radius:50%}
 .stage.lit .sheen{opacity:1}
+/* giroscopio sul telefono */
+.gyro{all:unset;position:fixed;z-index:26;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:10px 18px;font-weight:800;font-size:15px;box-shadow:4px 4px 0 var(--pink);white-space:nowrap;cursor:pointer}
+.gyro.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+.tiltnote{display:none;font-size:var(--t-s);color:#a3a29d}
+html.gyro-on .tiltnote{display:block}
 /* barra delle sette tele */
 .rail{position:fixed;z-index:25;right:14px;top:50%;transform:translateY(-50%);display:grid;gap:6px;opacity:0;pointer-events:none;transition:opacity .4s}
 .rail.show{opacity:1;pointer-events:auto}
@@ -178,6 +183,7 @@ dialog::backdrop{background:var(--dark)}
 .cur.say{width:92px;height:92px;margin:-46px 0 0 -46px;mix-blend-mode:normal;background:var(--pink)}.cur.say span{opacity:1}
 /* ingresso */
 html.loading{overflow:hidden}
+html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}.lenis.lenis-stopped{overflow:clip}
 #pre{position:fixed;inset:0;z-index:100;background:var(--pink);color:var(--ink);display:grid;grid-template-rows:1fr auto;padding:var(--s4) var(--side);will-change:transform}
 #pre .pc{align-self:end;font:800 clamp(7rem,30vw,26rem)/.78 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 #pre .pl{display:flex;justify-content:space-between;gap:var(--s2);font-weight:700;padding-top:var(--s2);border-top:3px solid var(--ink);margin-top:var(--s3)}
@@ -247,6 +253,7 @@ html.loading{overflow:hidden}
 </div></section>
 <div id="scenes"></div>
 <nav class="rail" id="rail" aria-label="Vai a una tela"></nav>
+<button class="gyro" id="gyro" type="button">✦ Muovi il telefono: tocca per attivare</button>
 
 <section id="indice"><div class="wrap">
  <div class="top"><h2 class="big">Tutte e sette</h2><p>Tocca una tela per tornarci, oppure aprila per vedere i dettagli uno per uno.</p></div>
@@ -288,7 +295,7 @@ html.loading{overflow:hidden}
 </main>
 <footer><div class="bigname" aria-hidden="true">Bomben</div><div class="wrap m"><span>© 2026 Marco Bomben</span><span>Tutte le opere sono di proprietà dell'artista</span></div></footer>
 
-<dialog id="lb" aria-label="Opera">
+<dialog id="lb" aria-label="Opera" data-lenis-prevent>
  <div class="lb">
   <div class="lb-top wrap"><b><span id="lb-t" style="all:unset"></span><span id="lb-c"></span></b><button class="pill" id="lb-x" type="button" style="color:#fff">Chiudi</button></div>
   <div class="lb-main" id="lb-main"><button class="lb-nav lb-prev" id="lb-p" type="button" aria-label="Precedente">←</button><img id="lb-img" alt="" draggable="false"><button class="lb-nav lb-next" id="lb-n" type="button" aria-label="Successiva">→</button><span class="lb-tip" id="lb-tip">Tocca per ingrandire · frecce o swipe per cambiare</span></div>
@@ -298,6 +305,7 @@ html.loading{overflow:hidden}
 
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
+<script src="js/lenis.min.js"></script>
 <script>
 const works=[
  {t:"Opera I",m:"Tecnica mista su tela",d:3,x:"jpg",p:"Forme nere che si annodano su un fondo azzurro, attraversate da colature rosa e graffi.",alt:"Tela astratta con forme nere su fondo azzurro, rosa, lilla e giallo"},
@@ -308,6 +316,8 @@ const works=[
  {t:"Opera VI",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Magenta, viola e blu: le forme si toccano senza confondersi.",alt:"Forme lucide magenta, viola e blu su fondo nero"},
  {t:"Opera VII",m:"Acrilico e spray su tela",d:2,x:"jpg",p:"Rosso, arancio e argento, così lucidi che sembra di poterli toccare.",alt:"Forme lucide rosse, arancio e argento su fondo nero"}];
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+// scorrimento morbido: la rotella scorre con inerzia, il dito resta nativo
+let lenis=null;if(!reduce&&window.Lenis&&window.gsap){lenis=new Lenis({duration:1.3,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),wheelMultiplier:.9,anchors:{duration:1.6}});gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);lenis.stop()}
 const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),ease=t=>1-Math.pow(1-t,3),pad=n=>String(n).padStart(2,'0');
 let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
 const css=c=>Array.isArray(c)?`rgb(${c[0]},${c[1]},${c[2]})`:c;
@@ -324,7 +334,7 @@ const FALL=["#ff2f8a","#2f7cff","#ffcc1f","#18c08a","#111"];
 const scenes=document.getElementById('scenes'),index=document.getElementById('index'),rail=document.getElementById('rail');
 // ogni tela si ferma sul suo stato "intero" (86% della scena)
 const REST=.86,restY=s=>s.offsetTop+(s.offsetHeight-innerHeight)*REST;
-function goTo(i){const s=scenes.children[i];if(!s)return;const y=reduce?s.offsetTop:restY(s);scrollTo({top:y,behavior:reduce?'auto':'smooth'})}
+function goTo(i){const s=scenes.children[i];if(!s)return;const y=reduce?s.offsetTop:restY(s);lenis?lenis.scrollTo(y,{duration:1.8}):scrollTo({top:y,behavior:reduce?'auto':'smooth'})}
 // la tela intera prende la misura giusta per il suo spazio, così luce e inclinazione combaciano col quadro
 function fitFull(s){const box=s.querySelector('.full'),img=box.querySelector('img');if(!img.naturalWidth)return;const W=box.clientWidth,H=box.clientHeight,r=img.naturalWidth/img.naturalHeight;
  let w=W,h=W/r;if(h>H){h=H;w=H*r}img.style.setProperty('--w',Math.floor(w)+'px');img.style.setProperty('--h',Math.floor(h)+'px')}
@@ -332,7 +342,7 @@ const fitAll=()=>[...scenes.children].forEach(fitFull);
 works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='scene';s.id='opera-'+n;s.setAttribute('aria-label',w.t);
  s.innerHTML=`<div class="stage"><div class="aura" aria-hidden="true"></div>
   <div class="full${w.x==="webp"?" round":""}"><button type="button" aria-label="Guarda i dettagli di ${w.t}"><img src="img/opera${n}-grande.${w.x}" alt="${w.alt}" decoding="async"><span class="sheen" aria-hidden="true"></span></button></div>
-  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m}</p><p>${w.p}</p><button class="pill" type="button">Guarda i dettagli ↗</button></div>
+  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m}</p><p>${w.p}</p><button class="pill" type="button">Guarda i dettagli ↗</button><span class="tiltnote">Inclina il telefono: la luce scorre sulla vernice</span></div>
   <div class="det" aria-hidden="true"><img src="img/opera${n}-dettaglio1.jpg" alt="" decoding="async"></div>
   <div class="hint" aria-hidden="true"><b>${w.t}, da vicino</b><span>Scorri per fare un passo indietro</span></div>
   <span class="cnt">${pad(n)} / ${pad(works.length)}</span></div>`;
@@ -382,19 +392,38 @@ function drawHero(force){if(!hd)return;const t=force?1:clamp((performance.now()-
 function loop(){drawHero();if(performance.now()-hstart<3400)requestAnimationFrame(loop)}
 // ingresso: la percentuale sale mentre si scaricano le tele, poi il rosa si ritira colando
 const entered=new Promise(res=>{const pre=document.getElementById('pre'),pcn=document.getElementById('pcn'),de=document.documentElement;
- if(reduce||!window.gsap){pre.remove();res();return}
+ if(reduce||!window.gsap){pre.remove();lenis&&lenis.start();res();return}
  de.classList.add('loading');const list=['img/opera6-grande.jpg'];works.forEach((w,i)=>{list.push(`img/opera${i+1}-grande.${w.x}`,`img/opera${i+1}-dettaglio1.jpg`)});
  let done=0,shown={v:0};const t0=performance.now();
  const tick=()=>{const target=done/list.length*100;shown.v+=(target-shown.v)*.12;pcn.textContent=String(Math.min(100,Math.round(shown.v))).padStart(2,'0')};gsap.ticker.add(tick);
  const finish=()=>{if(finish.d)return;finish.d=1;const wait=Math.max(0,1300-(performance.now()-t0));
   gsap.to(shown,{v:100,duration:.4,delay:wait/1000,onComplete:()=>{gsap.ticker.remove(tick);pcn.textContent='100';
-   gsap.to(pre,{yPercent:-120,duration:1.1,ease:'power4.inOut',delay:.15,onStart:()=>{de.classList.remove('loading');setTimeout(res,350)},onComplete:()=>pre.remove()})}})};
+   gsap.to(pre,{yPercent:-120,duration:1.1,ease:'power4.inOut',delay:.15,onStart:()=>{de.classList.remove('loading');lenis&&lenis.start();setTimeout(res,350)},onComplete:()=>pre.remove()})}})};
  list.forEach(src=>{const im=new Image();im.onload=im.onerror=()=>{if(++done>=list.length)finish()};im.src=src});setTimeout(finish,7000)});
 document.fonts.ready.then(()=>entered).then(()=>{const go=()=>{fitName();paintLetters();
   const intro=!reduce&&window.gsap;hstart=performance.now()+(intro?1150:0);buildHero();
   if(intro)gsap.from(h1.querySelectorAll('i'),{yPercent:115,rotate:()=>gsap.utils.random(-28,28),opacity:0,duration:.95,ease:'back.out(1.8)',stagger:.055});
   if(!reduce)requestAnimationFrame(loop)};heroImg.complete?go():(heroImg.onload=go,heroImg.onerror=go)});
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{fitName();paintLetters();buildHero();window.ScrollTrigger&&ScrollTrigger.refresh()},150)});
+
+// telefono: la tela si inclina col giroscopio e il riflesso segue il movimento
+(function(){if(reduce||!window.gsap||!('DeviceOrientationEvent' in window)||matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+ const de=document.documentElement,pill=document.getElementById('gyro'),needAsk=typeof DeviceOrientationEvent.requestPermission==='function';
+ const qs=[...scenes.children].map(s=>{const b=s.querySelector('.full button');return{s,st:s.querySelector('.stage'),sh:s.querySelector('.sheen'),rx:gsap.quickTo(b,'rotationX',{duration:.5,ease:'power2'}),ry:gsap.quickTo(b,'rotationY',{duration:.5,ease:'power2'})}});
+ let b0=null,g0=null,on=false,last=-1;
+ const active=()=>{for(let i=0;i<qs.length;i++){const r=qs[i].s.getBoundingClientRect();if(r.top<=innerHeight*.5&&r.bottom>=innerHeight*.5)return i}return -1};
+ function ori(e){if(e.beta==null||e.gamma==null)return;if(!on){on=true;de.classList.add('gyro-on');pill.classList.remove('show')}
+  if(b0===null){b0=e.beta;g0=e.gamma}b0+=(e.beta-b0)*.006;g0+=(e.gamma-g0)*.006; // il centro si riadatta piano a come tieni il telefono
+  const nx=gsap.utils.clamp(-1,1,(e.gamma-g0)/22),ny=gsap.utils.clamp(-1,1,(e.beta-b0)/22),i=active();
+  if(last>=0&&last!==i){const o=qs[last];o.rx(0);o.ry(0);o.st.classList.remove('lit')}last=i;if(i<0)return;
+  const q=qs[i];q.ry(nx*12);q.rx(-ny*10);q.sh.style.setProperty('--mx',(50+nx*55)+'%');q.sh.style.setProperty('--my',(45+ny*55)+'%');q.st.classList.add('lit')}
+ const start=()=>addEventListener('deviceorientation',ori,{passive:true});
+ start();if(!needAsk)return
+ // iPhone: serve un tocco per chiedere il permesso
+ const ask=()=>{DeviceOrientationEvent.requestPermission().then(()=>pill.remove()).catch(()=>pill.remove())};
+ pill.onclick=e=>{e.stopPropagation();ask()};
+ entered.then(()=>{gsap.registerPlugin(ScrollTrigger);ScrollTrigger.create({trigger:'#scenes',start:'top 60%',end:'bottom 40%',onToggle:t=>{if(!on&&document.body.contains(pill))setTimeout(()=>{if(!on)pill.classList.toggle('show',t.isActive)},t.isActive?1200:0)}})});
+})();
 
 // regia dello scroll
 function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlugin(ScrollTrigger);
@@ -403,6 +432,11 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   ScrollTrigger.create({trigger:el,endTrigger:k?el:'#scenes',start:'top 50%',end:'bottom 50%',onToggle:s=>nav[k].classList.toggle('on',s.isActive)})});
  ScrollTrigger.create({trigger:'#scenes',start:'top 60%',end:'bottom 40%',toggleClass:{targets:rail,className:'show'}});
  [...scenes.children].forEach((s,i)=>ScrollTrigger.create({trigger:s,start:'top 50%',end:'bottom 50%',onToggle:t=>rail.children[i].classList.toggle('on',t.isActive)}));
+ if(lenis){lenis.on('scroll',ScrollTrigger.update);
+  // ogni tela si posa da sola sul dettaglio o sulla tela intera quando smetti di scorrere
+  let idle;lenis.on('scroll',()=>{clearTimeout(idle);idle=setTimeout(()=>{if(lenis.isStopped||lb.open)return;const y=lenis.scroll;
+   for(const s of scenes.children){const len=s.offsetHeight-innerHeight,p=(y-s.offsetTop)/len;if(p<=0||p>=1)continue;
+    const t=p<REST/2?0:p<(1+REST)/2?REST:1,ty=s.offsetTop+len*t;if(Math.abs(ty-y)>3)lenis.scrollTo(ty,{duration:.9});break}},200)})}
  const mm=gsap.matchMedia();
  mm.add('(prefers-reduced-motion: no-preference)',()=>{
   document.documentElement.classList.add('anim');
@@ -421,7 +455,7 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   gsap.from('.door .big,.door p',{y:60,opacity:0,duration:1,ease:'power3.out',stagger:.15,scrollTrigger:{trigger:'.door',start:'top 75%',once:true}});
   // ogni opera: dal dettaglio alla tela intera
   document.querySelectorAll('.scene').forEach(s=>{const st=s.querySelector('.stage'),det=s.querySelector('.det'),di=det.querySelector('img'),full=s.querySelector('.full img'),info=s.querySelector('.info').children,hint=s.querySelector('.hint');
-   const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:s,start:'top top',end:'bottom bottom',scrub:.6,snap:{snapTo:v=>v<REST/2?0:v<(1+REST)/2?REST:1,directional:false,duration:{min:.3,max:.9},delay:.15,ease:'power2.inOut'}}});
+   const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:s,start:'top top',end:'bottom bottom',scrub:.6,snap:lenis?undefined:{snapTo:v=>v<REST/2?0:v<(1+REST)/2?REST:1,directional:false,duration:{min:.3,max:.9},delay:.15,ease:'power2.inOut'}}});
    // tela viva: si inclina col mouse e la luce scorre sulla vernice
    if(matchMedia('(hover:hover) and (pointer:fine)').matches){const btn=s.querySelector('.full button'),sh=s.querySelector('.sheen'),rx=gsap.quickTo(btn,'rotationX',{duration:.7,ease:'power3'}),ry=gsap.quickTo(btn,'rotationY',{duration:.7,ease:'power3'});
     st.addEventListener('pointermove',e=>{const b=full.getBoundingClientRect(),nx=(e.clientX-b.left)/b.width,ny=(e.clientY-b.top)/b.height;rx((.5-clamp(ny,-.5,1.5))*7);ry((clamp(nx,-.5,1.5)-.5)*9);sh.style.setProperty('--mx',nx*100+'%');sh.style.setProperty('--my',ny*100+'%');st.classList.add('lit')},{passive:true});
@@ -475,7 +509,8 @@ function show(j,dir=0){cur=(j+seq.length)%seq.length;const it=seq[cur];lm.classL
  li.src=it.src;li.alt=it.k?`${it.w.t}, dettaglio ${it.k}`:it.w.alt;
  if(window.gsap&&!reduce&&dir)gsap.fromTo(li,{x:dir*60,opacity:0},{x:0,opacity:1,duration:.45,ease:'power3.out',clearProps:'transform'});
  const nx=seq[(cur+1)%seq.length];new Image().src=nx.src}
-function openLb(w,n){curWork=-1;show(seq.findIndex(o=>o.n===n));lb.showModal()}
+function openLb(w,n){curWork=-1;show(seq.findIndex(o=>o.n===n));lb.showModal();lenis&&lenis.stop()}
+lb.addEventListener('close',()=>lenis&&lenis.start());
 document.getElementById('lb-x').onclick=()=>lb.close();
 document.getElementById('lb-p').onclick=e=>{e.stopPropagation();show(cur-1,-1)};
 document.getElementById('lb-n').onclick=e=>{e.stopPropagation();show(cur+1,1)};
