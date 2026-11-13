@@ -489,10 +489,10 @@ function paintLetters(){if(!heroImg.naturalWidth)return;const keep=mark.style.tr
  h1.classList.add('lettered');mark.style.transform=keep}
 function fitName(){if(matchMedia('(max-width:640px)').matches){h1.style.fontSize='';return}const keep=mark.style.transform;mark.style.transform='none';h1.style.fontSize='';
  const avail=h1.clientWidth,fs=parseFloat(getComputedStyle(h1).fontSize);h1.style.fontSize=(fs*avail*.74/textW(h1))+'px';mark.style.transform=keep}
-function drip(ctx,x,y,w,len,col){if(len<1)return;ctx.fillStyle=col;
- // attacco largo, colatura che si assottiglia, goccia a lacrima che si gonfia piano verso il basso
+function drip(ctx,x,y,w,len,col,src){if(len<1)return;
+ // forma: attacco largo, colatura che si assottiglia, lacrima gonfia in fondo
  const b=w*1.6,n=Math.min(len*.35,w*2.2),s=w*.38,r=Math.min(w*.62,len*.22),bt=y+len,ny=bt-r*3.2;
- ctx.beginPath();ctx.moveTo(x-b,y);ctx.lineTo(x+b,y);
+ ctx.save();ctx.beginPath();ctx.moveTo(x-b,y);ctx.lineTo(x+b,y);
  ctx.bezierCurveTo(x+w*.7,y+1,x+w/2,y+n*.4,x+w/2,y+n);
  if(ny>y+n){ctx.bezierCurveTo(x+w/2,y+n+(ny-y-n)*.5,x+s,ny-(ny-y-n)*.2,x+s,ny)}
  ctx.bezierCurveTo(x+s,ny+r*1.2,x+r,bt-r*1.3,x+r,bt-r*.75);
@@ -500,13 +500,27 @@ function drip(ctx,x,y,w,len,col){if(len<1)return;ctx.fillStyle=col;
  ctx.bezierCurveTo(x-r*.55,bt,x-r,bt-r*.2,x-r,bt-r*.75);
  ctx.bezierCurveTo(x-r,bt-r*1.3,x-s,ny+r*1.2,x-s,ny);
  if(ny>y+n){ctx.bezierCurveTo(x-s,ny-(ny-y-n)*.2,x-w/2,y+n+(ny-y-n)*.5,x-w/2,y+n)}
- ctx.bezierCurveTo(x-w/2,y+n*.4,x-w*.7,y+1,x-b,y);ctx.closePath();ctx.fill()}
+ ctx.bezierCurveTo(x-w/2,y+n*.4,x-w*.7,y+1,x-b,y);ctx.closePath();ctx.clip();
+ // dentro: la vernice vera della tela, presa dal fondo della lettera e tirata giù come quando cola
+ if(src&&heroImg.naturalWidth){ctx.fillStyle=col;ctx.fillRect(x-b,y-1,b*2,len+2);
+  const sw=Math.max(2,b*2*src.k),sh=Math.max(2,w*.35*src.k);ctx.drawImage(heroImg,src.sx-sw/2,src.sy-sh,sw,sh,x-b,y-1,b*2,len+2)}
+ else{ctx.fillStyle=col;ctx.fillRect(x-b,y-1,b*2,len+2)}
+ // volume: bordi in ombra, riflesso lucido a sinistra, fondo della goccia più scuro
+ const top=y+n*.5,g=ctx.createLinearGradient(x-w*.75,0,x+w*.75,0);
+ g.addColorStop(0,'rgba(0,0,0,.42)');g.addColorStop(.3,'rgba(0,0,0,0)');g.addColorStop(.62,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.5)');
+ const fade=ctx.createLinearGradient(0,y,0,top+w);ctx.fillStyle=g;ctx.globalAlpha=1;
+ ctx.save();ctx.beginPath();ctx.rect(x-b,top,b*2,len);ctx.clip();ctx.fillRect(x-b,top,b*2,len);ctx.restore();
+ const vg=ctx.createLinearGradient(0,Math.max(top,ny-r),0,bt);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.32)');ctx.fillStyle=vg;ctx.fillRect(x-b,Math.max(top,ny-r),b*2,bt-Math.max(top,ny-r)+1);
+ ctx.strokeStyle='rgba(255,255,255,.38)';ctx.lineCap='round';ctx.lineWidth=Math.max(1,w*.12);ctx.beginPath();ctx.moveTo(x-w*.2,y+n*.9);ctx.lineTo(x-s*.45,Math.max(y+n,ny));ctx.stroke();
+ ctx.fillStyle='rgba(255,255,255,.75)';ctx.beginPath();ctx.ellipse(x-r*.38,bt-r*.95,r*.17,r*.3,-.4,0,Math.PI*2);ctx.fill();
+ ctx.restore()}
 function buildHero(){const keep=mark.style.transform;mark.style.transform='none';const cs=getComputedStyle(h1),hr=mark.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5),fs=parseFloat(cs.fontSize);
  hc.width=hr.width*dpr;hc.height=hr.height*dpr;hc.style.height=hr.height+'px';const ctx=hc.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
  const pal=heroImg.complete&&heroImg.naturalWidth?palette(heroImg,1):null;seed=11;const drips=[];
  // colore vero della lettera nel punto da cui parte la goccia
- let sample=null;if(heroImg.naturalWidth){const sc=document.createElement('canvas'),sw=sc.width=200,sh=sc.height=Math.round(200*heroImg.naturalHeight/heroImg.naturalWidth),sx=sc.getContext('2d',{willReadFrequently:true});sx.drawImage(heroImg,0,0,sw,sh);const dd=sx.getImageData(0,0,sw,sh).data;
+ let sample=null,toImg=null;if(heroImg.naturalWidth){const sc=document.createElement('canvas'),sw=sc.width=200,sh=sc.height=Math.round(200*heroImg.naturalHeight/heroImg.naturalWidth),sx=sc.getContext('2d',{willReadFrequently:true});sx.drawImage(heroImg,0,0,sw,sh);const dd=sx.getImageData(0,0,sw,sh).data;
   const h=h1.getBoundingClientRect(),r=heroImg.naturalWidth/heroImg.naturalHeight;let bw,bh;if(h.width/h.height>r){bw=h.width;bh=h.width/r}else{bh=h.height;bw=h.height*r}const ox=(h.width-bw)*.3,oy=(h.height-bh)*.5;
+  toImg=(X,Y)=>({sx:clamp((X-(h.left-hr.left)-ox)/bw)*heroImg.naturalWidth,sy:clamp((Y-(h.top-hr.top)-oy)/bh)*heroImg.naturalHeight,k:heroImg.naturalWidth/bw});
   sample=(X,Y)=>{const u=clamp((X-(h.left-hr.left)-ox)/bw),v=clamp((Y-(h.top-hr.top)-oy)/bh),i=(Math.min(sh-1,Math.round(v*sh))*sw+Math.min(sw-1,Math.round(u*sw)))*4;let R=dd[i],G=dd[i+1],B=dd[i+2];
    // il bianco della tela sul bianco della pagina sparisce: in quel caso la goccia prende il colore più vicino che si vede
    if(R+G+B>640){R=Math.round(R*.55);G=Math.round(G*.45);B=Math.round(B*.85)}return `rgb(${R},${G},${B})`}}
@@ -518,10 +532,10 @@ function buildHero(){const keep=mark.style.transform;mark.style.transform='none'
    for(let k=0;k<nd;k++){let q=Math.floor(rnd()*legs.length);if(used.has(q))q=(q+1)%legs.length;if(used.has(q))break;used.add(q);
     const round=ch==='C'||ch==='O',x=L.left-hr.left+L.width*legs[q]+(rnd()-.5)*L.width*.04,y=baseY-fs*(round?.07:.05),room=Math.max(0,foot-y);if(room<20)continue;const long=rnd()<.45;
     const w=fs*(.03+rnd()*.04)*wk;
-    drips.push({x,y,w,L:Math.min(room-w*1.6,Math.max(Math.min(room*.4,w*4+fs*.04),(long&&x<hr.width*.42?.7+rnd()*.25:.28+rnd()*.3)*room*(x<hr.width*.42?1:.6))),del:rnd()*.5,col:sample?sample(x,y-fs*.04):(pal?css(pal(x/innerWidth,.5)):FALL[li%FALL.length])})}})});
+    drips.push({x,y,w,L:Math.min(room-w*1.6,Math.max(Math.min(room*.4,w*4+fs*.04),(long&&x<hr.width*.42?.7+rnd()*.25:.28+rnd()*.3)*room*(x<hr.width*.42?1:.6))),del:rnd()*.5,src:toImg?toImg(x,y-fs*.035):null,col:sample?sample(x,y-fs*.04):(pal?css(pal(x/innerWidth,.5)):FALL[li%FALL.length])})}})});
  mark.style.transform=keep;hd={ctx,drips};if(!hstart)hstart=performance.now();if(reduce)drawHero(1)}
 function drawHero(force){if(!hd)return;const t=force?1:clamp((performance.now()-hstart)/3200);
- const c=hd.ctx;c.clearRect(0,0,hc.width,hc.height);for(const d of hd.drips){const k=ease(clamp((t-d.del*.6)/(1-d.del*.6)));drip(c,d.x,d.y,d.w,d.L*k,d.col)}}
+ const c=hd.ctx;c.clearRect(0,0,hc.width,hc.height);for(const d of hd.drips){const k=ease(clamp((t-d.del*.6)/(1-d.del*.6)));drip(c,d.x,d.y,d.w,d.L*k,d.col,d.src)}}
 function loop(){drawHero();if(performance.now()-hstart<3400)requestAnimationFrame(loop)}
 // ingresso: la percentuale sale mentre si scaricano le tele, poi il rosa si ritira colando
 const entered=new Promise(res=>{const pre=document.getElementById('pre'),pcn=document.getElementById('pcn'),de=document.documentElement;
