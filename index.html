@@ -296,6 +296,26 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 :is(.share,.ask,.up)::after{content:"";position:absolute;inset:-12px -10px}
 .rail button::after{content:"";position:absolute;inset:-3px -6px -3px -24px}
 @media (pointer:coarse){.wctl button{padding:12px 14px}.wctl .z{width:42px;height:42px}.lb-nav{width:52px;height:52px;margin-top:-26px}}
+
+/* altre opere */
+.more{margin-top:var(--s6);padding-top:var(--s5);border-top:2px solid #262626}
+.more .top{margin-bottom:var(--s4)!important}
+.big2{margin:0;font:800 clamp(2rem,5vw,3.6rem)/.95 var(--display);font-variation-settings:"opsz" 96,"wdth" 78;letter-spacing:-.02em}
+.altre{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--gap)}
+.altre button{all:unset;cursor:pointer;display:grid;gap:var(--s1);align-content:start;position:relative}
+.altre .th{aspect-ratio:4/5;overflow:hidden;background:#161616;border:3px solid #fff;transition:transform .32s cubic-bezier(.3,1.6,.5,1),border-color .2s,box-shadow .2s}
+.altre .th img,.altre .th video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.altre button:hover .th{transform:rotate(-2deg) translateY(-6px);border-color:var(--pink);box-shadow:6px 6px 0 var(--pink)}
+.altre button:hover .th img{transform:scale(1.08)}
+.altre b{font:800 1.15rem/1 var(--display);font-variation-settings:"wdth" 80}
+.altre span{font-size:var(--t-s);color:#a3a29d}
+.altre .tag{position:absolute;top:10px;left:10px;background:var(--pink);color:var(--ink);font:800 12px/1 var(--display);padding:5px 8px;z-index:1}
+.studio{margin:0;position:relative;border:3px solid var(--ink);box-shadow:8px 8px 0 var(--pink);background:#111;overflow:hidden}
+.studio video{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.studio figcaption{position:absolute;left:10px;bottom:10px;right:10px;color:#fff;font-size:var(--t-s);text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.studio figcaption b{background:var(--pink);color:var(--ink);padding:3px 8px;margin-right:6px;text-shadow:none}
+@media (max-width:1100px){.altre{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){.altre{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -334,6 +354,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 <section id="indice"><div class="wrap">
  <div class="top"><h2 class="big">Tutte e sette</h2><p>Tocca una tela per tornarci. Oppure apri la parete: altre sei opere, la sera della mostra, tutte le foto e i video.<br><button class="pill openwall" type="button" id="openwall2" style="color:#fff">Apri la parete ⊞</button></p></div>
  <div class="index" id="index"></div>
+ <div class="more"><div class="top"><h3 class="big2">E non solo sette</h3><p>Altre tele viste alla mostra e una bottiglia dipinta a mano. Tocca per aprirle.</p></div><div class="altre" id="altre"></div></div>
 </div></section>
 
 <section id="marco"><div class="wrap marco">
@@ -348,6 +369,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
    <div><dt>400+</dt><dd>Opere realizzate</dd></div>
    <div><dt>2026</dt><dd>Sensazioni senza contorni, Banca Mediolanum, Azzano Decimo</dd></div>
   </dl>
+  <figure class="studio"><video muted loop playsinline preload="none" poster="img/g/th/v0011-04.jpg" data-src="vid/0011-04.mp4" aria-label="Marco dipinge una bottiglia con l'aerografo"></video><figcaption><b>In studio</b> L'aerografo passa sulla bottiglia, strato dopo strato.</figcaption></figure>
   <h3 class="kicker" style="margin:0">La sera dell'apertura</h3>
   <div class="reel" tabindex="0" aria-label="Foto dell'inaugurazione">
    <figure><img src="img/live1.jpg" alt="Visitatori all'inaugurazione davanti alle tele" loading="lazy"><figcaption>Il pubblico</figcaption></figure>
@@ -364,7 +386,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
  <a class="ig" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Le tele in mostra sono disponibili. Scrivi a Marco su Instagram</span><b>@mbomben</b></a>
  <div class="contact">
   <a href="https://www.gigarte.com/marco-bomben" target="_blank" rel="noopener"><span class="m">Catalogo</span><b>Gigarte</b></a>
-  <div><span class="m">Email</span><b>da inserire</b></div>
+  <a href="https://ig.me/m/mbomben" target="_blank" rel="noopener"><span class="m">Messaggio diretto</span><b>Scrivi a Marco</b></a>
   <div><span class="m">Mostra</span><b>Azzano Decimo</b></div>
  </div>
 </div></section>
@@ -607,6 +629,17 @@ const seq=[];[...works,...extra].forEach((w,i)=>{const n=i+1;
  (w.vids||[]).forEach((v,q)=>seq.push({w,n,k:'v'+(q+1),q:q+1,c:'video',src:`img/g/th/v${v}.jpg`,th:`img/g/th/v${v}.jpg`,v:`vid/${v}.mp4`}))});
 const glowOfN=n=>{const e=document.getElementById('opera-'+n);return e?e.style.getPropertyValue('--glow'):''},nameOf=it=>it.w.mostra?it.w.t:`${pad(it.n)} ${it.w.t}`;
 const lv=document.getElementById('lb-v');
+// altre opere: le tele della mostra e la bottiglia, aperte nel visore
+(function(){const box=document.getElementById('altre');if(!box)return;
+ extra.forEach((w,i)=>{if(w.mostra)return;const n=works.length+i+1,j=seq.findIndex(o=>o.n===n&&o.c==='tela'),b=document.createElement('button');b.type='button';
+  const vid=w.vids&&w.vids[2];
+  b.innerHTML=`<span class="th">${vid?`<video muted loop playsinline preload="none" poster="img/th/opera${n}-grande.jpg" data-src="vid/${vid}.mp4"></video>`:`<img src="img/th/opera${n}-grande.jpg" alt="${w.alt}" loading="lazy">`}</span>${vid?'<i class="tag">Oggetto</i>':''}<b>${pad(n)} ${w.t}</b><span>${w.m}</span>`;
+  b.onclick=()=>openAt(j);box.appendChild(b)});
+ if(window.gsap&&!reduce&&window.ScrollTrigger)gsap.from('.altre button',{y:50,opacity:0,duration:.6,ease:'power3.out',stagger:.06,scrollTrigger:{trigger:'.altre',start:'top 88%',once:true}});
+ // i video partono solo quando li vedi
+ const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting){if(!v.src&&v.dataset.src)v.src=v.dataset.src;v.play().catch(()=>{})}else v.pause()}),{threshold:.25});
+ document.querySelectorAll('video[data-src]').forEach(v=>{if(reduce)return;io.observe(v)})})();
+
 let cur=0,curWork=-1;
 function show(j,dir=0){cur=(j+seq.length)%seq.length;const it=seq[cur];lm.classList.remove('zoom');
  if(it.n!==curWork){curWork=it.n;document.getElementById('lb-t').textContent=nameOf(it);document.getElementById('lb-d').textContent=`${it.w.m}. ${it.w.p}`;document.querySelector('.lb-foot').style.setProperty('--glow',glowOfN(it.n));th.innerHTML='';
