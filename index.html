@@ -288,8 +288,9 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 @media (prefers-reduced-motion:reduce){.sticker svg,.cue{animation:none}.scene{height:auto}.stage{position:relative;height:auto;min-height:100vh}}
 
 /* tocco: si schiaccia quando premi e rimbalza quando lasci */
-:is(.pill,.playbtn,.wctl button,.lb-nav,.index button,.lb-th button,.up,.share,.ask,#wallx,#lb-x){transition-property:background,color,border-color,box-shadow,transform,opacity;transition-duration:.15s,.15s,.15s,.15s,.32s,.2s;transition-timing-function:ease,ease,ease,ease,cubic-bezier(.3,1.7,.5,1),ease}
-:is(.pill,.playbtn,.wctl button,.lb-nav,.index button,.lb-th button,.up,.share,#wallx,#lb-x):active{transform:scale(.92,.96)!important;transition-duration:.08s!important}
+:is(.pill,.playbtn,.wctl button,.lb-nav,.lb-th button,.up,.share,.ask,#wallx,#lb-x){transition-property:background,color,border-color,box-shadow,transform,opacity;transition-duration:.15s,.15s,.15s,.15s,.32s,.2s;transition-timing-function:ease,ease,ease,ease,cubic-bezier(.3,1.7,.5,1),ease}
+:is(.pill,.playbtn,.wctl button,.lb-nav,.lb-th button,.up,.share,#wallx,#lb-x):active{transform:scale(.92,.96)!important;transition-duration:.08s!important}
+.index button:active .th,.altre button:active .th{transform:scale(.93,.97)!important;transition-duration:.08s!important}
 .wallbtn:active{transform:scale(.9,.95)!important;transition-duration:.08s}
 /* bersagli più grandi di quanto sembrano */
 :is(.share,.ask,.up,.rail button,.lb-th button){position:relative}
