@@ -53,9 +53,9 @@ header nav a:hover,header nav a.on{background:var(--pink)}
 
 /* apertura */
 .hero{position:relative;padding-top:calc(68px + var(--s5));overflow:hidden}
-.mark{position:relative;z-index:20;padding-bottom:clamp(80px,13vh,160px);transform-origin:0 0;will-change:transform;--w:clamp(1.5px,.15vw,3px);--o:clamp(2px,.24vw,4px);--x:clamp(5px,.8vw,13px);filter:saturate(1.25) contrast(1.06) drop-shadow(var(--w) 0 0 #fff) drop-shadow(calc(var(--w)*-1) 0 0 #fff) drop-shadow(0 var(--w) 0 #fff) drop-shadow(0 calc(var(--w)*-1) 0 #fff) drop-shadow(var(--o) 0 0 var(--ink)) drop-shadow(calc(var(--o)*-1) 0 0 var(--ink)) drop-shadow(0 var(--o) 0 var(--ink)) drop-shadow(0 calc(var(--o)*-1) 0 var(--ink)) drop-shadow(var(--x) var(--x) 0 var(--ink))}
+.mark{position:relative;z-index:20;padding-bottom:clamp(80px,13vh,160px);transform-origin:0 0;will-change:transform}
 #heroDrip{position:absolute;left:0;top:0;width:100%;pointer-events:none;z-index:0}
-.hero h1{position:relative;z-index:1;margin:0;font-weight:800;font-size:21vw;line-height:.88;letter-spacing:.015em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;
+.hero h1{position:relative;z-index:1;margin:0;font-weight:800;font-size:21vw;line-height:.82;letter-spacing:-.02em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;
   background:url(img/opera6-grande.jpg) 30% 50%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero h1 span{display:block;width:max-content}.hero h1 span+span{margin-left:.12em}
 .hero h1 i{font-style:normal;display:inline-block}.hero h1.lettered{background:none}
@@ -481,31 +481,25 @@ function paintLetters(){if(!heroImg.naturalWidth)return;const keep=mark.style.tr
  h1.classList.add('lettered');mark.style.transform=keep}
 function fitName(){if(matchMedia('(max-width:640px)').matches){h1.style.fontSize='';return}const keep=mark.style.transform;mark.style.transform='none';h1.style.fontSize='';
  const avail=h1.clientWidth,fs=parseFloat(getComputedStyle(h1).fontSize);h1.style.fontSize=(fs*avail*.74/textW(h1))+'px';mark.style.transform=keep}
-function drip(ctx,x,y,w,len,col){if(len<1)return;ctx.fillStyle=col;const b=w*1.6,n=Math.min(len*.5,w*2.2),tip=w*.5,dr=w*.72;
- ctx.beginPath();ctx.moveTo(x-b,y);ctx.lineTo(x+b,y);
- ctx.bezierCurveTo(x+w*.7,y+1,x+w/2,y+n*.4,x+w/2,y+n);
- ctx.bezierCurveTo(x+w/2,y+len*.75,x+tip,y+len*.85,x+tip,y+len);ctx.lineTo(x-tip,y+len);
- ctx.bezierCurveTo(x-tip,y+len*.85,x-w/2,y+len*.75,x-w/2,y+n);
- ctx.bezierCurveTo(x-w/2,y+n*.4,x-w*.7,y+1,x-b,y);ctx.fill();
- if(len>w*2){ctx.beginPath();ctx.ellipse(x,y+len,dr,dr*1.15,0,0,Math.PI*2);ctx.fill()}}
+function drip(ctx,x,y,w,len,col){if(len<1)return;ctx.fillStyle=col;ctx.beginPath();
+ const tip=Math.max(w*.42,1.2);ctx.moveTo(x-w/2,y);ctx.lineTo(x+w/2,y);
+ ctx.bezierCurveTo(x+w/2,y+len*.4,x+tip,y+len*.7,x+tip,y+len);ctx.lineTo(x-tip,y+len);ctx.bezierCurveTo(x-tip,y+len*.7,x-w/2,y+len*.4,x-w/2,y);ctx.fill();
+ ctx.beginPath();ctx.ellipse(x,y+len,tip*1.35,tip*1.6,0,0,Math.PI*2);ctx.fill();}
 function buildHero(){const keep=mark.style.transform;mark.style.transform='none';const cs=getComputedStyle(h1),hr=mark.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5),fs=parseFloat(cs.fontSize);
  hc.width=hr.width*dpr;hc.height=hr.height*dpr;hc.style.height=hr.height+'px';const ctx=hc.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
  const pal=heroImg.complete&&heroImg.naturalWidth?palette(heroImg,1):null;seed=11;const drips=[];
- // colore vero della lettera nel punto da cui parte la goccia
- let sample=null;if(heroImg.naturalWidth){const sc=document.createElement('canvas'),sw=sc.width=200,sh=sc.height=Math.round(200*heroImg.naturalHeight/heroImg.naturalWidth),sx=sc.getContext('2d',{willReadFrequently:true});sx.drawImage(heroImg,0,0,sw,sh);const dd=sx.getImageData(0,0,sw,sh).data;
-  const h=h1.getBoundingClientRect(),r=heroImg.naturalWidth/heroImg.naturalHeight;let bw,bh;if(h.width/h.height>r){bw=h.width;bh=h.width/r}else{bh=h.height;bw=h.height*r}const ox=(h.width-bw)*.3,oy=(h.height-bh)*.5;
-  sample=(X,Y)=>{const u=clamp((X-(h.left-hr.left)-ox)/bw),v=clamp((Y-(h.top-hr.top)-oy)/bh),i=(Math.min(sh-1,Math.round(v*sh))*sw+Math.min(sw-1,Math.round(u*sw)))*4;let R=dd[i],G=dd[i+1],B=dd[i+2];
-   // il bianco della tela sul bianco della pagina sparisce: in quel caso la goccia prende il colore più vicino che si vede
-   if(R+G+B>640){R=Math.round(R*.55);G=Math.round(G*.45);B=Math.round(B*.85)}return `rgb(${R},${G},${B})`}}
- const LEGS={M:[.13,.87],A:[.13,.87],R:[.14,.86],C:[.5],O:[.5],B:[.22,.62],E:[.25,.55],N:[.13,.87]};
  const foot=hr.height-14,wk=Math.min(1,innerWidth/900+.35);
  h1.querySelectorAll('span').forEach((sp,li)=>{const baseY=sp.querySelector('.bl').getBoundingClientRect().bottom-hr.top;
-  sp.querySelectorAll('i').forEach(el=>{const L=el.getBoundingClientRect(),ch=el.textContent.toUpperCase(),legs=LEGS[ch]||[.5];
-   const nd=li?(rnd()<.75?1:2):0;const used=new Set();
-   for(let k=0;k<nd;k++){let q=Math.floor(rnd()*legs.length);if(used.has(q))q=(q+1)%legs.length;if(used.has(q))break;used.add(q);
-    const round=ch==='C'||ch==='O',x=L.left-hr.left+L.width*legs[q]+(rnd()-.5)*L.width*.04,y=baseY-fs*(round?.07:.05),room=Math.max(0,foot-y);if(room<20)continue;const long=rnd()<.3;
-    const w=fs*(.026+rnd()*.032)*wk;
-    drips.push({x,y,w,L:Math.min(room*.62,Math.max(w*7+fs*.07,(long?.4+rnd()*.22:.12+rnd()*.22)*room)),del:rnd()*.5,col:sample?sample(x,y-fs*.04):(pal?css(pal(x/innerWidth,.5)):FALL[li%FALL.length])})}})});
+  sp.querySelectorAll('i').forEach(el=>{const L=el.getBoundingClientRect(),ch=el.textContent.toUpperCase(),W=Math.max(4,Math.ceil(L.width)),H=Math.ceil(fs*1.3),cb=Math.round(fs);
+   const off=document.createElement('canvas');off.width=W;off.height=H;const x=off.getContext('2d',{willReadFrequently:true});
+   x.font=`${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;try{x.fontStretch='condensed'}catch(e){}x.textBaseline='alphabetic';
+   const mw=x.measureText(ch).width||W;x.setTransform(W/mw,0,0,1,0,0);x.fillText(ch,0,cb);x.setTransform(1,0,0,1,0,0);
+   const d=x.getImageData(0,0,W,H).data,feet=[];
+   for(let px=1;px<W-1;px++){let by=-1;for(let yy=H-1;yy>0;yy--){if(d[(yy*W+px)*4+3]>140){by=yy;break}}if(by>=cb-fs*.03)feet.push(px)}
+   if(!feet.length)return;const nd=li?1+Math.floor(rnd()*2.4):(rnd()<.55?1:0);
+   for(let k=0;k<nd;k++){const fx=feet[Math.floor(rnd()*feet.length)],y=baseY-1,room=Math.max(0,foot-y);if(room<10)continue;const long=rnd()<.28;
+    let w=(3+rnd()*rnd()*16)*wk;w=Math.min(w,Math.max(3,feet.length*.6));
+    drips.push({x:L.left-hr.left+fx,y,w,L:(long?.6+rnd()*.4:.08+rnd()*.3)*room,del:rnd()*.5,col:pal?css(pal((L.left+fx)/innerWidth,.2+rnd()*.6)):FALL[li%FALL.length]})}})});
  mark.style.transform=keep;hd={ctx,drips};if(!hstart)hstart=performance.now();if(reduce)drawHero(1)}
 function drawHero(force){if(!hd)return;const t=force?1:clamp((performance.now()-hstart)/3200);
  const c=hd.ctx;c.clearRect(0,0,hc.width,hc.height);for(const d of hd.drips){const k=ease(clamp((t-d.del*.6)/(1-d.del*.6)));drip(c,d.x,d.y,d.w,d.L*k,d.col)}}
