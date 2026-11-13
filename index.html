@@ -124,6 +124,7 @@ html.gyro-on .tiltnote{display:block}
 .info p{margin:0;max-width:34ch}
 .info .pill{color:#fff}
 .acts{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3)}
+.info .pill.room{border-color:transparent;background:rgba(255,255,255,.1)}
 .ask{font-weight:700;font-size:var(--t-s);color:#fff;text-decoration:none;border-bottom:2px solid var(--glow,var(--pink));padding-bottom:2px}.ask:hover{color:var(--glow,var(--pink))}
 .chip{display:inline-block;margin-left:.5em;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);background:var(--glow,var(--pink));padding:3px 8px;border-radius:999px;vertical-align:1px}
 .keys{display:none;font-size:12px;font-weight:700;color:#a3a29d;text-align:right;margin-top:6px}@media (hover:hover) and (pointer:fine){.keys{display:block}}
@@ -378,6 +379,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
    <figure><img src="img/live2.jpg" alt="Marco Bomben racconta un'opera ai visitatori" loading="lazy"><figcaption>Davanti alle tele</figcaption></figure>
    <figure><img src="img/live4.jpg" alt="Sala con quattro tele e poltrone rosse" loading="lazy"><figcaption>La sala</figcaption></figure>
   </div>
+  <button class="link" type="button" id="allphotos" style="all:unset;cursor:pointer;font-weight:700;border-bottom:2px solid currentColor;padding-bottom:2px;justify-self:start">Tutte le foto della serata, e i video ⊞</button>
   <a class="link" href="https://www.nordestnews.com/arte/dirompenti-cromatismi-improvvisi-marco-bomben/" target="_blank" rel="noopener">Leggi l'articolo su Nordest News</a>
  </div>
 </div></section>
@@ -407,12 +409,12 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 <script src="js/lenis.min.js"></script>
 <script>
 const works=[
- {t:"Opera I",m:"Tecnica mista su tela",d:3,x:"jpg",p:"Forme nere che si annodano su un fondo azzurro, attraversate da colature rosa e graffi.",alt:"Tela astratta con forme nere su fondo azzurro, rosa, lilla e giallo"},
- {t:"Opera II",m:"Tecnica mista su tela",d:2,x:"jpg",p:"Due fasce di schizzi corrono da un bordo all'altro e lasciano al centro una linea di bianco.",alt:"Fasce orizzontali di schizzi di colore su fondo bianco"},
- {t:"Opera III",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Sfere lucide che sembrano gonfiarsi verso chi guarda, chiuse da un contorno nero deciso.",alt:"Tela orizzontale con forme sferiche lucide magenta, blu e arancio"},
- {t:"Opera IV",m:"Tecnica mista su tela tonda",d:2,x:"webp",p:"Linee nere sottili legano quadrati, cerchi e triangoli. Un omaggio alla geometria del Novecento.",alt:"Tela tonda con linee nere e forme geometriche colorate"},
- {t:"Opera V",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Il verde acido al centro spinge tutte le altre forme verso i bordi.",alt:"Forme lucide verdi, azzurre e gialle su fondo nero"},
- {t:"Opera VI",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Magenta, viola e blu: le forme si toccano senza confondersi.",alt:"Forme lucide magenta, viola e blu su fondo nero"},
+ {t:"Opera I",room:"0001-07",m:"Tecnica mista su tela",d:3,x:"jpg",p:"Forme nere che si annodano su un fondo azzurro, attraversate da colature rosa e graffi.",alt:"Tela astratta con forme nere su fondo azzurro, rosa, lilla e giallo"},
+ {t:"Opera II",room:"0002-02",m:"Tecnica mista su tela",d:2,x:"jpg",p:"Due fasce di schizzi corrono da un bordo all'altro e lasciano al centro una linea di bianco.",alt:"Fasce orizzontali di schizzi di colore su fondo bianco"},
+ {t:"Opera III",room:"0003-07",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Sfere lucide che sembrano gonfiarsi verso chi guarda, chiuse da un contorno nero deciso.",alt:"Tela orizzontale con forme sferiche lucide magenta, blu e arancio"},
+ {t:"Opera IV",room:"0004-04",m:"Tecnica mista su tela tonda",d:2,x:"webp",p:"Linee nere sottili legano quadrati, cerchi e triangoli. Un omaggio alla geometria del Novecento.",alt:"Tela tonda con linee nere e forme geometriche colorate"},
+ {t:"Opera V",room:"0006-10",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Il verde acido al centro spinge tutte le altre forme verso i bordi.",alt:"Forme lucide verdi, azzurre e gialle su fondo nero"},
+ {t:"Opera VI",room:"0007-08",m:"Acrilico e spray su tela",d:3,x:"jpg",p:"Magenta, viola e blu: le forme si toccano senza confondersi.",alt:"Forme lucide magenta, viola e blu su fondo nero"},
  {t:"Opera VII",m:"Acrilico e spray su tela",d:2,x:"jpg",p:"Rosso, arancio e argento, così lucidi che sembra di poterli toccare.",alt:"Forme lucide rosse, arancio e argento su fondo nero"}];
 const ph={"1": ["0001-01", "0001-03", "0001-04", "0001-05", "0001-06", "0001-07"], "2": ["0002-01", "0002-02", "0002-04", "0002-05", "0002-06", "0002-07"], "3": ["0003-02", "0003-03", "0003-04", "0003-05", "0003-06", "0003-07"], "4": ["0004-02", "0004-03", "0004-04", "0004-05", "0004-06"], "5": ["0006-01", "0006-03", "0006-04", "0006-05", "0006-06", "0006-07", "0006-08", "0006-09", "0006-10"], "6": ["0007-01", "0007-03", "0007-04", "0007-05", "0007-06", "0007-07", "0007-08"], "7": ["0008-02", "0008-03"]};
 const extra=[
@@ -450,11 +452,11 @@ const fitAll=()=>[...scenes.children].forEach(fitFull);
 works.forEach((w,i)=>{const n=i+1,s=document.createElement('section');s.className='scene';s.id='opera-'+n;s.setAttribute('aria-label',w.t);
  s.innerHTML=`<div class="stage"><div class="aura" aria-hidden="true"></div><div class="shade" aria-hidden="true"></div>
   <div class="full${w.x==="webp"?" round":""}"><button type="button" aria-label="Guarda i dettagli di ${w.t}"><img src="img/opera${n}-grande.${w.x}" alt="${w.alt}" decoding="async"><span class="sheen" aria-hidden="true"></span></button></div>
-  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m} <span class="chip">Disponibile</span> <button class="share" type="button">Condividi ↗</button></p><p>${w.p}</p><span class="acts"><button class="pill" type="button">Guarda i dettagli ↗</button><a class="ask" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener">Chiedi di quest'opera</a></span><span class="tiltnote">Inclina il telefono: la luce scorre sulla vernice</span></div>
+  <div class="info"><span class="num" aria-hidden="true">${pad(n)}</span><h3>${w.t}</h3><p class="m">${w.m} <span class="chip">Disponibile</span> <button class="share" type="button">Condividi ↗</button></p><p>${w.p}</p><span class="acts"><button class="pill" type="button">Guarda i dettagli ↗</button>${w.room?'<button class="pill room" type="button">Vedila in casa ⌂</button>':''}<a class="ask" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener">Chiedi di quest'opera</a></span><span class="tiltnote">Inclina il telefono: la luce scorre sulla vernice</span></div>
   <div class="det" aria-hidden="true" title="Apri il dettaglio"><img src="img/opera${n}-dettaglio1.jpg" alt="" decoding="async"></div>
   <div class="hint" aria-hidden="true"><b>${w.t}, da vicino</b><span>Scorri per fare un passo indietro</span></div>
   <span class="cnt">${pad(n)} / ${pad(works.length)}</span></div>`;
- s.querySelectorAll('.full button,.info .pill').forEach(b=>b.onclick=()=>openLb(w,n));
+ s.querySelectorAll('.full button,.info .pill:not(.room)').forEach(b=>b.onclick=()=>openLb(w,n));const rm=s.querySelector('.room');if(rm)rm.onclick=()=>openAt(seq.findIndex(o=>o.src===`img/g/${w.room}.jpg`));
  s.querySelector('.det').onclick=()=>{if(s.querySelector('.det').classList.contains('rest'))openAt(seq.findIndex(o=>o.n===n&&o.k===1))};
  const sh=s.querySelector('.share');sh.onclick=async()=>{const url=location.href.split('#')[0]+'#opera-'+n,data={title:`${w.t} · Marco Bomben`,text:`${w.t} di Marco Bomben, Sensazioni senza contorni`,url};
   try{if(navigator.share){await navigator.share(data);return}await navigator.clipboard.writeText(url);sh.textContent='Link copiato ✓';setTimeout(()=>sh.textContent='Condividi ↗',1800)}catch(e){}};scenes.appendChild(s);
@@ -691,11 +693,11 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
   // più corri, più la parete si piega e si allontana, come gomma
   const k=Math.round((1-Math.min(.08,Math.hypot(vx,vy)*.0025))*1000)/1000;if(k!==lk){lk=k;inn.style.transform=`scale(${k})`}
   raf=requestAnimationFrame(frame)}
- function open(){layout();wall.classList.add('open');lenis&&lenis.stop();document.documentElement.style.overflow='hidden';ox=-S*.5;oy=-S*.3;vx=-2.2;vy=-.6;cancelAnimationFrame(raf);frame();
+ function open(f){if(typeof f==='string'){items=f==='all'?all:all.filter(o=>o.c===f);document.querySelectorAll('.wf button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===f));tiles=[]}layout();wall.classList.add('open');lenis&&lenis.stop();document.documentElement.style.overflow='hidden';ox=-S*.5;oy=-S*.3;vx=-2.2;vy=-.6;cancelAnimationFrame(raf);frame();
   pop();
   document.getElementById('wallx').focus()}
  function close(){wall.classList.remove('open');cancelAnimationFrame(raf);document.documentElement.style.overflow='';lenis&&lenis.start()}
- window.openWall=open;document.getElementById('wcount').textContent=`${all.filter(o=>o.c==='tela').length} opere, ${all.filter(o=>o.c!=='video').length} immagini, ${all.filter(o=>o.c==='video').length} video.`;
+ window.openWall=open;document.getElementById('allphotos').onclick=()=>open('foto');document.getElementById('wcount').textContent=`${all.filter(o=>o.c==='tela').length} opere, ${all.filter(o=>o.c!=='video').length} immagini, ${all.filter(o=>o.c==='video').length} video.`;
  btn.onclick=()=>{if(!window.gsap||reduce)return open();gsap.timeline().to(btn,{scale:.86,rotate:-4,duration:.09,ease:'power2.in'}).add(open).to(btn,{scale:1,rotate:0,duration:.45,ease:'elastic.out(1,.45)',clearProps:'scale,rotate'})};document.getElementById('openwall2').onclick=open;document.getElementById('navwall').onclick=e=>{e.preventDefault();open()};
  document.getElementById('wallx').onclick=close;
  addEventListener('keydown',e=>{if(!wall.classList.contains('open')||lb.open)return;if(e.key==='Escape')close();const k={ArrowLeft:[8,0],ArrowRight:[-8,0],ArrowUp:[0,8],ArrowDown:[0,-8]}[e.key];if(k){vx+=k[0];vy+=k[1]}});
