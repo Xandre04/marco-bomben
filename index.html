@@ -538,7 +538,7 @@ function drip(ctx,x,y,w,len,col,src,mb=1e9){if(len<1)return;
  ctx.bezierCurveTo(x-w/2,y+n*.4,x-w*.7,y+1,x-b,y);ctx.closePath();ctx.clip();
  // dentro: la vernice vera della tela, presa dal fondo della lettera e tirata giù come quando cola
  if(src&&heroImg.naturalWidth){ctx.fillStyle=col;ctx.fillRect(x-b,y-1,b*2,len+2);
-  const sw=Math.max(2,b*2*src.k),sh=Math.max(2,w*.35*src.k);ctx.drawImage(heroImg,src.sx-sw/2,src.sy-sh,sw,sh,x-b,y-1,b*2,len+2)}
+  const sw=Math.max(2,b*2*src.k),sh=Math.max(2,w*.35*src.k);ctx.globalAlpha=.5;ctx.drawImage(heroImg,src.sx-sw/2,src.sy-sh,sw,sh,x-b,y-1,b*2,len+2);ctx.globalAlpha=1}
  else{ctx.fillStyle=col;ctx.fillRect(x-b,y-1,b*2,len+2)}
  // volume: bordi in ombra, riflesso lucido a sinistra, fondo della goccia più scuro
  const top=y+n*.5,g=ctx.createLinearGradient(x-w*.75,0,x+w*.75,0);
@@ -553,12 +553,18 @@ function buildHero(){const keep=mark.style.transform;mark.style.transform='none'
  hc.width=hr.width*dpr;hc.height=hr.height*dpr;hc.style.height=hr.height+'px';const ctx=hc.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
  const pal=heroImg.complete&&heroImg.naturalWidth?palette(heroImg,1):null;seed=11;const drips=[];
  // colore vero della lettera nel punto da cui parte la goccia
- let sample=null,toImg=null;if(heroImg.naturalWidth){const sc=document.createElement('canvas'),sw=sc.width=200,sh=sc.height=Math.round(200*heroImg.naturalHeight/heroImg.naturalWidth),sx=sc.getContext('2d',{willReadFrequently:true});sx.drawImage(heroImg,0,0,sw,sh);const dd=sx.getImageData(0,0,sw,sh).data;
+ let sample=null,toImg=null,sampleArea=null;if(heroImg.naturalWidth){const sc=document.createElement('canvas'),sw=sc.width=200,sh=sc.height=Math.round(200*heroImg.naturalHeight/heroImg.naturalWidth),sx=sc.getContext('2d',{willReadFrequently:true});sx.drawImage(heroImg,0,0,sw,sh);const dd=sx.getImageData(0,0,sw,sh).data;
   const h=h1.getBoundingClientRect(),r=heroImg.naturalWidth/heroImg.naturalHeight;let bw,bh;if(h.width/h.height>r){bw=h.width;bh=h.width/r}else{bh=h.height;bw=h.height*r}const ox=(h.width-bw)*.3,oy=(h.height-bh)*.5;
   toImg=(X,Y)=>({sx:clamp((X-(h.left-hr.left)-ox)/bw)*heroImg.naturalWidth,sy:clamp((Y-(h.top-hr.top)-oy)/bh)*heroImg.naturalHeight,k:heroImg.naturalWidth/bw});
   sample=(X,Y)=>{const u=clamp((X-(h.left-hr.left)-ox)/bw),v=clamp((Y-(h.top-hr.top)-oy)/bh),i=(Math.min(sh-1,Math.round(v*sh))*sw+Math.min(sw-1,Math.round(u*sw)))*4;let R=dd[i],G=dd[i+1],B=dd[i+2];
    // il bianco della tela sul bianco della pagina sparisce: in quel caso la goccia prende il colore più vicino che si vede
-   if(R+G+B>640){R=Math.round(R*.55);G=Math.round(G*.45);B=Math.round(B*.85)}return `rgb(${R},${G},${B})`}}
+   if(R+G+B>640){R=Math.round(R*.55);G=Math.round(G*.45);B=Math.round(B*.85)}return `rgb(${R},${G},${B})`};
+  // colore della goccia: media dei pixel colorati lungo il fondo della gamba (il bianco della tela non conta)
+  sampleArea=(X,Y,half,hgt)=>{const px=v=>clamp(v)*sw,py=v=>clamp(v)*sh,u0=Math.floor(px((X-half-(h.left-hr.left)-ox)/bw)),u1=Math.ceil(px((X+half-(h.left-hr.left)-ox)/bw)),v0=Math.floor(py((Y-hgt-(h.top-hr.top)-oy)/bh)),v1=Math.ceil(py((Y-(h.top-hr.top)-oy)/bh));
+   // colore dominante, non la media: la media di nero, arancio e bianco fa un grigio fangoso
+   const bk=new Map();let N=0,K=0;for(let v=Math.max(0,v0);v<=Math.min(sh-1,v1);v++)for(let u=Math.max(0,u0);u<=Math.min(sw-1,u1);u++){const i=(v*sw+u)*4,a=dd[i],b=dd[i+1],c=dd[i+2];N++;if(a+b+c>540)continue;K++;
+    const key=(a>>6)*16+(b>>6)*4+(c>>6),wt=1+(v-v0)/(v1-v0+1)*2,o=bk.get(key)||{R:0,G:0,B:0,W:0};o.R+=a*wt;o.G+=b*wt;o.B+=c*wt;o.W+=wt;bk.set(key,o)}
+   if(!K||K<N*.4)return null;let best=null;bk.forEach(o=>{if(!best||o.W>best.W)best=o});return `rgb(${Math.round(best.R/best.W)},${Math.round(best.G/best.W)},${Math.round(best.B/best.W)})`}}
  const LEGS={M:[.13,.87],A:[.13,.87],R:[.14,.86],C:[.5],O:[.5],B:[.22,.62],E:[.25,.55],N:[.13,.87]};
  const foot=hr.height-14,wk=Math.min(1,innerWidth/900+.35);
  h1.querySelectorAll('span').forEach((sp,li)=>{const baseY=sp.querySelector('.bl').getBoundingClientRect().bottom-hr.top;
@@ -568,8 +574,10 @@ function buildHero(){const keep=mark.style.transform;mark.style.transform='none'
     const round=ch==='C'||ch==='O',x=L.left-hr.left+L.width*legs[q]+(rnd()-.5)*L.width*.04,y=baseY-fs*(round?.07:.05),room=Math.max(0,foot-y);if(room<20)continue;const long=rnd()<.45;
     const HW={M:.1,A:.1,N:.1,R:.1,B:.16,E:.2,C:.12,O:.12}[ch]||.1,ink0=L.left-hr.left+L.width*.09,ink1=L.right-hr.left-L.width*.09;
     // l'attacco non può essere più largo della gamba né uscire dal bordo della lettera
-    const maxB=Math.max(2,Math.min(HW*L.width,x-ink0,ink1-x));let w=fs*(.03+rnd()*.04)*wk;w=Math.min(w,maxB*1.25);
-    drips.push({x,y,w,mb:maxB,L:Math.min(room-w*1.6,Math.max(Math.min(room*.4,w*4+fs*.04),(long&&x<hr.width*.42?.7+rnd()*.25:.28+rnd()*.3)*room*(x<hr.width*.42?1:.6))),del:rnd()*.5,src:toImg?toImg(x,y-fs*.035):null,col:sample?sample(x,y-fs*.04):(pal?css(pal(x/innerWidth,.5)):FALL[li%FALL.length])})}})});
+    const maxB=Math.max(2,Math.min(HW*L.width,x-ink0,ink1-x));let w=Math.max(fs*.06,fs*(.03+rnd()*.04)*wk);w=Math.min(w,maxB*1.25);
+    // dove il fondo della lettera è bianco tela la goccia non avrebbe colore: niente goccia lì
+    const ac=sampleArea?sampleArea(x,y,maxB,fs*.14):'';if(ac===null)continue;
+    drips.push({x,y,w,mb:maxB,L:Math.min(room-w*1.6,w*8,Math.max(Math.min(room*.4,w*4+fs*.04),(long&&x<hr.width*.42?.7+rnd()*.25:.28+rnd()*.3)*room*(x<hr.width*.42?1:.6))),del:rnd()*.5,src:toImg?toImg(x,y-fs*.035):null,col:ac?ac:sample?sample(x,y-fs*.04):(pal?css(pal(x/innerWidth,.5)):FALL[li%FALL.length])})}})});
  mark.style.transform=keep;hd={ctx,drips};if(!hstart)hstart=performance.now();if(reduce)drawHero(1)}
 function drawHero(force){if(!hd)return;const t=force?1:clamp((performance.now()-hstart)/3200);
  const c=hd.ctx;c.clearRect(0,0,hc.width,hc.height);for(const d of hd.drips){const k=ease(clamp((t-d.del*.6)/(1-d.del*.6)));drip(c,d.x,d.y,d.w,d.L*k,d.col,d.src,d.mb)}}
