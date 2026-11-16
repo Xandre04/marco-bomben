@@ -712,7 +712,7 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
  let items=all,zoom=1;
  const setFilter=f=>{items=f==='all'?all:all.filter(o=>o.c===f);document.querySelectorAll('.wf button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===f));tiles=[];layout();pop(1)};
  const setZoom=z=>{const oz=zoom;zoom=gsap.utils.clamp(.55,1.9,z);if(zoom===oz)return;const cx=innerWidth/2,cy=innerHeight/2,k=zoom/oz;ox=cx-(cx-ox)*k;oy=cy-(cy-oy)*k;tiles=[];layout()};
- const pop=(quick)=>{if(window.gsap&&!reduce)gsap.fromTo(tiles.map(t=>t.el.firstElementChild),quick?{scale:.85,opacity:0}:{scale:0,rotate:()=>gsap.utils.random(-25,25)},quick?{scale:1,opacity:1,duration:.22,ease:'power2.out',stagger:{each:.004,from:'center'},clearProps:'opacity'}:{scale:1,rotate:0,duration:.6,ease:'back.out(1.6)',stagger:{each:.01,from:'random'}})};
+ const pop=(quick)=>{if(window.gsap&&!reduce)gsap.fromTo(tiles.map(t=>t.el.firstElementChild),quick?{scale:.85,opacity:0}:{scale:.9,opacity:0,rotate:()=>gsap.utils.random(-4,4)},quick?{scale:1,opacity:1,duration:.22,ease:'power2.out',stagger:{each:.004,from:'center'},clearProps:'opacity'}:{scale:1,opacity:1,rotate:0,duration:.4,ease:'power3.out',stagger:{each:.006,from:'center'},clearProps:'opacity'})};
  let tiles=[],S=0,C=0,R=0,W=0,H=0,ox=0,oy=0,vx=0,vy=0,drag=null,moved=0,raf=0;
  function layout(){S=Math.round((innerWidth<700?innerWidth/2.3:Math.max(240,innerWidth/5.2))*zoom);C=Math.max(Math.ceil(innerWidth/S)+2,Math.ceil(Math.sqrt(items.length*1.4)));R=Math.ceil(items.length/C);
   while(R*S<innerHeight+2*S){R++}W=C*S;H=R*S;
