@@ -223,11 +223,13 @@ dl.cv dt{font-weight:800;font-variant-numeric:tabular-nums}dl.cv dd{margin:0}
 .ig .m{color:#3a0a1f}
 .ig b{font:800 clamp(4rem,15vw,14rem)/.85 var(--display);font-variation-settings:"opsz" 96,"wdth" 75;letter-spacing:-.03em;transition:color .2s}
 .ig:hover b{color:#fff}
-.contact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
+.contact{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap)}
 .contact>*{display:grid;gap:var(--s1);padding-top:var(--s2);border-top:3px solid var(--ink);text-decoration:none}
 .contact .m{color:#3a0a1f}
 .contact b{font:800 var(--t-xl)/1.05 var(--display);font-variation-settings:"opsz" 48,"wdth" 85;letter-spacing:-.02em}
 .contact a:hover b{color:#fff}
+.contact .mail b{font-size:clamp(1.25rem,1.9vw,1.9rem);overflow-wrap:anywhere}
+@media (max-width:1000px) and (min-width:641px){.contact{grid-template-columns:repeat(2,minmax(0,1fr))}}
 footer{background:var(--dark);color:#a3a29c}footer .m,footer span{color:#a3a29c}
 ::selection{background:var(--pink);color:var(--ink)}
 html{scrollbar-color:#55544f var(--dark)}
@@ -424,10 +426,11 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 <div class="band" aria-hidden="true"><div class="tr"><span>Sensazioni senza contorni<i>✺</i></span><span><em>Azzano Decimo</em><i>✺</i></span><span>Dal 1 ottobre 2026<i>✺</i></span><span><em>Banca Mediolanum</em><i>✺</i></span></div></div>
 <section id="contatti"><div class="wrap">
  <h2 class="big">Porta a casa un'opera</h2>
- <a class="ig" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Le tele in mostra sono disponibili. Scrivi a Marco su Instagram</span><b>@mbomben</b></a>
+ <a class="ig" href="https://www.instagram.com/mbomben/" target="_blank" rel="noopener"><span class="m">Le tele in mostra sono disponibili. Scrivi a Marco su Instagram o via email</span><b>@mbomben</b></a>
  <div class="contact">
   <a href="https://www.gigarte.com/marco-bomben" target="_blank" rel="noopener"><span class="m">Catalogo</span><b>Gigarte</b></a>
   <a href="https://ig.me/m/mbomben" target="_blank" rel="noopener"><span class="m">Messaggio diretto</span><b>Scrivi a Marco</b></a>
+  <a class="mail" href="mailto:bombenmarco@gmail.com?subject=Informazioni%20sulle%20opere"><span class="m">Email</span><b>bombenmarco<wbr>@gmail.com</b></a>
   <div><span class="m">Mostra</span><b>Azzano Decimo</b></div>
  </div>
 </div></section>
