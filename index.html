@@ -320,6 +320,8 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 :is(.pill,.playbtn,.wctl button,.lb-nav,.lb-th button,.up,.share,.ask,#wallx,#lb-x){transition-property:background,color,border-color,box-shadow,transform,opacity;transition-duration:.15s,.15s,.15s,.15s,.32s,.2s;transition-timing-function:ease,ease,ease,ease,cubic-bezier(.3,1.7,.5,1),ease}
 :is(.pill,.playbtn,.wctl button,.lb-nav,.lb-th button,.up,.share,#wallx,#lb-x):active{transform:scale(.96)!important;transition-duration:.08s!important}
 .index button:active .th,.altre button:active .th{transform:scale(.97)!important;transition-duration:.08s!important}
+@media (max-width:640px){.index .th{padding:7%}}
+@media (hover:none){.index button:hover .th{transform:none;background:#161616}.altre button:hover .th{transform:none;border-color:#fff;box-shadow:none}.altre button:hover .th img{transform:none}#wall .tile button:hover{transform:none;outline:0}#wall .tile button:hover img{transform:none}}
 .wallbtn:active{transform:scale(.96)!important;transition-duration:.08s}
 /* bersagli più grandi di quanto sembrano */
 :is(.share,.ask,.up,.rail button,.lb-th button){position:relative}
@@ -771,7 +773,7 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
  wall.addEventListener('wheel',e=>{e.preventDefault();if(e.ctrlKey){setZoom(zoom*(e.deltaY<0?1.08:1/1.08));return}vx-=e.deltaX*.12+(e.shiftKey?e.deltaY*.12:0);vy-=e.shiftKey?0:e.deltaY*.12},{passive:false});
  addEventListener('resize',()=>{if(wall.classList.contains('open')){tiles=[];layout()}});
  // il bottone compare dopo l'apertura e resta sempre a portata
- const mk=document.getElementById('marco');const tog=()=>btn.classList.toggle('show',scrollY>innerHeight*.6&&scrollY+innerHeight<mk.offsetTop+innerHeight*.4);addEventListener('scroll',tog,{passive:true});tog();
+ const mk=document.getElementById('marco');const ix=document.getElementById('indice'),tog=()=>{const r=ix.getBoundingClientRect();btn.classList.toggle('show',scrollY>innerHeight*.6&&scrollY+innerHeight<mk.offsetTop+innerHeight*.4&&!(r.top<innerHeight*.85&&r.bottom>innerHeight*.15))};addEventListener('scroll',tog,{passive:true});tog();
  if(location.hash==='#parete')setTimeout(open,300);
 })();
 
@@ -809,9 +811,9 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
  if(dt&&window.gsap&&!reduce){const o={n:0};dt.textContent='0+';
   new IntersectionObserver((e,io)=>{if(!e[0].isIntersecting)return;io.disconnect();gsap.to(o,{n:400,duration:1.4,ease:'power3.out',onUpdate:()=>{dt.textContent=Math.round(o.n)+'+'}})},{threshold:.6}).observe(dt)}
  // schizzi: solo sui link per contattare Marco, momento raro
- if(window.gsap&&!reduce){const cols=['#ff2e88','#0a0a0a','#fff','#ffd400'];
-  document.addEventListener('pointerdown',e=>{const a=e.target.closest('.ig,.contact a,.ask');if(!a)return;
-   for(let i=0;i<14;i++){const d=document.createElement('i');d.className='splat';const sz=gsap.utils.random(5,16);d.style.setProperty('--d',sz+'px');d.style.background=cols[i%cols.length];if(i%cols.length===2)d.style.boxShadow='0 0 0 1.5px #0a0a0a';document.body.appendChild(d);
+ if(window.gsap&&!reduce){const base=['#19d3ff','#b6ff2e','#ff7a1a','#7a3cff','#0a0a0a'];
+  document.addEventListener('pointerdown',e=>{const a=e.target.closest('.ig,.contact a,.ask');if(!a)return;const g=getComputedStyle(a).getPropertyValue('--glow').trim(),onPink=!!a.closest('#contatti'),cols=g&&!onPink?[g,...base]:base;
+   for(let i=0;i<18;i++){const d=document.createElement("i");d.className="splat";const sz=gsap.utils.random(7,22);d.style.setProperty('--d',sz+'px');d.style.background=cols[i%cols.length];if(i%3===0){d.style.borderRadius='50% 50% 50% 50% / 62% 62% 38% 38%';d.style.height=(sz*1.5)+'px'}document.body.appendChild(d);
     const ang=Math.random()*Math.PI*2,dist=gsap.utils.random(24,90);
     gsap.fromTo(d,{x:e.clientX,y:e.clientY,scale:.4,opacity:1},{x:e.clientX+Math.cos(ang)*dist,y:e.clientY+Math.sin(ang)*dist+12,scale:1,duration:.45,ease:'power3.out',onComplete:()=>gsap.to(d,{opacity:0,y:'+=10',duration:.3,delay:.15,onComplete:()=>d.remove()})})}
   })}
