@@ -250,12 +250,16 @@ dl.cv dt{font-weight:800;font-variant-numeric:tabular-nums}dl.cv dd{margin:0}
 .contact a:hover b{color:#fff}
 .contact .mail b{font-size:clamp(1.25rem,1.9vw,1.9rem);overflow-wrap:anywhere}
 @media (max-width:1000px) and (min-width:641px){.contact{grid-template-columns:repeat(2,minmax(0,1fr))}}
-footer{background:var(--dark);color:#a3a29c}footer .m,footer span{color:#a3a29c}
+footer{background:var(--dark);color:#a3a29c}
+.privbtn{all:unset;cursor:pointer;color:#a3a29c;border-bottom:1px solid currentColor}.privbtn:hover{color:#fff}
+.priv{padding-block:var(--s2) var(--s5);display:grid;gap:var(--s2);max-width:calc(68ch + 2*var(--side));margin-inline:0;font-size:var(--t-s)}
+.priv[hidden]{display:none}.priv h2{margin:0;color:#fff;font:800 var(--t-l)/1 var(--display);font-variation-settings:"wdth" 80}
+.priv p{margin:0;color:#a3a29c}.priv b{color:#e8e7e2}.priv a{color:#fff}.priv .upd{font-size:13px}footer .m,footer span{color:#a3a29c}
 ::selection{background:var(--pink);color:var(--ink)}
 html{scrollbar-color:#55544f var(--dark)}
-.bigname{display:block;font-weight:800;font-size:30vw;line-height:.8;letter-spacing:-.03em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;white-space:nowrap;text-align:center;overflow:hidden;padding-top:var(--s4);
+.bigname{pointer-events:none;display:block;font-weight:800;font-size:30vw;line-height:.8;letter-spacing:-.03em;font-variation-settings:"opsz" 96,"wdth" 75;text-transform:uppercase;white-space:nowrap;text-align:center;overflow:hidden;padding-top:var(--s4);
   background:url(img/opera1-grande.jpg) 50% 60%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
-footer .wrap{display:flex;justify-content:space-between;gap:var(--s2);flex-wrap:wrap;padding-block:var(--s3);border-top:1px solid #2a2a2a}
+footer .wrap:not(.priv){display:flex;justify-content:space-between;gap:var(--s2);flex-wrap:wrap;padding-block:var(--s3);border-top:1px solid #2a2a2a}
 
 /* lightbox */
 dialog{border:0;padding:0;background:var(--dark);color:#fff;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;overflow:hidden}
@@ -455,7 +459,15 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
  </div>
 </div></section>
 </main>
-<footer><div class="bigname" aria-hidden="true">Bomben</div><div class="wrap m"><span>© 2026 Marco Bomben</span><span>Tutte le opere sono di proprietà dell'artista</span><button class="up" type="button" id="up">Torna su ↑</button></div></footer>
+<footer><div class="bigname" aria-hidden="true">Bomben</div><div class="wrap m"><span>© 2026 Marco Bomben</span><span>Tutte le opere sono di proprietà dell'artista</span><button class="privbtn" type="button" aria-expanded="false" aria-controls="privacy">Privacy</button><button class="up" type="button" id="up">Torna su ↑</button></div>
+<div class="wrap priv" id="privacy" hidden><h2>Privacy</h2>
+<p><b>Chi gestisce il sito.</b> Marco Bomben, <a href="mailto:bombenmarco@gmail.com">bombenmarco@gmail.com</a>.</p>
+<p><b>Cosa raccoglie.</b> Niente. È una vetrina delle opere: niente cookie, niente statistiche, niente moduli, nessun servizio esterno caricato nella pagina, nemmeno i caratteri.</p>
+<p><b>Hosting.</b> Il sito è ospitato su GitHub Pages (GitHub, Inc.). Come ogni hosting, GitHub registra l'indirizzo IP di chi visita per motivi tecnici e di sicurezza: trovi i dettagli nell'<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">informativa di GitHub</a>.</p>
+<p><b>Memoria del browser.</b> Il sito ricorda solo, finché la scheda resta aperta, che hai già visto l'animazione d'ingresso. Si cancella da sola quando chiudi la scheda.</p>
+<p><b>Se scrivi a Marco.</b> Via email o Instagram i tuoi dati servono solo a risponderti e non vengono passati a nessuno. Instagram, Gigarte e Nordest News sono siti esterni con le loro regole.</p>
+<p><b>I tuoi diritti.</b> Per chiedere di vedere, correggere o cancellare i tuoi dati scrivi a <a href="mailto:bombenmarco@gmail.com">bombenmarco@gmail.com</a>. Puoi anche rivolgerti al Garante per la protezione dei dati personali.</p>
+<p class="upd">Aggiornata a novembre 2026.</p></div></footer>
 
 <dialog id="lb" aria-label="Opera" data-lenis-prevent>
  <div class="lb">
@@ -699,7 +711,7 @@ function stage(){if(!window.gsap||!window.ScrollTrigger)return;gsap.registerPlug
   gsap.from('.portrait',{y:120,rotate:-12,opacity:0,duration:1,ease:'back.out(1.3)',scrollTrigger:{trigger:'#marco',start:'top 75%',once:true}});
   gsap.from('.story>*',{y:40,opacity:0,duration:.8,ease:'power3.out',stagger:.08,scrollTrigger:{trigger:'.story',start:'top 80%',once:true}});
   gsap.from('.ig b',{scale:.55,yPercent:30,opacity:0,duration:1.1,ease:'expo.out',scrollTrigger:{trigger:'.ig',start:'top 85%',once:true}});
-  gsap.fromTo('.bigname',{yPercent:60,letterSpacing:'.1em'},{yPercent:0,letterSpacing:'-.03em',ease:'none',scrollTrigger:{trigger:'footer',start:'top bottom',end:'bottom bottom',scrub:true}});
+  gsap.fromTo('.bigname',{yPercent:60,letterSpacing:'.1em'},{yPercent:0,letterSpacing:'-.03em',ease:'none',scrollTrigger:{trigger:'.bigname',start:'top bottom',end:()=>Math.min(ScrollTrigger.maxScroll(window),document.querySelector('.bigname').getBoundingClientRect().bottom+scrollY-innerHeight*.75),scrub:true,invalidateOnRefresh:true}});
   if(matchMedia('(hover:hover) and (pointer:fine)').matches){
    // pulsanti magnetici
    document.querySelectorAll('.cue,.ig,.contact>a,header nav a').forEach(el=>{const mx=gsap.quickTo(el,'x',{duration:.5,ease:'elastic.out(1,.5)'}),my=gsap.quickTo(el,'y',{duration:.5,ease:'elastic.out(1,.5)'}),k=el.classList.contains('ig')?.08:.3;
@@ -857,6 +869,10 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
  document.addEventListener('click',e=>{if(e.target.closest('.index button,.rail button'))left=left.filter(s=>{load(s);return false})},true);
  const cn=navigator.connection;if(!(cn&&(cn.saveData||/2g|3g/.test(cn.effectiveType||''))))setTimeout(()=>left.forEach(load),12000); // con una buona connessione dopo un po' le scarica comunque
 })();
+// informativa privacy nel footer
+(function(){const b=document.querySelector('.privbtn'),pv=document.getElementById('privacy');if(!b||!pv)return;
+ const open=o=>{pv.hidden=!o;b.setAttribute('aria-expanded',o);if(o){window.ScrollTrigger&&ScrollTrigger.refresh();requestAnimationFrame(()=>{if(lenis){lenis.resize();lenis.scrollTo(pv,{offset:-90})}else pv.scrollIntoView({behavior:'smooth'})})}};
+ b.onclick=()=>open(pv.hidden);if(location.hash==='#privacy')open(true)})();
 </script>
 </body>
 </html>
