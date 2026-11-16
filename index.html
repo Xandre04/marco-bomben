@@ -232,7 +232,8 @@ dialog::backdrop{background:var(--dark)}
 .lb-nav{all:unset;cursor:pointer;position:absolute;z-index:2;top:50%;width:56px;height:56px;margin-top:-28px;border-radius:50%;border:2px solid #fff;display:grid;place-items:center;font-size:22px;transition:background .15s,color .15s}
 .lb-nav:hover{background:var(--pink);border-color:var(--pink);color:var(--ink)}
 .lb-prev{left:clamp(10px,2vw,32px)}.lb-next{right:clamp(10px,2vw,32px)}
-.lb-tip{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:13px;color:#a3a29d;white-space:nowrap}
+.lb-tip{position:absolute;z-index:3;left:50%;bottom:14px;transform:translateX(-50%);font-size:13px;color:#e8e7e2;white-space:nowrap;background:rgba(11,11,11,.72);padding:6px 12px;border-radius:999px;pointer-events:none;animation:tipout .4s ease 3.5s forwards}
+@keyframes tipout{to{opacity:0;visibility:hidden}}
 .lb-foot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:var(--s3);padding-block:var(--s2)}
 .lb-foot p{margin:0;color:#a3a29d;font-size:var(--t-s);max-width:42ch}.lb-foot .ask{justify-self:end}
 @media (max-width:900px){.lb-foot{grid-template-columns:1fr;justify-items:center;text-align:center;gap:var(--s2)}.lb-foot .ask{justify-self:center}.lb-foot p{display:none}}
@@ -276,7 +277,7 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
  .hint{bottom:auto;top:120px}
  .index{grid-template-columns:repeat(4,minmax(0,1fr))}
  .rail{right:4px;gap:2px}.rail span{display:none}.rail button{height:22px;padding-left:8px}.rail i{width:10px}.rail .on i{width:20px}
- .lb-nav{width:44px;height:44px;margin-top:-22px;background:rgba(0,0,0,.5)}.lb-main{padding-inline:8px}
+ .lb-nav{width:44px;height:44px;margin-top:-22px;background:rgba(11,11,11,.35);border-color:rgba(255,255,255,.7);backdrop-filter:blur(4px)}.lb-main{padding-inline:8px}
  .portrait{grid-column:1/-1;position:relative;top:auto;width:min(80%,420px);margin-bottom:var(--s5)}
  .story{grid-column:1/-1}
 }
@@ -313,7 +314,8 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
 @media (pointer:coarse){.wctl button{padding:12px 14px}}
 .wctl .z{flex:none}
 @media (max-width:360px){header nav a{padding:6px 10px;font-size:14px}.wtop p{font-size:13px}.wctl{gap:2px;padding:3px}.wctl .wf{gap:0!important}.wctl button{padding-inline:4px!important;font-size:12px!important}.wctl .z{width:34px!important;height:34px!important}.wctl i{display:none}}
-@media (pointer:coarse){.wctl .z{width:42px;height:42px}.lb-nav{width:52px;height:52px;margin-top:-26px}}
+@media (pointer:coarse){.wctl .z{width:42px;height:42px}}
+@media (pointer:coarse) and (min-width:641px){.lb-nav{width:52px;height:52px;margin-top:-26px}}
 @media (pointer:coarse) and (max-width:640px){.wctl button{padding:12px 7px;font-size:13px}.wctl .z{width:40px;height:40px}}
 
 /* altre opere */
