@@ -39,10 +39,10 @@ export async function mount(stage, opts = {}) {
   const scene = new THREE.Scene();
   const pm = new THREE.PMREMGenerator(renderer);
   scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.55;
+  scene.environmentIntensity = 0.4;
   const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 50);
-  camera.position.set(-0.08, 0.3, 5.5);
-  camera.lookAt(-0.08, -0.3, 0);
+  camera.position.set(-0.08, 0.05, 5.4);
+  camera.lookAt(-0.08, -0.28, 0);
 
   const key = new THREE.DirectionalLight(0xffffff, 1.35); key.position.set(-2.5, 3.5, 5); scene.add(key);
   const fill = new THREE.DirectionalLight(0xfff0f6, 0.45); fill.position.set(3, 0.5, 4); scene.add(fill);
@@ -51,13 +51,13 @@ export async function mount(stage, opts = {}) {
 
   const ink = new THREE.MeshStandardMaterial({ color: '#141014', roughness: 0.35 });
   const vinyl = (hex, r = 0.5) => new THREE.MeshPhysicalMaterial({ color: hex, roughness: r, clearcoat: 0.25, clearcoatRoughness: 0.45 });
-  const M = { teal: vinyl('#58ab9f'), tealLeg: vinyl('#5fb3a7'), pink: vinyl('#ea6fa5'), pinkLeg: vinyl('#e8749f'), white: vinyl('#f8f6f2', 0.22) };
+  const M = { teal: vinyl('#5fb0a6'), tealLeg: vinyl('#68b8ad'), pink: vinyl('#ec6f9c'), pinkLeg: vinyl('#ea7a9f'), white: vinyl('#f8f6f2', 0.22) };
 
   // ---------- corpo: la tela ----------
   faceTex.colorSpace = THREE.SRGBColorSpace; faceTex.anisotropy = 4;
   // la texture copre x ∈ [-0.52, 0.80], y ∈ [-0.85, 0.84]
   faceTex.repeat.set(1 / 1.32, 1 / 1.69); faceTex.offset.set(0.52 / 1.32, 0.85 / 1.69);
-  const faceMat = new THREE.MeshPhysicalMaterial({ map: faceTex, roughness: 0.55, clearcoat: 0.2, clearcoatRoughness: 0.5 });
+  const faceMat = new THREE.MeshPhysicalMaterial({ map: faceTex, color: '#e6e6e6', roughness: 0.62, clearcoat: 0.15, clearcoatRoughness: 0.5 });
   const edgeMat = vinyl('#e67cb4', 0.55);
   function slab(x0, y0, x1, y1, d) {
     const sh = new THREE.Shape(); sh.moveTo(x0, y0); sh.lineTo(x1, y0); sh.lineTo(x1, y1); sh.lineTo(x0, y1); sh.closePath();
@@ -66,27 +66,33 @@ export async function mount(stage, opts = {}) {
   }
 
   const toy = new THREE.Group(); scene.add(toy);
-  const bodyPivot = new THREE.Group(); toy.add(bodyPivot);
-  const body = new THREE.Group(); body.rotation.z = -0.07; bodyPivot.add(body);
-  const main = new THREE.Mesh(slab(-0.5, -0.83, 0.5, 0.82, 0.28), [faceMat, edgeMat]); body.add(main);
-  const block = new THREE.Mesh(slab(0.47, 0.2, 0.78, 0.81, 0.26), [faceMat, edgeMat]); block.position.z = -0.025; body.add(block);
+  const bodyPivot = new THREE.Group();
+  const fig = new THREE.Group(); fig.rotation.z = -0.12; fig.scale.y = 0.92; toy.add(fig);
+  fig.add(bodyPivot);
+  const body = new THREE.Group(); bodyPivot.add(body);
+  // un unico pezzo a L: tela + blocco in alto a destra
+  const outline = [[-0.5, -0.83], [0.52, -0.83], [0.52, 0.02], [0.76, 0.02], [0.76, 0.8], [-0.5, 0.8]];
+  const bs = new THREE.Shape(); bs.moveTo(...outline[0]); outline.slice(1).forEach(p => bs.lineTo(...p)); bs.closePath();
+  const bg = new THREE.ExtrudeGeometry(bs, { depth: 0.28, bevelEnabled: true, bevelThickness: 0.025, bevelSize: 0.012, bevelSegments: 3 }); bg.translate(0, 0, -0.14);
+  body.add(new THREE.Mesh(bg, [faceMat, edgeMat]));
   const FZ = 0.14 + 0.025; // fronte della tela
 
   // occhi in rilievo: disco bianco lucido, contorno nero, pupilla mobile
-  function eye(x, y, z, r, pupil) {
-    const g = new THREE.Group(); g.position.set(x, y, z);
+  function eye(x, y, z, r, sy, pupil) {
+    const o = new THREE.Group(); o.position.set(x, y, z); o.scale.y = sy; body.add(o);
+    const g = new THREE.Group(); o.add(g);
     const w = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 16), M.white); w.scale.z = 0.32; g.add(w);
     const ring = new THREE.Mesh(new THREE.TorusGeometry(r, r * 0.085, 10, 40), ink); ring.scale.z = 0.8; ring.position.z = 0.005; g.add(ring);
     let p = null;
     if (pupil) { p = new THREE.Mesh(new THREE.SphereGeometry(r * pupil, 24, 12), ink); p.scale.z = 0.3; p.position.z = r * 0.3; g.add(p); }
-    body.add(g); return { g, p, r };
+    return { g, p, r };
   }
-  const eyes = [eye(-0.17, 0.46, FZ, 0.15, 0.45), eye(0.025, 0.4, FZ, 0.083, 0), eye(0.66, 0.47, FZ - 0.012, 0.09, 0.42)];
-  eyes[0].rest = [0.32, -0.12]; eyes[2].rest = [-0.25, -0.05];
+  const eyes = [eye(-0.2575, 0.446, FZ, 0.152, 1.45, 0.54), eye(-0.0175, 0.425, FZ, 0.092, 1.22, 0), eye(0.58, 0.346, FZ, 0.102, 1.48, 0.52)];
+  eyes[0].rest = [0.5, 0]; eyes[2].rest = [-0.95, 0.4];
 
   // ciuffo bianco con il bordo nero e il ricciolo
   const leaf = new THREE.Shape(); leaf.moveTo(0.04, 0); leaf.quadraticCurveTo(0.1, 0.13, 0.27, 0.12); leaf.quadraticCurveTo(0.36, 0.1, 0.34, 0); leaf.closePath();
-  const tuft = new THREE.Group(); tuft.position.set(-0.02, 0.83, 0.05); tuft.rotation.z = -0.04; tuft.scale.setScalar(1.15); body.add(tuft);
+  const tuft = new THREE.Group(); tuft.position.set(0.0, 0.81, 0.05); tuft.rotation.z = -0.04; tuft.scale.setScalar(1.15); body.add(tuft);
   const lw = new THREE.Mesh(new THREE.ExtrudeGeometry(leaf, { depth: 0.05, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.008, bevelSegments: 2 }), M.white); lw.position.z = -0.025; tuft.add(lw);
   const lb = new THREE.Mesh(new THREE.ExtrudeGeometry(leaf, { depth: 0.04, bevelEnabled: true, bevelThickness: 0.01, bevelSize: 0.026, bevelSegments: 2 }), ink); lb.position.z = -0.03; tuft.add(lb);
   const curlPts = [[0.33, 0.0], [0.4, 0.01], [0.47, 0.035], [0.5, 0.075], [0.47, 0.095], [0.445, 0.075], [0.465, 0.06]].map(([x, y]) => new THREE.Vector3(x, y, 0.03));
@@ -94,22 +100,22 @@ export async function mount(stage, opts = {}) {
 
   // ---------- arti modellati in Blender ----------
   const mesh = (name, mat) => new THREE.Mesh(parts[name], mat);
-  const SH = new THREE.Vector3(-0.45, -0.05, -0.05); // spalla sinistra: perno del saluto
+  const SH = new THREE.Vector3(-0.5, -0.1, -0.02); // spalla sinistra: perno del saluto
   const armL = new THREE.Group(); armL.position.copy(SH); body.add(armL);
   for (const [n, m] of [['sleeveL', M.teal], ['handL', M.pink]]) { const o = mesh(n, m); o.position.copy(SH).negate(); armL.add(o); }
   body.add(mesh('armR', M.pink));
-  const legs = new THREE.Group(); toy.add(legs);
+  const legs = new THREE.Group(); fig.add(legs);
   legs.add(mesh('legL', M.tealLeg), mesh('legR', M.pinkLeg));
-  parts.legL.computeBoundingBox(); const floorY = parts.legL.boundingBox.min.y;
+  fig.updateMatrixWorld(true); const floorY = new THREE.Box3().setFromObject(legs).min.y;
 
   // ombra morbida a terra
   const shc = document.createElement('canvas'); shc.width = shc.height = 256; const shx = shc.getContext('2d');
   const rg = shx.createRadialGradient(128, 128, 0, 128, 128, 128); rg.addColorStop(0, 'rgba(60,30,70,.42)'); rg.addColorStop(1, 'rgba(60,30,70,0)'); shx.fillStyle = rg; shx.fillRect(0, 0, 256, 256);
   const shadow = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.0), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(shc), transparent: true, depthWrite: false }));
-  shadow.rotation.x = -Math.PI / 2; shadow.position.set(-0.12, floorY + 0.005, 0.1); toy.add(shadow);
+  shadow.rotation.x = -Math.PI / 2; shadow.position.set(-0.3, floorY + 0.005, 0.1); toy.add(shadow);
 
-  toy.rotation.y = -0.09;
-  const REST_Y = -0.09;
+  toy.rotation.y = 0;
+  const REST_Y = 0;
 
   // ---------- interazione ----------
   const tgt = { ry: 0, rx: 0 }, cur = { ry: 0, rx: 0 }, look = { x: 0, y: 0 };
