@@ -914,7 +914,7 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
  const ok=(()=>{try{const c=document.createElement('canvas');return !!(c.getContext('webgl2')||c.getContext('webgl'))}catch(e){return false}})();
  if(!ok){st.querySelector('canvas').remove();return}
  const io=new IntersectionObserver(es=>{if(!es[0].isIntersecting)return;io.disconnect();
-  import('./js/mascotte.js').then(m=>{m.mount(st,{reduce});requestAnimationFrame(()=>st.classList.add('live'))}).catch(()=>{})},{rootMargin:'600px 0px'});io.observe(st)})();
+  import('./js/mascotte.js').then(m=>m.mount(st,{reduce})).then(()=>requestAnimationFrame(()=>st.classList.add('live'))).catch(()=>{})},{rootMargin:'600px 0px'});io.observe(st)})();
 </script>
 </body>
 </html>
