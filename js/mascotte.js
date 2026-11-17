@@ -1,35 +1,15 @@
-// Il personaggio delle tele di Marco in 3D.
-// Braccia, mani, gambe e stivali sono modellati in Blender (metaball) ed esportati in un binario
-// minuscolo (mascotte.bin, ~50 KB): posizioni quantizzate a 16 bit + indici. Il volto è una texture
-// dipinta (mascotte-volto.webp); occhi, ciuffo e corpo sono costruiti qui.
+// Il personaggio delle tele di Marco in 3D: modello scolpito in Blender (mascotte.glb),
+// con il dipinto cotto nella texture. Qui solo luci, saluto e interazione.
 import * as THREE from './three/three.module.min.js';
 import { RoomEnvironment } from './three/RoomEnvironment.js';
+import { GLTFLoader } from './three/GLTFLoader.js';
 
 const base = new URL('./', import.meta.url);
-
-async function loadParts() {
-  const buf = await (await fetch(new URL('mascotte.bin', base))).arrayBuffer();
-  const hl = new DataView(buf).getUint32(0, true);
-  const hdr = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 4, hl)));
-  let o = 4 + hl; const out = {};
-  for (const [name, nv, ni] of hdr) {
-    const q = new Int16Array(buf, o, nv * 3); o += nv * 6; o += (4 - (o % 4)) % 4;
-    const idx = new Uint16Array(buf, o, ni); o += ni * 2; o += (4 - (o % 4)) % 4;
-    const pos = new Float32Array(nv * 3); for (let i = 0; i < pos.length; i++) pos[i] = (q[i] / 32767) * 1.8;
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setIndex(new THREE.BufferAttribute(idx.slice(), 1));
-    g.computeVertexNormals(); out[name] = g;
-  }
-  return out;
-}
 
 export async function mount(stage, opts = {}) {
   const reduce = !!opts.reduce;
   const canvas = stage.querySelector('canvas');
-  const [parts, faceTex] = await Promise.all([
-    loadParts(),
-    new THREE.TextureLoader().loadAsync(new URL('../img/mascotte-volto.webp', base).href),
-  ]);
+  const gltf = await new GLTFLoader().loadAsync(new URL('mascotte.glb', base).href);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power', preserveDrawingBuffer: !!opts.preserve });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
@@ -49,64 +29,19 @@ export async function mount(stage, opts = {}) {
   const rim = new THREE.DirectionalLight(0xffffff, 0.7); rim.position.set(2, 3, -4); scene.add(rim);
   scene.add(new THREE.HemisphereLight(0xffffff, 0xd8c8d8, 0.5));
 
-  const ink = new THREE.MeshStandardMaterial({ color: '#141014', roughness: 0.35 });
-  const vinyl = (hex, r = 0.5) => new THREE.MeshPhysicalMaterial({ color: hex, roughness: r, clearcoat: 0.25, clearcoatRoughness: 0.45 });
-  const M = { teal: vinyl('#5fb0a6'), tealLeg: vinyl('#68b8ad'), pink: vinyl('#ec6f9c'), pinkLeg: vinyl('#ea7a9f'), white: vinyl('#f8f6f2', 0.22) };
-
-  // ---------- corpo: la tela ----------
-  faceTex.colorSpace = THREE.SRGBColorSpace; faceTex.anisotropy = 4;
-  // la texture copre x ∈ [-0.52, 0.80], y ∈ [-0.85, 0.84]
-  faceTex.repeat.set(1 / 1.32, 1 / 1.69); faceTex.offset.set(0.52 / 1.32, 0.85 / 1.69);
-  const faceMat = new THREE.MeshPhysicalMaterial({ map: faceTex, color: '#e6e6e6', roughness: 0.62, clearcoat: 0.15, clearcoatRoughness: 0.5 });
-  const edgeMat = vinyl('#e67cb4', 0.55);
-  function slab(x0, y0, x1, y1, d) {
-    const sh = new THREE.Shape(); sh.moveTo(x0, y0); sh.lineTo(x1, y0); sh.lineTo(x1, y1); sh.lineTo(x0, y1); sh.closePath();
-    const g = new THREE.ExtrudeGeometry(sh, { depth: d, bevelEnabled: true, bevelThickness: 0.025, bevelSize: 0.012, bevelSegments: 3, curveSegments: 4 });
-    g.translate(0, 0, -d / 2); return g;
-  }
-
   const toy = new THREE.Group(); scene.add(toy);
-  const bodyPivot = new THREE.Group();
-  const fig = new THREE.Group(); fig.rotation.z = -0.12; fig.scale.y = 0.92; toy.add(fig);
-  fig.add(bodyPivot);
-  const body = new THREE.Group(); bodyPivot.add(body);
-  // un unico pezzo a L: tela + blocco in alto a destra
-  const outline = [[-0.5, -0.83], [0.52, -0.83], [0.52, 0.02], [0.76, 0.02], [0.76, 0.8], [-0.5, 0.8]];
-  const bs = new THREE.Shape(); bs.moveTo(...outline[0]); outline.slice(1).forEach(p => bs.lineTo(...p)); bs.closePath();
-  const bg = new THREE.ExtrudeGeometry(bs, { depth: 0.28, bevelEnabled: true, bevelThickness: 0.025, bevelSize: 0.012, bevelSegments: 3 }); bg.translate(0, 0, -0.14);
-  body.add(new THREE.Mesh(bg, [faceMat, edgeMat]));
-  const FZ = 0.14 + 0.025; // fronte della tela
-
-  // occhi in rilievo: disco bianco lucido, contorno nero, pupilla mobile
-  function eye(x, y, z, r, sy, pupil) {
-    const o = new THREE.Group(); o.position.set(x, y, z); o.scale.y = sy; body.add(o);
-    const g = new THREE.Group(); o.add(g);
-    const w = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 16), M.white); w.scale.z = 0.32; g.add(w);
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(r, r * 0.085, 10, 40), ink); ring.scale.z = 0.8; ring.position.z = 0.005; g.add(ring);
-    let p = null;
-    if (pupil) { p = new THREE.Mesh(new THREE.SphereGeometry(r * pupil, 24, 12), ink); p.scale.z = 0.3; p.position.z = r * 0.3; g.add(p); }
-    return { g, p, r };
-  }
-  const eyes = [eye(-0.2575, 0.446, FZ, 0.152, 1.45, 0.54), eye(-0.0175, 0.425, FZ, 0.092, 1.22, 0), eye(0.58, 0.346, FZ, 0.102, 1.48, 0.52)];
-  eyes[0].rest = [0.5, 0]; eyes[2].rest = [-0.95, 0.4];
-
-  // ciuffo bianco con il bordo nero e il ricciolo
-  const leaf = new THREE.Shape(); leaf.moveTo(0.04, 0); leaf.quadraticCurveTo(0.1, 0.13, 0.27, 0.12); leaf.quadraticCurveTo(0.36, 0.1, 0.34, 0); leaf.closePath();
-  const tuft = new THREE.Group(); tuft.position.set(0.0, 0.81, 0.05); tuft.rotation.z = -0.04; tuft.scale.setScalar(1.15); body.add(tuft);
-  const lw = new THREE.Mesh(new THREE.ExtrudeGeometry(leaf, { depth: 0.05, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.008, bevelSegments: 2 }), M.white); lw.position.z = -0.025; tuft.add(lw);
-  const lb = new THREE.Mesh(new THREE.ExtrudeGeometry(leaf, { depth: 0.04, bevelEnabled: true, bevelThickness: 0.01, bevelSize: 0.026, bevelSegments: 2 }), ink); lb.position.z = -0.03; tuft.add(lb);
-  const curlPts = [[0.33, 0.0], [0.4, 0.01], [0.47, 0.035], [0.5, 0.075], [0.47, 0.095], [0.445, 0.075], [0.465, 0.06]].map(([x, y]) => new THREE.Vector3(x, y, 0.03));
-  tuft.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(curlPts), 40, 0.008, 6), ink));
-
-  // ---------- arti modellati in Blender ----------
-  const mesh = (name, mat) => new THREE.Mesh(parts[name], mat);
-  const SH = new THREE.Vector3(-0.5, -0.1, -0.02); // spalla sinistra: perno del saluto
-  const armL = new THREE.Group(); armL.position.copy(SH); body.add(armL);
-  for (const [n, m] of [['sleeveL', M.teal], ['handL', M.pink]]) { const o = mesh(n, m); o.position.copy(SH).negate(); armL.add(o); }
-  body.add(mesh('armR', M.pink));
-  const legs = new THREE.Group(); fig.add(legs);
-  legs.add(mesh('legL', M.tealLeg), mesh('legR', M.pinkLeg));
-  fig.updateMatrixWorld(true); const floorY = new THREE.Box3().setFromObject(legs).min.y;
+  const fig = new THREE.Group(); toy.add(fig);
+  const bodyPivot = new THREE.Group(); fig.add(bodyPivot);
+  const model = gltf.scene; bodyPivot.add(model);
+  model.traverse(o => { if (o.isMesh) { o.material.side = THREE.FrontSide; if (o.material.map) o.material.map.anisotropy = 4; } });
+  // piedi a y=0, alto ~2.22: lo porto alla scala della scena precedente (alto ~1.9, centrato)
+  const S = 0.86; model.scale.setScalar(S);
+  const box0 = new THREE.Box3().setFromObject(model); const c0 = box0.getCenter(new THREE.Vector3());
+  model.position.set(-c0.x, -box0.min.y - 1.24, -c0.z);
+  const armL = model.getObjectByName('braccio_saluto'); const arm0 = armL ? armL.quaternion.clone() : null;
+  const legs = new THREE.Group();
+  fig.updateMatrixWorld(true); const floorY = new THREE.Box3().setFromObject(model).min.y;
+  const eyes = [];
 
   // ombra morbida a terra
   const shc = document.createElement('canvas'); shc.width = shc.height = 256; const shx = shc.getContext('2d');
@@ -114,6 +49,7 @@ export async function mount(stage, opts = {}) {
   const shadow = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.0), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(shc), transparent: true, depthWrite: false }));
   shadow.rotation.x = -Math.PI / 2; shadow.position.set(-0.3, floorY + 0.005, 0.1); toy.add(shadow);
 
+  const qz = new THREE.Quaternion(), ZA = new THREE.Vector3(0, 0, 1);
   toy.rotation.y = 0;
   const REST_Y = 0;
 
@@ -148,8 +84,10 @@ export async function mount(stage, opts = {}) {
     legs.position.y = jump * 0.9;
     shadow.scale.setScalar(1 - Math.min(0.4, jump * 0.5)); shadow.material.opacity = 1 - Math.min(0.6, jump);
     // saluto: tutto il braccio oscilla dalla spalla
-    if (wave > 0) { wave -= dt; armL.rotation.z = Math.sin(t * 10) * 0.12 * Math.min(1, wave * 2) * amp; }
-    else { armL.rotation.z += (Math.sin(t * 2.1) * 0.02 * amp - armL.rotation.z) * Math.min(1, dt * 4); if (!reduce && Math.random() < dt / 6) wave = 1.6; }
+    let wz = 0;
+    if (wave > 0) { wave -= dt; wz = Math.sin(t * 10) * 0.14 * Math.min(1, wave * 2) * amp; }
+    else { wz = Math.sin(t * 2.1) * 0.02 * amp; if (!reduce && Math.random() < dt / 6) wave = 1.6; }
+    if (armL) armL.quaternion.copy(arm0).premultiply(qz.setFromAxisAngle(ZA, wz));
     // sguardo e battito di ciglia
     if (!reduce) { nextBlink -= dt; if (nextBlink <= 0) { blinkT = 0; nextBlink = 2.5 + Math.random() * 3; } }
     let lid = 1;
