@@ -238,6 +238,26 @@ dl.cv dt{font-weight:800;font-variant-numeric:tabular-nums}dl.cv dd{margin:0}
 :is(a,button,[tabindex]):focus-visible{outline:3px solid var(--pink)!important;outline-offset:3px!important}
 #contatti :focus-visible,.band :focus-visible{outline-color:var(--ink)!important}
 @media (prefers-reduced-motion:reduce){.chip::before{animation:none}.band .tr{transform:none!important}}
+/* il personaggio: sezione pastello come le tele da cui nasce */
+.pers{background:linear-gradient(160deg,#f7c6e1 0%,#e9bdea 55%,#d6b8f1 100%);color:var(--ink);padding-block:var(--s6);overflow:hidden}
+.pers-in{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);align-items:center}
+.pers-txt{grid-column:1/6;display:grid;gap:var(--s3);align-content:center}
+.pers .kicker{margin:0;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:var(--t-s);color:#7a1450}
+.pers .big mark{background:var(--pink);color:var(--ink);padding:0 .08em}
+.pers-txt>p{margin:0;max-width:40ch}
+.pers-how{font-weight:700}
+.pers-src{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:var(--s2)}
+.pers-src figure{margin:0;border:3px solid var(--ink);background:#fff;box-shadow:4px 4px 0 var(--ink)}
+.pers-src figure:nth-child(2){transform:translateY(-8px)}
+.pers-src img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.pers-cap{margin:0;color:#5b2350!important;font-size:13px}
+.pers-stage{grid-column:6/13;position:relative;aspect-ratio:1/1.08;max-height:88vh;width:100%;justify-self:center}
+.pers-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab;outline:0}
+.pers-stage canvas:active{cursor:grabbing}
+.pers-stage canvas:focus-visible{outline:3px solid var(--ink)!important;outline-offset:-3px!important;border-radius:12px}
+.pers-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .6s ease}
+.pers-stage.live .pers-poster{opacity:0;pointer-events:none}
+@media (max-width:900px){.pers-txt,.pers-stage{grid-column:1/-1}.pers-stage{order:-1;aspect-ratio:1/1.05;max-height:none;margin-bottom:var(--s3)}.pers-txt{gap:var(--s2)}}
 #contatti{background:var(--pink);padding-block:var(--s6) var(--s5)}
 .ig{display:grid;gap:var(--s1);text-decoration:none;margin:var(--s4) 0 var(--s5)}
 .ig .m{color:#3a0a1f}
@@ -445,6 +465,22 @@ html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!
   <button class="link" type="button" id="allphotos" style="all:unset;cursor:pointer;font-weight:700;border-bottom:2px solid currentColor;padding-bottom:2px;justify-self:start">Tutte le foto ⊞</button>
   <a class="link" href="https://www.nordestnews.com/arte/dirompenti-cromatismi-improvvisi-marco-bomben/" target="_blank" rel="noopener">Leggi l'articolo su Nordest News</a>
  </div>
+</div></section>
+
+<section class="pers" id="personaggio" aria-labelledby="pers-t"><div class="wrap pers-in">
+ <div class="pers-txt">
+  <p class="kicker">Il personaggio</p>
+  <h2 class="big" id="pers-t">Esce dalla <mark>tela</mark>.</h2>
+  <p>Torna nei quadri di Marco: la testa squadrata chiusa in una cornice nera, gli occhi che guardano altrove, la bocca a mezzaluna. Qui ha preso corpo.</p>
+  <p class="pers-how">Trascinalo per girarlo, toccalo e salta.</p>
+  <div class="pers-src" aria-label="Le tre tele in cui compare">
+   <figure><img src="img/personaggio-1.jpg" alt="Tela con il personaggio su fondo viola e rosa" loading="lazy"></figure>
+   <figure><img src="img/personaggio-2.jpg" alt="Tela con il personaggio su fondo rosa e turchese" loading="lazy"></figure>
+   <figure><img src="img/personaggio-3.jpg" alt="Tela con il personaggio su fondo rosa e beige" loading="lazy"></figure>
+  </div>
+  <p class="m pers-cap">Le tre tele del trittico in cui compare.</p>
+ </div>
+ <div class="pers-stage" id="pers-stage"><img class="pers-poster" src="img/mascotte.webp" width="900" height="972" alt="Il personaggio in 3D: una tela squadrata con occhi e bocca, braccia turchese e rosa, che saluta" loading="lazy"><canvas tabindex="0" aria-label="Personaggio in 3D. Frecce per girarlo, Invio per farlo saltare"></canvas></div>
 </div></section>
 
 <div class="band" aria-hidden="true"><div class="tr"><span>Sensazioni senza contorni<i>✺</i></span><span><em>Azzano Decimo</em><i>✺</i></span><span>Dal 1 ottobre 2026<i>✺</i></span><span><em>Banca Mediolanum</em><i>✺</i></span></div></div>
@@ -873,6 +909,12 @@ li.addEventListener('pointerup',e=>{const dx=e.clientX-(px??e.clientX);px=null;
 (function(){const b=document.querySelector('.privbtn'),pv=document.getElementById('privacy');if(!b||!pv)return;
  const open=o=>{pv.hidden=!o;b.setAttribute('aria-expanded',o);if(o){window.ScrollTrigger&&ScrollTrigger.refresh();requestAnimationFrame(()=>{if(lenis){lenis.resize();lenis.scrollTo(pv,{offset:-90})}else pv.scrollIntoView({behavior:'smooth'})})}};
  b.onclick=()=>open(pv.hidden);if(location.hash==='#privacy')open(true)})();
+// personaggio 3D: la libreria si scarica solo quando ti avvicini alla sezione
+(function(){const st=document.getElementById('pers-stage');if(!st)return;
+ const ok=(()=>{try{const c=document.createElement('canvas');return !!(c.getContext('webgl2')||c.getContext('webgl'))}catch(e){return false}})();
+ if(!ok){st.querySelector('canvas').remove();return}
+ const io=new IntersectionObserver(es=>{if(!es[0].isIntersecting)return;io.disconnect();
+  import('./js/mascotte.js').then(m=>{m.mount(st,{reduce});requestAnimationFrame(()=>st.classList.add('live'))}).catch(()=>{})},{rootMargin:'600px 0px'});io.observe(st)})();
 </script>
 </body>
 </html>
