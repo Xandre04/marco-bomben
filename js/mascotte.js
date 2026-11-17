@@ -41,7 +41,36 @@ export async function mount(stage, opts = {}) {
   const armL = model.getObjectByName('braccio_saluto'); const arm0 = armL ? armL.quaternion.clone() : null;
   const legs = new THREE.Group();
   fig.updateMatrixWorld(true); const floorY = new THREE.Box3().setFromObject(model).min.y;
+  // occhi: perno al centro per il battito; pupille staccate dall'anello nero e mobili
   const eyes = [];
+  for (const name of ['occhio_grande', 'occhio_lato', 'occhio_piccolo']) {
+    const node = model.getObjectByName(name); if (!node) continue;
+    const ms = []; node.traverse(m => { if (m.isMesh) ms.push(m); });
+    const bb = new THREE.Box3(); for (const m of ms) { m.geometry.computeBoundingBox(); bb.union(m.geometry.boundingBox); }
+    const c = bb.getCenter(new THREE.Vector3()), r = (bb.max.x - bb.min.x) / 2;
+    const g = new THREE.Group(); g.position.copy(c); node.add(g);
+    let p = null;
+    for (const m of ms) {
+      m.geometry.translate(-c.x, -c.y, -c.z); g.add(m);
+      const n = m.geometry.attributes.position.count;
+      if (m.material.name !== 'black') continue;
+      // componenti connesse: il pezzo nero più piccolo è la pupilla
+      const pos = m.geometry.attributes.position, idx = m.geometry.index.array, par = new Int32Array(n).map((_, i) => i);
+      const f = x => { while (par[x] !== x) x = par[x] = par[par[x]]; return x; };
+      for (let i = 0; i < idx.length; i += 3) { const a = f(idx[i]); par[f(idx[i + 1])] = a; par[f(idx[i + 2])] = a; }
+      const box = new Map();
+      for (let i = 0; i < n; i++) { const k = f(i); const bx = box.get(k) || new THREE.Box3(); bx.expandByPoint(new THREE.Vector3().fromBufferAttribute(pos, i)); box.set(k, bx); }
+      if (box.size < 2) continue;
+      const [pk, pb] = [...box].sort((u, v) => (u[1].max.x - u[1].min.x) - (v[1].max.x - v[1].min.x))[0];
+      const A = [], B = [];
+      for (let i = 0; i < idx.length; i += 3) (f(idx[i]) === pk ? A : B).push(idx[i], idx[i + 1], idx[i + 2]);
+      const pc = pb.getCenter(new THREE.Vector3());
+      const pg = m.geometry.clone(); pg.setIndex(A); pg.translate(-pc.x, -pc.y, 0); m.geometry.setIndex(B);
+      p = new THREE.Mesh(pg, m.material); p.position.set(pc.x, pc.y, 0.004); g.add(p);
+      p.userData.lim = Math.max(0, (r - (pb.max.x - pb.min.x) / 2) * 0.8);
+    }
+    eyes.push({ g, p, r, rest: [0, 0], p0: p ? p.position.clone() : null });
+  }
 
   // ombra morbida a terra
   const shc = document.createElement('canvas'); shc.width = shc.height = 256; const shx = shc.getContext('2d');
@@ -96,7 +125,7 @@ export async function mount(stage, opts = {}) {
       e.g.scale.y = lid;
       if (!e.p) continue;
       const rx = e.rest[0] * (1 - Math.abs(look.x)) + look.x, ry = e.rest[1] * (1 - Math.abs(look.y)) - look.y;
-      const tx = rx * e.r * 0.42, ty = ry * e.r * 0.42;
+      let tx = e.p0.x + rx * e.r * 0.3, ty = e.p0.y + ry * e.r * 0.3; const L = Math.hypot(tx, ty), lim = e.p.userData.lim; if (L > lim) { tx *= lim / L; ty *= lim / L; }
       e.p.position.x += (tx - e.p.position.x) * Math.min(1, dt * 10); e.p.position.y += (ty - e.p.position.y) * Math.min(1, dt * 10);
     }
   }
@@ -112,7 +141,7 @@ export async function mount(stage, opts = {}) {
   document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
   wave = opts.still ? 0 : wave;
   pose(opts.still ? 0 : 0.016);
-  if (opts.still) for (const e of eyes) if (e.p) e.p.position.set(e.rest[0] * e.r * 0.42, e.rest[1] * e.r * 0.42, e.p.position.z);
+  if (opts.still) for (const e of eyes) if (e.p) e.p.position.copy(e.p0);
   renderer.render(scene, camera);
   return { hello() { wave = 1.8; }, render() { renderer.render(scene, camera); } };
 }
